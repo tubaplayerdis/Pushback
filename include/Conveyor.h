@@ -6,10 +6,61 @@
 #define CONVEYOR_H
 
 #include "cls/SubSystem.h"
+#include "pros/adi.hpp"
+#include "pros/motor_group.hpp"
+#include "pros/misc.h"
+#include "Controller.h"
+
+//Port macros
+#define PORT_NORMAL_A -1
+#define PORT_NORMAL_B -1
+#define PORT_INVERTED_A -1
+#define PORT_INVERTED_B -1
+#define PORT_SPLITTER 'A'
+
+//Control macros
+#define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
+#define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
 class Conveyor : public SubSystem
 {
-    //TODO: Implement
+public:
+    pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
+    pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
+    pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
+
+    Conveyor() : SubSystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
+
+    bool Activate_Implementation() override;
+    bool Deactivate_Implementation() override;
+    void Tick() override;
 };
+
+inline bool Conveyor::Activate_Implementation()
+{
+    return true;
+}
+
+inline bool Conveyor::Deactivate_Implementation()
+{
+    return true;
+}
+
+inline void Conveyor::Tick()
+{
+    if (Controller.get_digital(CONVEYOR_IN))
+    {
+        Handle(NormalGroup.move(FULL_POWER));
+        Handle(InvertedGroup.move(-FULL_POWER));
+    } else if (Controller.get_digital(CONVEYOR_OUT))
+    {
+        Handle(NormalGroup.move(-FULL_POWER));
+        Handle(InvertedGroup.move(FULL_POWER));
+    } else
+    {
+        Handle(NormalGroup.brake());
+        Handle(InvertedGroup.brake());
+    }
+}
 
 #endif //CONVEYOR_H

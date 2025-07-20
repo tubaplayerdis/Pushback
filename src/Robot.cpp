@@ -1,7 +1,7 @@
 //
 // Created by aaron on 7/20/2025.
 //
-#include "../include/robot.h"
+#include "../include/Robot.h"
 
 bool robot::calibrateRobot()
 {

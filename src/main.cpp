@@ -1,5 +1,5 @@
 #include "main.h"
-#include "robot.h"
+#include "Robot.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 

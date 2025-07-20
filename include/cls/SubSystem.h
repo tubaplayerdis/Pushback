@@ -5,6 +5,12 @@
 #ifndef SUBSYSTEM_H
 #define SUBSYSTEM_H
 
+//Used in motor.move()
+#define FULL_POWER 127
+
+//Define Handle(exp) if((exp) == PROS_ERR) ReportError(__FILE__, __LINE__, errno)
+#define Handle(exp) if((exp) == PROS_ERR) (void)0
+
 enum EInitializationState
 {
     NONAPPLICABLE = 0,
@@ -18,11 +24,12 @@ class SubSystem
 
     protected:
     EInitializationState Initialization;
-
-    //Initialization needs to toggled to INITIALIZED in derived class constructor if sucsessfull
+    //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true
     SubSystem(bool bNeedsInit, bool bStartActive);
 
     public:
+    virtual ~SubSystem() = default;
+
     bool IsActive() const;
     EInitializationState GetInitializationState() const;
 
@@ -31,6 +38,8 @@ class SubSystem
     virtual bool Activate_Implementation() = 0;
     //Implement this function in derived class. Called inside Deactivate().
     virtual bool Deactivate_Implementation() = 0;
+    //Called in subsequent loop.
+    virtual void Tick() = 0;
 
     public:
     bool Activate();
@@ -56,14 +65,14 @@ inline EInitializationState SubSystem::GetInitializationState() const
 inline bool SubSystem::Activate()
 {
     bool bResult = Activate_Implementation();
-    isActive = bResult;
+    isActive = true;
     return bResult;
 }
 
 inline bool SubSystem::Deactivate()
 {
     bool bResult = Deactivate_Implementation();
-    isActive = bResult;
+    isActive = false;
     return bResult;
 }
 
