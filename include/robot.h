@@ -13,6 +13,28 @@ namespace robot
 
     namespace drivetrain
     {
+        namespace odometry
+        {
+            namespace sensors
+            {
+                pros::Imu Inertial(14);
+
+                pros::Rotation RotationVertical(-13);
+
+                pros::Rotation RotationHorizontial(-8);
+            }
+
+            // horizontal tracking wheel
+            lemlib::TrackingWheel TrackingHorizontial(&sensors::RotationHorizontial, lemlib::Omniwheel::NEW_2, -1.5);
+
+            // vertical tracking wheel
+            lemlib::TrackingWheel TrackingVertical(&sensors::RotationVertical, lemlib::Omniwheel::NEW_2, 0);
+
+            // odometry settings
+            lemlib::OdomSensors Odometry(&TrackingVertical, nullptr, &TrackingHorizontial, nullptr, &sensors::Inertial);
+
+        }
+
         namespace motors
         {
             pros::MotorGroup LeftGroup({-1,-1,-1});
