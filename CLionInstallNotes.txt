@@ -1,0 +1,12 @@
+Archive of the CLion install process:
+
+Download pros cli and toolchain following thier directions.
+Download LLVM using winget and add bin folder from LLVM to path
+
+Configure custom pros toolchain
+
+run pros build-compile-commands to generate compile_commands.json
+
+invalidate Cashes and restart to force intellisense to load
+
+All done (hopefully)
