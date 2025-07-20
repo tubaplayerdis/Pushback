@@ -51,7 +51,7 @@ namespace robot
         namespace motors
         {
             pros::MotorGroup NormalGroup({-1,-1}); //Runs the intake and other system requiring the path of movement.
-            pros::MotorGroup InvertedGroup({-1,-1}); //Moslty resposible for getting the blocks into storage
+            pros::MotorGroup InvertedGroup({-1,-1}); //Mostly resposible for getting the blocks into storage
         }
 
         namespace pneumatics

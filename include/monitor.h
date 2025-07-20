@@ -11,6 +11,7 @@ namespace monitor
 
     //Individual Checks
     bool areConnectionsValid();
+
     bool areMotorsCool();
 }
 
