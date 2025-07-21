@@ -15,17 +15,17 @@ enum EInitializationState
     UNINITIALIZED = 2,
 };
 
-class SubSystem
+class subsystem
 {
     bool isActive;
 
     protected:
     EInitializationState Initialization;
     //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true
-    SubSystem(bool bNeedsInit, bool bStartActive);
+    subsystem(bool bNeedsInit, bool bStartActive);
 
     public:
-    virtual ~SubSystem() = default;
+    virtual ~subsystem() = default;
 
     bool IsActive() const;
     EInitializationState GetInitializationState() const;
@@ -43,30 +43,30 @@ class SubSystem
     bool Deactivate();
 };
 
-inline SubSystem::SubSystem(bool bNeedsInit, bool bStartActive)
+inline subsystem::subsystem(bool bNeedsInit, bool bStartActive)
 {
     bNeedsInit ? Initialization = EInitializationState::UNINITIALIZED : Initialization = EInitializationState::NONAPPLICABLE;
     isActive = bStartActive;
 }
 
-inline bool SubSystem::IsActive() const
+inline bool subsystem::IsActive() const
 {
     return isActive;
 }
 
-inline EInitializationState SubSystem::GetInitializationState() const
+inline EInitializationState subsystem::GetInitializationState() const
 {
     return Initialization;
 }
 
-inline bool SubSystem::Activate()
+inline bool subsystem::Activate()
 {
     bool bResult = Activate_Implementation();
     isActive = true;
     return bResult;
 }
 
-inline bool SubSystem::Deactivate()
+inline bool subsystem::Deactivate()
 {
     bool bResult = Deactivate_Implementation();
     isActive = false;

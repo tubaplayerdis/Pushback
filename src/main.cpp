@@ -1,5 +1,5 @@
 #include "main.h"
-#include "Robot.h"
+#include "robot.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 
@@ -81,7 +81,7 @@ void autonomous() {}
  */
 void opcontrol() {
 	while (true) {
-		robot::drivetrain::drivetrainControl();
+		Robot::
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }

@@ -5,12 +5,12 @@
 #ifndef CONVEYOR_H
 #define CONVEYOR_H
 
-#include "cls/SubSystem.h"
+#include "cls/subsystem.h"
 #include "pros/adi.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/misc.h"
-#include "Monitor.h"
-#include "Controller.h"
+#include "monitor.h"
+#include "controller.h"
 
 //Port macros
 #define PORT_NORMAL_A -1
@@ -23,14 +23,14 @@
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
-class Conveyor : public Subsystem
+class conveyor final : public subsystem
 {
 public:
     pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
     pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
     pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
 
-    Conveyor() : Subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
+    conveyor() : subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
 
 private:
     bool Activate_Implementation() override;
@@ -40,17 +40,17 @@ public:
     void Tick() override;
 };
 
-inline bool Conveyor::Activate_Implementation()
+inline bool conveyor::Activate_Implementation()
 {
     return true;
 }
 
-inline bool Conveyor::Deactivate_Implementation()
+inline bool conveyor::Deactivate_Implementation()
 {
     return true;
 }
 
-inline void Conveyor::Tick()
+inline void conveyor::Tick()
 {
     if (Controller.get_digital(CONVEYOR_IN))
     {

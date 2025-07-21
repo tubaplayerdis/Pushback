@@ -4,7 +4,7 @@
 
 #ifndef ROBOT_H
 #define ROBOT_H
-#include "Controller.h"
+#include "conveyor.h"
 #include "lemlib//chassis/chassis.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/misc.h"
@@ -13,8 +13,9 @@
 //Electronics are organized under robot then its according subsystem then its according type
 namespace robot
 {
-    bool calibrateRobot();
-    void initializeTasks();
+    bool CalibrateRobot();
+    void InitializeTasks();
+    void TickSubsystems();
 
     //Handle various subsystems and controls/monitors
     namespace tasks
@@ -60,23 +61,7 @@ namespace robot
         //TODO: setup drivetrain curves and lemlib "chassis"
     }
 
-    namespace conveyor
-    {
-        void conveyorControl();
-
-        inline bool isConveyorActive = false;
-
-        namespace motors
-        {
-            pros::MotorGroup NormalGroup({-1,-1}); //Runs the intake and other system requiring the path of movement.
-            pros::MotorGroup InvertedGroup({-1,-1}); //Mostly resposible for getting the blocks into storage
-        }
-
-        namespace pneumatics
-        {
-            pros::adi::Pneumatics Splitter(-1, false); //Dictates whether balls are stowed/scored.
-        }
-    }
+    inline conveyor Conveyor = conveyor();
 
     lemlib::Chassis Chassis(drivetrain::Drivetrain, controller::ControllerLateral, controller::ControllerAngular, drivetrain::odometry::Odometry, &controller::CurveThrottle, &controller::CurveSteer);
 }
