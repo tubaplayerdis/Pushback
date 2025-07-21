@@ -9,6 +9,7 @@
 #include "pros/adi.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/misc.h"
+#include "Monitor.h"
 #include "Controller.h"
 
 //Port macros
@@ -22,17 +23,20 @@
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
-class Conveyor : public SubSystem
+class Conveyor : public Subsystem
 {
 public:
     pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
     pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
     pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
 
-    Conveyor() : SubSystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
+    Conveyor() : Subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
 
+private:
     bool Activate_Implementation() override;
     bool Deactivate_Implementation() override;
+
+public:
     void Tick() override;
 };
 

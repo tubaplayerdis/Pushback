@@ -8,9 +8,6 @@
 //Used in motor.move()
 #define FULL_POWER 127
 
-//Define Handle(exp) if((exp) == PROS_ERR) ReportError(__FILE__, __LINE__, errno)
-#define Handle(exp) if((exp) == PROS_ERR) (void)0
-
 enum EInitializationState
 {
     NONAPPLICABLE = 0,
