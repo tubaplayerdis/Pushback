@@ -7,7 +7,7 @@
 
 #include <functional>
 
-//Custom error handler macro
+//Handles PROS_ERR throwing functions using proprietary error handler
 #define Handle(exp) if((exp) == PROS_ERR) monitor::ReportError(__FUNCTION__, __LINE__, __FILE__)
 
 namespace monitor
