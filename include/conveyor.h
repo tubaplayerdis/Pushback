@@ -15,8 +15,8 @@
 //Port macros
 #define PORT_NORMAL_A -1
 #define PORT_NORMAL_B -1
-#define PORT_INVERTED_A -1
-#define PORT_INVERTED_B -1
+#define PORT_NORMAL_C -1
+#define PORT_NORMAL_D -1
 #define PORT_SPLITTER 'A'
 
 //Control macros
@@ -30,7 +30,7 @@ public:
     pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
     pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
 
-    conveyor() : subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_INVERTED_A, PORT_INVERTED_B}), Splitter(PORT_SPLITTER, false) {}
+    conveyor() : subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_NORMAL_C, PORT_NORMAL_D}), Splitter(PORT_SPLITTER, false) {}
 
 private:
     bool Activate_Implementation() override;
