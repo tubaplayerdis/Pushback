@@ -9,7 +9,9 @@
 #include "pros/adi.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/misc.h"
+#include "controller.h"
 #include "monitor.h"
+#include "odometry.h"
 
 //Port macros
 #define PORT_LEFT_A -19
@@ -23,20 +25,55 @@
 #define VERTICAL_AXIS pros::E_CONTROLLER_ANALOG_LEFT_Y
 #define HORIZONTAL_AXIS pros::E_CONTROLLER_ANALOG_RIGHT_X
 
+#define DRIVETRAIN_TRACK_WIDTH 10
+#define DRIVETRAIN_WHEEL_DIAMETER lemlib::Omniwheel::NEW_325
+#define DRIVETRAIN_RPM 450
+#define DRIVETRAIN_HORIZONTAL_DRIFT 2
+
 class drivetrain : public subsystem
 {
-    public:
+    inline static drivetrain* instance;
+public:
     pros::MotorGroup MotorsLeft;
     pros::MotorGroup MotorsRight;
+    lemlib::Drivetrain LemDrivetrain;
+    lemlib::Chassis Chassis;
 
-    drivetrain() : subsystem(), MotorsLeft({PORT_LEFT_A, PORT_LEFT_B, PORT_LEFT_C}), MotorsRight({PORT_RIGHT_A, PORT_RIGHT_B, PORT_RIGHT_C}) {}
+private:
+    drivetrain() :
+    MotorsLeft({PORT_LEFT_A, PORT_LEFT_B, PORT_LEFT_C}),
+    MotorsRight({PORT_RIGHT_A, PORT_RIGHT_B, PORT_RIGHT_C}) ,
+    LemDrivetrain(&MotorsLeft, &MotorsRight, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
+    Chassis(LemDrivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, Odometry->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
+    {
+        Chassis.calibrate();
+        Chassis.setPose(0,0,0);//Set the local location controller to zero
+    }
 
-    void Tick() override;
+protected:
+    void Tick_Implementation() override;
+
+public:
+    static drivetrain* Get();
 };
 
-inline void drivetrain::Tick()
+inline drivetrain * drivetrain::Get()
 {
+    if (!instance) instance = new drivetrain;
+    return instance;
+}
+
+inline void drivetrain::Tick_Implementation()
+{
+    if (!IsActive()) return;
+    Odometry->Tick();
+    const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
+    const int32_t turn = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
+    Chassis.arcade(throttle, turn);
     //Handle moving the drivetrain.
 }
+
+//Subsystem macro to get this subsystem
+#define Drivetrain drivetrain::Get()
 
 #endif //DRIVETRAIN_H

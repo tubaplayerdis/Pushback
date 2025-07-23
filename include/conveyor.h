@@ -11,7 +11,7 @@
 #include "pros/misc.h"
 #include "monitor.h"
 #include "controller.h"
-#include "conveyorpid.h"
+#include "cpid.h"
 
 //Port macros
 #define PORT_NORMAL_A 1
@@ -29,7 +29,7 @@
 
 class conveyor final : public subsystem
 {
-    static conveyor Singleton;
+    inline static conveyor* instance;
 public:
     cpid PID;
     pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
@@ -38,24 +38,29 @@ public:
 
 private:
     //The constructor is private so the only way to access the conveyor is via the Conveyor macro
-    conveyor() : subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_NORMAL_C, PORT_NORMAL_D}), Splitter(PORT_SPLITTER, false) {}
+    conveyor() :
+    NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}),
+    InvertedGroup({PORT_NORMAL_C, PORT_NORMAL_D}),
+    Splitter(PORT_SPLITTER, false) {}
+
+protected:
+    void Tick_Implementation() override;
 
 public:
     static conveyor* Get();
-
-    void Tick() override;
 };
 
 inline conveyor* conveyor::Get()
 {
-    return &Singleton;
+    if (!instance) instance = new conveyor();
+    return instance;
 }
 
 //The idea here is that we are trying to reach 500 rpm when the system is activated and it will auto power up to that speed. This is done to prevent overheating.
-inline void conveyor::Tick()
+inline void conveyor::Tick_Implementation()
 {
-    double normSpeed = Conveyor->NormalGroup.get_actual_velocity();
-    double invSpeed = Conveyor->InvertedGroup.get_actual_velocity();
+    double normSpeed = NormalGroup.get_actual_velocity();
+    double invSpeed = InvertedGroup.get_actual_velocity();
     float avgSpeed = static_cast<float>((normSpeed + invSpeed)/2);
     float power = PID.Compute(PID.Target - avgSpeed);
 

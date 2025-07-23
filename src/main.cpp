@@ -1,5 +1,7 @@
 #include "main.h"
 #include "robot.h"
+#include "drivetrain.h"
+#include "conveyor.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 
@@ -30,6 +32,11 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello super PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
+
+	//Initalize subsystems
+	Odometry;
+	Drivetrain;
+	Conveyor;
 }
 
 /**
@@ -81,6 +88,7 @@ void autonomous() {}
  */
 void opcontrol() {
 	while (true) {
+		Drivetrain->Tick();
 		Conveyor->Tick();
 		pros::delay(20);                               // Run for 20 ms then update
 	}

@@ -2,8 +2,8 @@
 // Created by aaron on 7/23/2025.
 //
 
-#ifndef CONVEYORPID_H
-#define CONVEYORPID_H
+#ifndef CPID_H
+#define CPID_H
 
 #include "cls/pid.h"
 
@@ -21,4 +21,4 @@ class cpid : public pid
     cpid() : pid(CKP, CKI, CKD, CTARGET, CTOLERANCE, CMAX, CMIN) {}
 };
 
-#endif //CONVEYORPID_H
+#endif //CPID_H
