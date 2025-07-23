@@ -18,18 +18,19 @@ void monitor::ReportError(const char *sFunction, int iLine, const char *sFileNam
     }
 }
 
-void monitor::PerformAllChecks()
-{
-}
-
-bool monitor::areConnectionsValid()
+bool areConnectionsValid()
 {
     return true;
 }
 
-bool monitor::areMotorsCool()
+bool areMotorsCool()
 {
     return true;
+}
+
+bool monitor::PerformAllChecks()
+{
+    return (areMotorsCool() && areConnectionsValid());
 }
 
 void monitor::registerErrorCallback(const std::function<void(const char *, int, const char *, char[256])> &lambda)

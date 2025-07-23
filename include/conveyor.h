@@ -23,6 +23,12 @@
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
+//PID Macros
+#define TARGET_RPM 500
+#define RPM_P 0
+#define RPM_I 50
+#define RPM_D 0
+
 class conveyor final : public subsystem
 {
 public:

@@ -14,11 +14,7 @@ namespace monitor
 {
     void ReportError(const char* sFunction, int iLine, const char* sFileName);
 
-    void PerformAllChecks();
-
-    //Individual Checks
-    bool areConnectionsValid();
-    bool areMotorsCool();
+    bool PerformAllChecks();
 
     void registerErrorCallback(const std::function<void(const char*, int, const char*, char[256])>& lambda);
 }
