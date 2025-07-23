@@ -61,8 +61,6 @@ namespace robot
         //TODO: setup drivetrain curves and lemlib "chassis"
     }
 
-    inline conveyor Conveyor = conveyor();
-
     lemlib::Chassis Chassis(drivetrain::Drivetrain, controller::ControllerLateral, controller::ControllerAngular, drivetrain::odometry::Odometry, &controller::CurveThrottle, &controller::CurveSteer);
 }
 

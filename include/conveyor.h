@@ -11,61 +11,63 @@
 #include "pros/misc.h"
 #include "monitor.h"
 #include "controller.h"
+#include "conveyorpid.h"
 
 //Port macros
-#define PORT_NORMAL_A -1
-#define PORT_NORMAL_B -1
-#define PORT_NORMAL_C -1
-#define PORT_NORMAL_D -1
+#define PORT_NORMAL_A 1
+#define PORT_NORMAL_B -10
+#define PORT_NORMAL_C 9
+#define PORT_NORMAL_D -2
 #define PORT_SPLITTER 'A'
 
 //Control macros
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
-//PID Macros
-#define TARGET_RPM 500
-#define RPM_P 0
-#define RPM_I 50
-#define RPM_D 0
+//Subsystem macros. mimics a global variable
+#define Conveyor conveyor::Get()
 
 class conveyor final : public subsystem
 {
+    static conveyor Singleton;
 public:
+    cpid PID;
     pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
     pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
     pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
 
+private:
+    //The constructor is private so the only way to access the conveyor is via the Conveyor macro
     conveyor() : subsystem(false, false), NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}), InvertedGroup({PORT_NORMAL_C, PORT_NORMAL_D}), Splitter(PORT_SPLITTER, false) {}
 
-private:
-    bool Activate_Implementation() override;
-    bool Deactivate_Implementation() override;
-
 public:
+    static conveyor* Get();
+
     void Tick() override;
 };
 
-inline bool conveyor::Activate_Implementation()
+inline conveyor* conveyor::Get()
 {
-    return true;
+    return &Singleton;
 }
 
-inline bool conveyor::Deactivate_Implementation()
-{
-    return true;
-}
-
+//The idea here is that we are trying to reach 500 rpm when the system is activated and it will auto power up to that speed. This is done to prevent overheating.
 inline void conveyor::Tick()
 {
+    double normSpeed = Conveyor->NormalGroup.get_actual_velocity();
+    double invSpeed = Conveyor->InvertedGroup.get_actual_velocity();
+    float avgSpeed = static_cast<float>((normSpeed + invSpeed)/2);
+    float power = PID.Compute(PID.Target - avgSpeed);
+
+
     if (Controller.get_digital(CONVEYOR_IN))
     {
-        Handle(NormalGroup.move(FULL_POWER));
-        Handle(InvertedGroup.move(-FULL_POWER));
+        Handle(NormalGroup.move(power));
+        Handle(InvertedGroup.move(-power));
     } else if (Controller.get_digital(CONVEYOR_OUT))
     {
-        Handle(NormalGroup.move(-FULL_POWER));
-        Handle(InvertedGroup.move(FULL_POWER));
+        Handle(NormalGroup.move(-power));
+        Handle(InvertedGroup.move(power));
     } else
     {
         Handle(NormalGroup.brake());

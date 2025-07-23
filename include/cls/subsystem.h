@@ -22,19 +22,19 @@ class subsystem
     protected:
     EInitializationState Initialization;
     //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true
-    subsystem(bool bNeedsInit, bool bStartActive);
+    explicit subsystem(bool bNeedsInit = false, bool bStartActive = false);
 
     public:
     virtual ~subsystem() = default;
 
-    bool IsActive() const;
-    EInitializationState GetInitializationState() const;
+    [[nodiscard]] bool IsActive() const;
+    [[nodiscard]] EInitializationState GetInitializationState() const;
 
     protected:
     //Implement this function in derived class. Called inside Activate().
-    virtual bool Activate_Implementation() = 0;
+    virtual bool Activate_Implementation();
     //Implement this function in derived class. Called inside Deactivate().
-    virtual bool Deactivate_Implementation() = 0;
+    virtual bool Deactivate_Implementation();
     //Called in subsequent loop.
     virtual void Tick() = 0;
 
@@ -57,6 +57,16 @@ inline bool subsystem::IsActive() const
 inline EInitializationState subsystem::GetInitializationState() const
 {
     return Initialization;
+}
+
+inline bool subsystem::Activate_Implementation()
+{
+    return true;
+}
+
+inline bool subsystem::Deactivate_Implementation()
+{
+    return true;
 }
 
 inline bool subsystem::Activate()
