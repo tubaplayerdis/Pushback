@@ -29,6 +29,7 @@
 #define DRIVETRAIN_WHEEL_DIAMETER lemlib::Omniwheel::NEW_325
 #define DRIVETRAIN_RPM 450
 #define DRIVETRAIN_HORIZONTAL_DRIFT 2
+#define DRIVETRAIN_MOTOR_CARTRIDGE pros::v5::MotorGears::blue
 
 class drivetrain : public subsystem
 {
@@ -41,8 +42,8 @@ public:
 
 private:
     drivetrain() :
-    MotorsLeft({PORT_LEFT_A, PORT_LEFT_B, PORT_LEFT_C}),
-    MotorsRight({PORT_RIGHT_A, PORT_RIGHT_B, PORT_RIGHT_C}) ,
+    MotorsLeft({PORT_LEFT_A, PORT_LEFT_B, PORT_LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
+    MotorsRight({PORT_RIGHT_A, PORT_RIGHT_B, PORT_RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE) ,
     LemDrivetrain(&MotorsLeft, &MotorsRight, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
     Chassis(LemDrivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, Odometry->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
     {
@@ -68,7 +69,7 @@ inline void drivetrain::Tick_Implementation()
     if (!IsActive()) return;
     Odometry->Tick();
     const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
-    const int32_t turn = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
+    const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);
     Chassis.arcade(throttle, turn);
     //Handle moving the drivetrain.
 }

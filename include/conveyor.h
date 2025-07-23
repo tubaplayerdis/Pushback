@@ -16,8 +16,8 @@
 //Port macros
 #define PORT_NORMAL_A 1
 #define PORT_NORMAL_B -10
-#define PORT_NORMAL_C 9
-#define PORT_NORMAL_D -2
+#define PORT_NORMAL_C -9
+#define PORT_NORMAL_D 2
 #define PORT_SPLITTER 'A'
 
 //Control macros

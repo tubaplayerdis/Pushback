@@ -18,8 +18,8 @@ class subsystem
 
     protected:
     EInitializationState Initialization;
-    //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true
-    explicit subsystem(bool bNeedsInit = false, bool bStartActive = false);
+    //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true. Is activated by default.
+    explicit subsystem(bool bNeedsInit = false, bool bStartActive = true);
 
     public:
     virtual ~subsystem() = default;
