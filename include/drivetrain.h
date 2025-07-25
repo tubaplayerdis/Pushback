@@ -31,7 +31,7 @@
 #define DRIVETRAIN_HORIZONTAL_DRIFT 2
 #define DRIVETRAIN_MOTOR_CARTRIDGE pros::v5::MotorGears::blue
 
-class drivetrain : public subsystem
+class drivetrain final : public subsystem
 {
     inline static drivetrain* instance;
 public:
@@ -74,7 +74,6 @@ inline void drivetrain::Tick_Implementation()
     //Handle moving the drivetrain.
 }
 
-//Subsystem macro to get this subsystem
-#define Drivetrain drivetrain::Get()
+inline drivetrain* Drivetrain = drivetrain::Get();
 
 #endif //DRIVETRAIN_H

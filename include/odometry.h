@@ -15,8 +15,6 @@
 #define ODOMETRY_DIST_FROM_CENTER_VERTICAL 0
 #define ODOMETRY_WHEEL_SIZE lemlib::Omniwheel::NEW_2
 
-#define Odometry odometry::Get()
-
 class odometry final : public subsystem
 {
     inline static odometry* instance;
@@ -54,5 +52,7 @@ inline void odometry::Tick_Implementation()
 {
     //Add debug statements or other things
 }
+
+inline odometry* Odometry = odometry::Get();
 
 #endif //ODOMETRY_H

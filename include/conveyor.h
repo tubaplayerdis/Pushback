@@ -24,9 +24,6 @@
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
-//Subsystem macros. mimics a global variable
-#define Conveyor conveyor::Get()
-
 class conveyor final : public subsystem
 {
     inline static conveyor* instance;
@@ -79,5 +76,7 @@ inline void conveyor::Tick_Implementation()
         Handle(InvertedGroup.brake());
     }
 }
+
+inline conveyor* Conveyor = conveyor::Get();
 
 #endif //CONVEYOR_H

@@ -2,7 +2,14 @@
 #include "robot.h"
 #include "drivetrain.h"
 #include "conveyor.h"
+#include "cls/auton.h"
+#include "robodash/api.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
+
+//Global variables
+rd::Selector RDSelector(AUTONS);
+rd::Image IMLogo("GBSLogo.bin", "Logo");
+rd::Image IMJimmy("Jimmy.bin", "Jimmy");
 
 
 /**
@@ -35,15 +42,8 @@ void initialize() {
 	});
 
 
-	pros::lcd::initialize(); //still have to install the selector thing
-	pros::lcd::set_text(1, "Hello super PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
-
-	//Initalize subsystems
-	Odometry;
-	Drivetrain;
-	Conveyor;
+	RDSelector.focus();
+	IMJimmy.focus();
 }
 
 /**
@@ -65,7 +65,10 @@ void disabled()
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize()
+{
+	RDSelector.focus();
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -78,7 +81,10 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous()
+{
+	RDSelector.run_auton();
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -94,6 +100,7 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	IMLogo.focus();
 	while (true) {
 		Drivetrain->Tick();
 		Conveyor->Tick();
