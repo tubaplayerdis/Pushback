@@ -1,14 +1,10 @@
 #include "main.h"
 #include "drivetrain.h"
 #include "conveyor.h"
-#include "cls/auton.h"
-#include "robodash/api.h"
+#include "titanselect/titanselect.hpp"
+//Not tested but this needs to be included to avoid the autons not showing up.
+#include "autons.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
-
-//Global variables
-rd::Selector RDSelector(auton::GetAutons());
-rd::Image IMLogo("GBSLogo.bin", "Logo");
-rd::Image IMJimmy("Jimmy.bin", "Jimmy");
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -20,11 +16,11 @@ void initialize() {
 	//Add Monitor lambda
 	monitor::registerErrorCallback([](const char*, int, const char*, const char*)
 	{
+		printf("hello!");
 		//How to handle errors
 	});
 
-	RDSelector.focus();
-	IMJimmy.focus();
+	SELECTOR->Focus();
 }
 
 /**
@@ -48,7 +44,6 @@ void disabled()
  */
 void competition_initialize()
 {
-	RDSelector.focus();
 }
 
 /**
@@ -64,7 +59,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	RDSelector.run_auton();
+	SELECTOR->RunSelectedAuton();
 }
 
 /**
@@ -81,10 +76,10 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	IMLogo.focus();
 	while (true) {
-		Drivetrain->Tick();
-		Conveyor->Tick();
+		//lv_timer_handler();
+		DRIVETRAIN->Tick();
+		CONVEYOR->Tick();
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }

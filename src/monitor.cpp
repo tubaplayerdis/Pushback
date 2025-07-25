@@ -10,6 +10,9 @@
 #include "../include/drivetrain.h"
 #include "../include/conveyor.h"
 
+#define Drivetrain drivetrain::Get()
+#define Conveyor conveyor::Get()
+
 std::vector<std::function<void(const char *, int, const char *, const char*)>> ErrorCallbackFunctions = std::vector<std::function<void(const char *, int, const char *, const char*)>>();
 
 void monitor::ReportError(const char *sFunction, int iLine, const char *sFileName)

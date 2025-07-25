@@ -7,15 +7,15 @@
 
 #include "conveyor.h"
 #include "drivetrain.h"
-#include "cls/auton.h"
+#include "titanselect/titanselect.hpp"
 
 AUTON(testing, {
-    Drivetrain->Chassis.calibrate();
-    Drivetrain->Chassis.moveToPoint(100, 100, 1000);
+    DRIVETRAIN->Chassis.calibrate();
+    DRIVETRAIN->Chassis.moveToPoint(100, 100, 1000);
 });
 
 AUTON(BlueLeft, {
-    Drivetrain->Chassis.calibrate();
+    DRIVETRAIN->Chassis.calibrate();
 });
 
 #endif //AUTONS_H
