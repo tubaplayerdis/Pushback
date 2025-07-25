@@ -28,6 +28,13 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	//Add Monitor lambda
+	monitor::registerErrorCallback([](const char*, int, const char*, const char*)
+	{
+		//How to handle errors
+	});
+
+
 	pros::lcd::initialize(); //still have to install the selector thing
 	pros::lcd::set_text(1, "Hello super PROS User!");
 

@@ -50,10 +50,9 @@ bool monitor::MotorsCool()
     return true;
 }
 
-/*
-void monitor::registerErrorCallback(const std::function<void(const char *, int, const char *, char[256])> &lambda)
+
+void monitor::registerErrorCallback(const std::function<void(const char *, int, const char *, const char *)> &lambda)
 {
     ErrorCallbackFunctions.push_back(lambda);
 }
-*/
 

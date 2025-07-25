@@ -19,7 +19,7 @@ namespace monitor
 
     bool MotorsCool();
 
-    //void registerErrorCallback(const std::function<void(const char*, int, const char*, const char*)>& lambda);
+    void registerErrorCallback(const std::function<void(const char*, int, const char*, const char*)>& lambda);
 }
 
 #endif //MONITOR_H
