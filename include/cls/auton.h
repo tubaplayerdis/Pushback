@@ -19,10 +19,7 @@ class name : public auton \
 name() : auton(#name ,[]()lambda) {} \
 } \
 
-//Get every auton in Robodash format
-#define AUTONS auton::GetAutons()
-
-//Maybe add more proprietary functions/abilities as the codebase progresses
+//I could have created a macro that adds the lambda and name to a vector and just retuned that, but I am waiting on a need for proprietary implementations, so I made a class.
 class auton
 {
     static std::vector<rd::Selector::routine_t> autons;
