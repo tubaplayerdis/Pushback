@@ -8,8 +8,8 @@
 #include <functional>
 
 #include "../liblvgl/lvgl.h"
+#include "../pros/misc.hpp"
 #include <cstring>
-#include <string>
 #include <utility>
 
 #define SELECTOR ts::selector::Get()
@@ -20,19 +20,22 @@
 #define SELECTOR_X_OFFSET 0
 #define SELECTOR_Y_OFFSET -18
 #define SELECTOR_NO_AUTON_TEXT "No Auton"
+#define SELECTOR_INVALID_AUTON_TEXT "Invalid Auton"
+#define SELECTOR_BUTTON_WIDTH 60
+#define SELECTOR_BUTTON_HEIGHT 20
+#define SELECTOR_BUTTON_TEXT "Test Selected Auton"
+#define SELECTOR_LABEL_TEXT "Selected Auton: "
 
 #define STREQL(str, str2) strcmp(str, str2) == 0
-
-#pragma region autons
 
 /// <summary>
 /// Defines an auton
 /// </summary>
 /// <param name="name">Name of the auton</param>
-/// <param name="lambda">Code of the auton in brackets {}</param>
+/// <param name="routine">Code of the auton in brackets {}</param>
 /// <returns>None</returns>
-#define AUTON(name, lambda) \
-static ts::auton name(#name, []()lambda); \
+#define AUTON(name, routine) \
+static ts::auton name(#name, []()routine); \
 
 namespace ts
 {
@@ -57,68 +60,111 @@ namespace ts
             registry::Register(this);
         }
     };
-}
 
-#pragma endregion
+    enum e_handle_callback
+    {
+        SELECTION_NONE = 0,
+        SELECTION_NO_AUTON = 1,
+        SELECTION_UNMATCHED = 2,
+    };
 
-enum e_handle_callback
-{
-    SELECTION_NONE = 0,
-    SELECTION_NO_AUTON = 1,
-    SELECTION_UNMATCHED = 2,
-};
-
-namespace ts
-{
     class selector
     {
         inline static selector* instance;
         const char* aSelectedAuton;
+        std::function<void(ts::e_handle_callback)> fCustomErrorCallbackFunction;
 
-        selector() : aSelectedAuton(nullptr) {}
+        lv_buttonmatrix_t* lButtonMatrix;
+        lv_label_t* lSelectedAutonLabel;
+        lv_button_t* lRunSelectedAutonButon;
+        lv_label_t* lRunSelectedAutonButtonLabel;
+
+        FILE* fSelectedAutonFile;
+
+        selector() :
+        aSelectedAuton(SELECTOR_NO_AUTON_TEXT),
+        lButtonMatrix(nullptr),
+        lSelectedAutonLabel(nullptr),
+        lRunSelectedAutonButon(nullptr),
+        lRunSelectedAutonButtonLabel(nullptr),
+        fCustomErrorCallbackFunction(nullptr),
+        fSelectedAutonFile(nullptr)
+        {
+            fopen("/usd/LastSelectedAuton.txt", "r");
+        }
+
+        static void SetObjectHidden(lv_obj_t* obj, bool hidden);
+
+        void WriteSavedAuton();
+        void ReadSavedAuton();
 
         public:
 
-        void Focus();
+        void RegisterCustomErrorCallback(std::function<void(ts::e_handle_callback)> callback);
+        void Create();
         void RunSelectedAuton() const;
         void RunAuton(const char* name) const;
+
         //Called when the selector has an issue
         void HandleCallback(e_handle_callback callback) const;
 
         static selector* Get();
-        static void HandleButtonMatrix(lv_event_t * e);
+        static void HandleEvents(lv_event_t * e);
     };
 
-    inline void selector::Focus()
+    inline void selector::SetObjectHidden(lv_obj_t *obj, bool hidden)
+    {
+        hidden ? lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN) : lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN);
+    }
+
+    inline void selector::WriteSavedAuton()
+    {
+        //Check file validity
+    }
+
+    inline void selector::ReadSavedAuton()
+    {
+        FILE* file = fopen("/usd/LastSelectedAuton.txt", "r");
+        //Check the file validity
+    }
+
+    inline void selector::RegisterCustomErrorCallback(std::function<void(ts::e_handle_callback)> callback)
+    {
+        fCustomErrorCallbackFunction = std::move(callback);
+    }
+
+    inline void selector::Create()
     {
         lv_obj_t * btnm = lv_buttonmatrix_create(lv_screen_active());
         static const char* btn_map[SELECTOR_ROWS * SELECTOR_COLS + SELECTOR_COLS] = {};
 
         //Normally this would go rows->cols, but button matrix likes to be difficult
-        int gIndex = 0;
+        short aIndex = 0; //Index for taking stuff out of the autons
+        short rIndex = 0; //Index for the one dimensional array of button map
         std::vector<auton*> autons = registry::autons;
         for (int i = 0; i < SELECTOR_COLS; i++)
         {
             for (int j = 0; j < SELECTOR_ROWS; j++)
             {
                 //Item will not be valid
-                if (autons.size() > gIndex)
+                if (autons.size() > aIndex)
                 {
-                    if (autons[gIndex] == nullptr)
+                    if (autons[aIndex] == nullptr)
                     {
-                        btn_map[gIndex] = "Bruh";
+                        btn_map[rIndex] = SELECTOR_INVALID_AUTON_TEXT;
                     } else
                     {
-                        btn_map[gIndex] = autons[gIndex]->AutonName;
+                        btn_map[rIndex] = autons[aIndex]->AutonName;
                     }
                 } else
                 {
-                    btn_map[gIndex] = SELECTOR_NO_AUTON_TEXT;
+                    btn_map[rIndex] = SELECTOR_NO_AUTON_TEXT;
                 }
-                gIndex++;
+                aIndex++;
+                rIndex++;
             }
-            btn_map[gIndex] = "\n";
-            gIndex++;
+            btn_map[rIndex] = "\n";
+            rIndex++;
         }
 
         lv_buttonmatrix_set_map(btnm, btn_map);
@@ -126,16 +172,33 @@ namespace ts
         lv_obj_set_size(btnm, SELECTOR_WIDTH, SELECTOR_HEIGHT);
         lv_obj_align(btnm, LV_ALIGN_CENTER, SELECTOR_X_OFFSET, SELECTOR_Y_OFFSET);
 
-        lv_obj_add_event_cb(btnm, selector::HandleButtonMatrix, LV_EVENT_VALUE_CHANGED, 0);
+        lv_obj_add_event_cb(btnm, selector::HandleEvents, LV_EVENT_VALUE_CHANGED, 0);
 
-        //Create RunButton
-        //Create Bottom label clarifying which auton is selected.
+        lButtonMatrix = (lv_buttonmatrix_t*)btnm;
+
+        lv_obj_t* btnau = lv_button_create(lv_screen_active());
+        lv_obj_set_size(btnau, SELECTOR_WIDTH, SELECTOR_HEIGHT);
+        lv_obj_t* btnlabel = lv_label_create(btnau);
+        lv_label_set_text(btnlabel, SELECTOR_BUTTON_TEXT);
+
+        lRunSelectedAutonButtonLabel = (lv_label_t*)btnlabel;
+
+        std::string labelText = SELECTOR_LABEL_TEXT;
+        labelText.append(SELECTOR_NO_AUTON_TEXT);
+        lv_obj_t* label = lv_label_create(lv_screen_active());
+        lv_label_set_text(label, labelText.c_str());
+        lSelectedAutonLabel = (lv_label_t*)label;
     }
 
     inline void selector::RunSelectedAuton() const
     {
+        if (STREQL(aSelectedAuton, SELECTOR_NO_AUTON_TEXT))
+        {
+            HandleCallback(SELECTION_NO_AUTON);
+            return;
+        }
         RunAuton(aSelectedAuton);
-        //TODO: Handle no selected auton
+        WriteSavedAuton();
     }
 
     inline void selector::RunAuton(const char *name) const
@@ -154,7 +217,7 @@ namespace ts
 
     inline void selector::HandleCallback(e_handle_callback callback) const
     {
-        //TODO: handle
+        if (fCustomErrorCallbackFunction) fCustomErrorCallbackFunction(callback);
     }
 
     inline selector * selector::Get()
@@ -164,15 +227,26 @@ namespace ts
         return instance;
     }
 
-    inline void selector::HandleButtonMatrix(lv_event_t *e)
+    inline void selector::HandleEvents(lv_event_t *e)
     {
         if (lv_event_get_code(e) != LV_EVENT_CLICKED) return;
         lv_obj_t * obj = lv_event_get_target_obj(e); // Get the button matrix object
-        uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // Get the ID of the pressed/released button
-        const char * btn_text = lv_buttonmatrix_get_button_text(obj, btn_id);
-        selector::Get()->aSelectedAuton = btn_text;
-
-        //Update selected auton text
+        if (obj == (lv_obj_t*)Get()->lRunSelectedAutonButon)
+        {
+            auto master = pros::Controller(pros::E_CONTROLLER_MASTER);
+            master.rumble("- - -");
+            //Test if rumble waits.
+            Get()->RunSelectedAuton();
+        }
+        else if (obj == (lv_obj_t*)Get()->lButtonMatrix)
+        {
+            uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // Get the ID of the pressed/released button
+            const char * btn_text = lv_buttonmatrix_get_button_text(obj, btn_id);
+            Get()->aSelectedAuton = btn_text;
+            std::string format = SELECTOR_LABEL_TEXT;
+            format.append(Get()->aSelectedAuton);
+            lv_label_set_text((lv_obj_t*)Get()->lSelectedAutonLabel, format.c_str());
+        }
     }
 }
 
