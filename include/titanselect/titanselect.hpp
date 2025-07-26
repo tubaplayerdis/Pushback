@@ -21,6 +21,8 @@
 #define SELECTOR_Y_OFFSET -18
 #define SELECTOR_NO_AUTON_TEXT "No Auton"
 
+#define STREQL(str, str2) strcmp(str, str2) == 0
+
 #pragma region autons
 
 /// <summary>
@@ -59,12 +61,18 @@ namespace ts
 
 #pragma endregion
 
+enum e_handle_callback
+{
+    SELECTION_NONE = 0,
+    SELECTION_NO_AUTON = 1,
+    SELECTION_UNMATCHED = 2,
+};
+
 namespace ts
 {
     class selector
     {
         inline static selector* instance;
-
         const char* aSelectedAuton;
 
         selector() : aSelectedAuton(nullptr) {}
@@ -72,13 +80,12 @@ namespace ts
         public:
 
         void Focus();
-
         void RunSelectedAuton() const;
-
         void RunAuton(const char* name) const;
+        //Called when the selector has an issue
+        void HandleCallback(e_handle_callback callback) const;
 
         static selector* Get();
-
         static void HandleButtonMatrix(lv_event_t * e);
     };
 
@@ -133,11 +140,21 @@ namespace ts
 
     inline void selector::RunAuton(const char *name) const
     {
+        if (STREQL(name, SELECTOR_NO_AUTON_TEXT)) return;
         for (auton* autonomous : registry::autons)
         {
-            if (strcmp(autonomous->AutonName, name) == 0) autonomous->FunctionRef();
+            if (strcmp(autonomous->AutonName, name) == 0)
+            {
+                autonomous->FunctionRef();
+                return;
+            }
         }
-        //TODO: Handle no matched auton
+        HandleCallback(SELECTION_UNMATCHED);
+    }
+
+    inline void selector::HandleCallback(e_handle_callback callback) const
+    {
+        //TODO: handle
     }
 
     inline selector * selector::Get()
@@ -149,6 +166,13 @@ namespace ts
 
     inline void selector::HandleButtonMatrix(lv_event_t *e)
     {
+        if (lv_event_get_code(e) != LV_EVENT_CLICKED) return;
+        lv_obj_t * obj = lv_event_get_target_obj(e); // Get the button matrix object
+        uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // Get the ID of the pressed/released button
+        const char * btn_text = lv_buttonmatrix_get_button_text(obj, btn_id);
+        selector::Get()->aSelectedAuton = btn_text;
+
+        //Update selected auton text
     }
 }
 
