@@ -6,11 +6,13 @@
 #define TITANSELECT_HPP
 
 #include <functional>
+#include <cstring>
+#include <utility>
+#include <fstream>
+#include <filesystem>
 
 #include "../liblvgl/lvgl.h"
 #include "../pros/misc.hpp"
-#include <cstring>
-#include <utility>
 
 #define SELECTOR ts::selector::Get()
 #define SELECTOR_HEIGHT 200
@@ -25,6 +27,7 @@
 #define SELECTOR_BUTTON_HEIGHT 20
 #define SELECTOR_BUTTON_TEXT "Test Selected Auton"
 #define SELECTOR_LABEL_TEXT "Selected Auton: "
+#define SELECTOR_AUTON_FILE_PATH "/usd/LastSelectedAuton.txt"
 
 #define STREQL(str, str2) strcmp(str, str2) == 0
 
@@ -35,7 +38,7 @@
 /// <param name="routine">Code of the auton in brackets {}</param>
 /// <returns>None</returns>
 #define AUTON(name, routine) \
-static ts::auton name(#name, []()routine); \
+inline static ts::auton name(#name, []()routine); \
 
 namespace ts
 {
@@ -61,18 +64,10 @@ namespace ts
         }
     };
 
-    enum e_handle_callback
-    {
-        SELECTION_NONE = 0,
-        SELECTION_NO_AUTON = 1,
-        SELECTION_UNMATCHED = 2,
-    };
-
     class selector
     {
         inline static selector* instance;
         const char* aSelectedAuton;
-        std::function<void(ts::e_handle_callback)> fCustomErrorCallbackFunction;
 
         lv_buttonmatrix_t* lButtonMatrix;
         lv_label_t* lSelectedAutonLabel;
@@ -87,7 +82,6 @@ namespace ts
         lSelectedAutonLabel(nullptr),
         lRunSelectedAutonButon(nullptr),
         lRunSelectedAutonButtonLabel(nullptr),
-        fCustomErrorCallbackFunction(nullptr),
         fSelectedAutonFile(nullptr)
         {
             fopen("/usd/LastSelectedAuton.txt", "r");
@@ -95,20 +89,21 @@ namespace ts
 
         static void SetObjectHidden(lv_obj_t* obj, bool hidden);
 
-        void WriteSavedAuton();
+        //Saves current auton
+        void WriteSavedAuton() const;
+        //Reads last saved auton
         void ReadSavedAuton();
 
         public:
 
-        void RegisterCustomErrorCallback(std::function<void(ts::e_handle_callback)> callback);
         void Create();
         void RunSelectedAuton() const;
         void RunAuton(const char* name) const;
-
-        //Called when the selector has an issue
-        void HandleCallback(e_handle_callback callback) const;
+        bool IsAutonSelected() const;
+        const char* GetSelectedAutonName() const;
 
         static selector* Get();
+        private:
         static void HandleEvents(lv_event_t * e);
     };
 
@@ -117,20 +112,35 @@ namespace ts
         hidden ? lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN) : lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN);
     }
 
-    inline void selector::WriteSavedAuton()
+    inline void selector::WriteSavedAuton() const
     {
+        std::ofstream file(SELECTOR_NO_AUTON_TEXT);
+        if (!file.is_open()) return;
+        file << aSelectedAuton;
         //Check file validity
     }
 
     inline void selector::ReadSavedAuton()
     {
-        FILE* file = fopen("/usd/LastSelectedAuton.txt", "r");
-        //Check the file validity
-    }
+        if (!std::filesystem::exists(SELECTOR_AUTON_FILE_PATH)) return;
+        std::ifstream AutonFile(SELECTOR_AUTON_FILE_PATH);
+        if (!AutonFile.is_open()) return;
+        std::string line;
+        if (!std::getline(AutonFile, line)) return;
+        //Check if auton exists
+        static const char* name = line.c_str();
+        if (STREQL(name, SELECTOR_NO_AUTON_TEXT)) return;
+        for (auton* autonomous : registry::autons)
+        {
+            if (strcmp(autonomous->AutonName, name) == 0)
+            {
+                aSelectedAuton = name;
+                return;
+            }
+        }
 
-    inline void selector::RegisterCustomErrorCallback(std::function<void(ts::e_handle_callback)> callback)
-    {
-        fCustomErrorCallbackFunction = std::move(callback);
+
+        //Check the file validity
     }
 
     inline void selector::Create()
@@ -194,7 +204,6 @@ namespace ts
     {
         if (STREQL(aSelectedAuton, SELECTOR_NO_AUTON_TEXT))
         {
-            HandleCallback(SELECTION_NO_AUTON);
             return;
         }
         RunAuton(aSelectedAuton);
@@ -212,12 +221,16 @@ namespace ts
                 return;
             }
         }
-        HandleCallback(SELECTION_UNMATCHED);
     }
 
-    inline void selector::HandleCallback(e_handle_callback callback) const
+    inline bool selector::IsAutonSelected() const
     {
-        if (fCustomErrorCallbackFunction) fCustomErrorCallbackFunction(callback);
+        return aSelectedAuton != nullptr && STREQL(aSelectedAuton, SELECTOR_NO_AUTON_TEXT);
+    }
+
+    inline const char * selector::GetSelectedAutonName() const
+    {
+        return aSelectedAuton;
     }
 
     inline selector * selector::Get()
