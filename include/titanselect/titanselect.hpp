@@ -48,7 +48,7 @@ namespace ts
     {
     public:
         inline static std::vector<auton*> autons;
-        inline static void Register(auton* routine)
+        static void Register(auton* routine)
         {
             autons.push_back(routine);
         }
@@ -84,7 +84,6 @@ namespace ts
         lRunSelectedAutonButtonLabel(nullptr),
         fSelectedAutonFile(nullptr)
         {
-            fopen("/usd/LastSelectedAuton.txt", "r");
         }
 
         static void SetObjectHidden(lv_obj_t* obj, bool hidden);
@@ -99,8 +98,8 @@ namespace ts
         void Create();
         void RunSelectedAuton() const;
         void RunAuton(const char* name) const;
-        bool IsAutonSelected() const;
-        const char* GetSelectedAutonName() const;
+        [[nodiscard]] bool IsAutonSelected() const;
+        [[nodiscard]] const char* GetSelectedAutonName() const;
 
         static selector* Get();
         private:
