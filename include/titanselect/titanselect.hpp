@@ -69,10 +69,10 @@ namespace ts
         inline static selector* instance;
         const char* aSelectedAuton;
 
-        lv_buttonmatrix_t* lButtonMatrix;
-        lv_label_t* lSelectedAutonLabel;
-        lv_button_t* lRunSelectedAutonButon;
-        lv_label_t* lRunSelectedAutonButtonLabel;
+        lv_obj_t* lButtonMatrix;
+        lv_obj_t* lSelectedAutonLabel;
+        lv_obj_t* lRunSelectedAutonButon;
+        lv_obj_t* lRunSelectedAutonButtonLabel;
 
         FILE* fSelectedAutonFile;
 
@@ -84,6 +84,7 @@ namespace ts
         lRunSelectedAutonButtonLabel(nullptr),
         fSelectedAutonFile(nullptr)
         {
+            //ReadSavedAuton();//Loads if an auton is present
         }
 
         static void SetObjectHidden(lv_obj_t* obj, bool hidden);
@@ -121,12 +122,11 @@ namespace ts
 
     inline void selector::ReadSavedAuton()
     {
-        if (!std::filesystem::exists(SELECTOR_AUTON_FILE_PATH)) return;
         std::ifstream AutonFile(SELECTOR_AUTON_FILE_PATH);
-        if (!AutonFile.is_open()) return;
+        if (!AutonFile) return;
         std::string line;
         if (!std::getline(AutonFile, line)) return;
-        //Check if auton exists
+        //Check if auton exists compared to ones in the binary
         static const char* name = line.c_str();
         if (STREQL(name, SELECTOR_NO_AUTON_TEXT)) return;
         for (auton* autonomous : registry::autons)
@@ -146,6 +146,7 @@ namespace ts
     {
         lv_obj_t * btnm = lv_buttonmatrix_create(lv_screen_active());
         static const char* btn_map[SELECTOR_ROWS * SELECTOR_COLS + SELECTOR_COLS] = {};
+
 
         //Normally this would go rows->cols, but button matrix likes to be difficult
         short aIndex = 0; //Index for taking stuff out of the autons
@@ -176,27 +177,30 @@ namespace ts
             rIndex++;
         }
 
+
         lv_buttonmatrix_set_map(btnm, btn_map);
 
         lv_obj_set_size(btnm, SELECTOR_WIDTH, SELECTOR_HEIGHT);
         lv_obj_align(btnm, LV_ALIGN_CENTER, SELECTOR_X_OFFSET, SELECTOR_Y_OFFSET);
 
-        lv_obj_add_event_cb(btnm, selector::HandleEvents, LV_EVENT_VALUE_CHANGED, 0);
+        lv_obj_add_event_cb(btnm, selector::HandleEvents, LV_EVENT_VALUE_CHANGED, nullptr);
 
-        lButtonMatrix = (lv_buttonmatrix_t*)btnm;
+        lButtonMatrix = btnm;
+
 
         lv_obj_t* btnau = lv_button_create(lv_screen_active());
-        lv_obj_set_size(btnau, SELECTOR_WIDTH, SELECTOR_HEIGHT);
+        lv_obj_set_size(btnau, 50, 50);
         lv_obj_t* btnlabel = lv_label_create(btnau);
         lv_label_set_text(btnlabel, SELECTOR_BUTTON_TEXT);
 
-        lRunSelectedAutonButtonLabel = (lv_label_t*)btnlabel;
+        lRunSelectedAutonButtonLabel = btnau;
+        lRunSelectedAutonButtonLabel = btnlabel;
 
         std::string labelText = SELECTOR_LABEL_TEXT;
         labelText.append(SELECTOR_NO_AUTON_TEXT);
         lv_obj_t* label = lv_label_create(lv_screen_active());
         lv_label_set_text(label, labelText.c_str());
-        lSelectedAutonLabel = (lv_label_t*)label;
+        lSelectedAutonLabel = label;
     }
 
     inline void selector::RunSelectedAuton() const
@@ -243,21 +247,21 @@ namespace ts
     {
         if (lv_event_get_code(e) != LV_EVENT_CLICKED) return;
         lv_obj_t * obj = lv_event_get_target_obj(e); // Get the button matrix object
-        if (obj == (lv_obj_t*)Get()->lRunSelectedAutonButon)
+        if (obj == Get()->lRunSelectedAutonButon)
         {
             auto master = pros::Controller(pros::E_CONTROLLER_MASTER);
             master.rumble("- - -");
             //Test if rumble waits.
             Get()->RunSelectedAuton();
         }
-        else if (obj == (lv_obj_t*)Get()->lButtonMatrix)
+        else if (obj == Get()->lButtonMatrix)
         {
             uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // Get the ID of the pressed/released button
             const char * btn_text = lv_buttonmatrix_get_button_text(obj, btn_id);
             Get()->aSelectedAuton = btn_text;
             std::string format = SELECTOR_LABEL_TEXT;
             format.append(Get()->aSelectedAuton);
-            lv_label_set_text((lv_obj_t*)Get()->lSelectedAutonLabel, format.c_str());
+            lv_label_set_text(Get()->lSelectedAutonLabel, format.c_str());
         }
     }
 }

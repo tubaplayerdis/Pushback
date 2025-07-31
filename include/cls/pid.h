@@ -6,7 +6,9 @@
 #define PID_H
 #include <cmath>
 
-//Value that is used to determine whether the power is limited or not
+
+
+//Value that is used to determine whether the power is limited or not. Max and Min are set to this by default to signify that no power limit should be in place
 #define MAX_MIN_NO_USE 0
 
 template<typename T>
