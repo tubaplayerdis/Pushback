@@ -14,19 +14,27 @@
 #include "../liblvgl/lvgl.h"
 #include "../pros/misc.hpp"
 
+//Change these to determine the number of rows and columns on the titan select selector
+//----------------------------
+#define SELECTOR_ROWS 3
+#define SELECTOR_COLS 3
+//----------------------------
+
 #define SELECTOR ts::selector::Get()
 #define SELECTOR_HEIGHT 200
 #define SELECTOR_WIDTH 475
-#define SELECTOR_ROWS 3
-#define SELECTOR_COLS 3
 #define SELECTOR_X_OFFSET 0
-#define SELECTOR_Y_OFFSET -18
+#define SELECTOR_Y_OFFSET 0
 #define SELECTOR_NO_AUTON_TEXT "No Auton"
 #define SELECTOR_INVALID_AUTON_TEXT "Invalid Auton"
-#define SELECTOR_BUTTON_WIDTH 60
-#define SELECTOR_BUTTON_HEIGHT 20
+#define SELECTOR_BUTTON_X 290
+#define SELECTOR_BUTTON_Y 5
+#define SELECTOR_BUTTON_WIDTH 180
+#define SELECTOR_BUTTON_HEIGHT 30
 #define SELECTOR_BUTTON_TEXT "Test Selected Auton"
-#define SELECTOR_LABEL_TEXT "Selected Auton: "
+#define SELECTOR_LABEL_TEXT "Selected: "
+#define SELECTOR_LABEL_X 10
+#define SELECTOR_LABEL_Y 6
 #define SELECTOR_AUTON_FILE_PATH "/usd/LastSelectedAuton.txt"
 
 #define STREQL(str, str2) strcmp(str, str2) == 0
@@ -64,7 +72,41 @@ namespace ts
         }
     };
 
-    class selector
+    class page
+    {
+        bool bIsEnabled;
+        const char* cName;
+
+        protected:
+
+        explicit page(bool bEnableByDefault, const char* name) : bIsEnabled(bEnableByDefault), cName(name)
+        {
+            //TODO: Add this page to the page selector
+        }
+        virtual void OnSelected_Implementation() = 0;
+        virtual void OnUnselected_Implementation() = 0;
+        public:
+        virtual ~page() = default;
+
+        virtual void Create() = 0;
+        void Select();
+        void Unselect();
+    };
+
+    inline void page::Select()
+    {
+        //TODO: Make the page active with the page selector which still has to be done
+        bIsEnabled = true;
+        OnSelected_Implementation();
+    }
+
+    inline void page::Unselect()
+    {
+        bIsEnabled = false;
+        OnUnselected_Implementation();
+    }
+
+    class selector : public page
     {
         inline static selector* instance;
         const char* aSelectedAuton;
@@ -77,6 +119,7 @@ namespace ts
         FILE* fSelectedAutonFile;
 
         selector() :
+        page(true, "selector"),
         aSelectedAuton(SELECTOR_NO_AUTON_TEXT),
         lButtonMatrix(nullptr),
         lSelectedAutonLabel(nullptr),
@@ -84,7 +127,7 @@ namespace ts
         lRunSelectedAutonButtonLabel(nullptr),
         fSelectedAutonFile(nullptr)
         {
-            //ReadSavedAuton();//Loads if an auton is present
+            ReadSavedAuton();//Loads if an auton is present
         }
 
         static void SetObjectHidden(lv_obj_t* obj, bool hidden);
@@ -94,9 +137,13 @@ namespace ts
         //Reads last saved auton
         void ReadSavedAuton();
 
+        protected:
+        void OnSelected_Implementation() override;
+        void OnUnselected_Implementation() override;
+
         public:
 
-        void Create();
+        void Create() override;
         void RunSelectedAuton() const;
         void RunAuton(const char* name) const;
         [[nodiscard]] bool IsAutonSelected() const;
@@ -142,10 +189,19 @@ namespace ts
         //Check the file validity
     }
 
+    inline void selector::OnSelected_Implementation()
+    {
+        //TODO: Toggle the visibility of all objects
+    }
+
+    inline void selector::OnUnselected_Implementation()
+    {
+    }
+
     inline void selector::Create()
     {
         lv_obj_t * btnm = lv_buttonmatrix_create(lv_screen_active());
-        static const char* btn_map[SELECTOR_ROWS * SELECTOR_COLS + SELECTOR_COLS] = {};
+        static const char* btn_map[SELECTOR_ROWS * SELECTOR_COLS + SELECTOR_COLS + 1] = {};
 
 
         //Normally this would go rows->cols, but button matrix likes to be difficult
@@ -176,12 +232,13 @@ namespace ts
             btn_map[rIndex] = "\n";
             rIndex++;
         }
+        btn_map[rIndex] = "";
 
 
         lv_buttonmatrix_set_map(btnm, btn_map);
 
         lv_obj_set_size(btnm, SELECTOR_WIDTH, SELECTOR_HEIGHT);
-        lv_obj_align(btnm, LV_ALIGN_CENTER, SELECTOR_X_OFFSET, SELECTOR_Y_OFFSET);
+        lv_obj_align(btnm, LV_ALIGN_BOTTOM_MID, SELECTOR_X_OFFSET, SELECTOR_Y_OFFSET);
 
         lv_obj_add_event_cb(btnm, selector::HandleEvents, LV_EVENT_VALUE_CHANGED, nullptr);
 
@@ -189,9 +246,11 @@ namespace ts
 
 
         lv_obj_t* btnau = lv_button_create(lv_screen_active());
-        lv_obj_set_size(btnau, 50, 50);
+        lv_obj_set_size(btnau, SELECTOR_BUTTON_WIDTH, SELECTOR_BUTTON_HEIGHT);
+        lv_obj_set_pos(btnau, SELECTOR_BUTTON_X, SELECTOR_BUTTON_Y);
         lv_obj_t* btnlabel = lv_label_create(btnau);
         lv_label_set_text(btnlabel, SELECTOR_BUTTON_TEXT);
+        lv_obj_align(btnlabel, LV_ALIGN_CENTER, 0, 0);
 
         lRunSelectedAutonButtonLabel = btnau;
         lRunSelectedAutonButtonLabel = btnlabel;
@@ -200,7 +259,10 @@ namespace ts
         labelText.append(SELECTOR_NO_AUTON_TEXT);
         lv_obj_t* label = lv_label_create(lv_screen_active());
         lv_label_set_text(label, labelText.c_str());
+        lv_obj_set_style_text_font(label, &lv_font_montserrat_24, 0);
+        lv_obj_set_pos(label, SELECTOR_LABEL_X, SELECTOR_LABEL_Y);
         lSelectedAutonLabel = label;
+
     }
 
     inline void selector::RunSelectedAuton() const
@@ -245,7 +307,7 @@ namespace ts
 
     inline void selector::HandleEvents(lv_event_t *e)
     {
-        if (lv_event_get_code(e) != LV_EVENT_CLICKED) return;
+        //There would, be a checking of event type here, but since it is only called on presses it does not matter.
         lv_obj_t * obj = lv_event_get_target_obj(e); // Get the button matrix object
         if (obj == Get()->lRunSelectedAutonButon)
         {
