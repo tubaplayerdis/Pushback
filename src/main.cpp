@@ -20,7 +20,7 @@ void initialize() {
 		//How to handle errors
 	});
 
-	SELECTOR->Create();
+	SELECTOR_INIT();
 }
 
 /**
@@ -44,7 +44,7 @@ void disabled()
  */
 void competition_initialize()
 {
-	if (!SELECTOR->IsAutonSelected())
+	if (!SELECTOR_IS_AUTON_SELECTED())
 	{
 		//Handle no selected auton
 	}
@@ -63,7 +63,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	SELECTOR->RunSelectedAuton();
+	SELECTOR_RUN_SELECTED();
 }
 
 /**

@@ -5,22 +5,71 @@
 #ifndef TITANSELECT_HPP
 #define TITANSELECT_HPP
 
+//TITAN-SELECT API Macros
+
+/// @brief Defines an auton and automatically adds it to the selector
+/// @param name Name of the auton
+/// @param routine of auton in curly braces {}.
+/// Example - AUTON(BlueLeft, {MoveRobot();});
+#define AUTON(name, routine) inline static ts::auton name(#name, []()routine)
+
+/// @brief Defines an auton and automatically adds it to the selector
+/// @param name Name of the auton
+/// @param function cpp function that matcches the <void()> function signature. Can be a lambda or raw function pointer
+/// EXAMPLE AUTON_RAW(BlueRight, MyAutonFunction);
+#define AUTON_RAW(name, function) inline static ts::auton name(#name, function)
+
+/// @brief Initializes the selector and displays it on the screen.
+#define SELECTOR_INIT() ts::selector::Get()->Create();
+
+/// @brief Runs the selected auton.
+#define SELECTOR_RUN_SELECTED() ts::selector::Get()->RunSelectedAuton()
+
+/// @brief Runs the auton of the specified name.
+/// @param auton_name Name of the auton to run.
+#define SELECTOR_RUN_AUTON(auton_name) ts::selector::Get()->RunAuton(auton_name)
+
+/// @brief Whether an auton is selected.
+/// @return A boolean representing whether an auton is selected.
+#define SELECTOR_IS_AUTON_SELECTED() ts::selector::Get()->IsAutonSelected()
+
+/// @brief The name of the currently selected auton
+/// @retval No_Auton No auton has been selected, actually returns "No Auton".
+/// @retval any The name of the current selected auton.
+#define SELECTOR_SELECTED_AUTON_NAME() ts::selector::Get()->SelectedAutonName()
+
+/// @brief Sets the visibility of the selector. Useful for incorporating your own displays.
+/// @param visible Visibility toggle the selector should be set too. false is hidden and true is visible.
+#define SELECTOR_SET_VISIBILITY(visible) ts::selector::Get()->SetVisibility(visible)
+
+/// @brief Get the active selector object
+/// @retval selector The active selector object.
+#define SELECTOR_GET_SELECTOR() ts::selector::Get()
+
+/// @brief Destroys the selectors object in memory. Use with caution.
+#define SELECTOR_DESTROY() ts::selector::Destroy()
+
+//TITAN-SELECT SETTINGS.
+///@brief The number of rows the auton selector has.
+#define SELECTOR_ROWS 3
+///@brief The number of columns the auton selector has.
+#define SELECTOR_COLS 3
+
+
+
+
+
+
+//IMPLEMENTATION BELOW! DO NOT CHANGE!
+
 #include <functional>
 #include <cstring>
 #include <utility>
 #include <fstream>
 #include <filesystem>
-
 #include "../liblvgl/lvgl.h"
 #include "../pros/misc.hpp"
 
-//Change these to determine the number of rows and columns on the titan select selector
-//----------------------------
-#define SELECTOR_ROWS 3
-#define SELECTOR_COLS 3
-//----------------------------
-
-#define SELECTOR ts::selector::Get()
 #define SELECTOR_HEIGHT 200
 #define SELECTOR_WIDTH 475
 #define SELECTOR_X_OFFSET 0
@@ -54,12 +103,12 @@ namespace ts
 
     class registry
     {
-    public:
-        inline static std::vector<auton*> autons;
-        static void Register(auton* routine)
-        {
-            autons.push_back(routine);
-        }
+        public:
+            inline static std::vector<auton*> autons;
+            static void Register(auton* routine)
+            {
+                autons.push_back(routine);
+            }
     };
 
     struct auton
@@ -72,41 +121,7 @@ namespace ts
         }
     };
 
-    class page
-    {
-        bool bIsEnabled;
-        const char* cName;
-
-        protected:
-
-        explicit page(bool bEnableByDefault, const char* name) : bIsEnabled(bEnableByDefault), cName(name)
-        {
-            //TODO: Add this page to the page selector
-        }
-        virtual void OnSelected_Implementation() = 0;
-        virtual void OnUnselected_Implementation() = 0;
-        public:
-        virtual ~page() = default;
-
-        virtual void Create() = 0;
-        void Select();
-        void Unselect();
-    };
-
-    inline void page::Select()
-    {
-        //TODO: Make the page active with the page selector which still has to be done
-        bIsEnabled = true;
-        OnSelected_Implementation();
-    }
-
-    inline void page::Unselect()
-    {
-        bIsEnabled = false;
-        OnUnselected_Implementation();
-    }
-
-    class selector : public page
+    class selector
     {
         inline static selector* instance;
         const char* aSelectedAuton;
@@ -116,41 +131,35 @@ namespace ts
         lv_obj_t* lRunSelectedAutonButon;
         lv_obj_t* lRunSelectedAutonButtonLabel;
 
-        FILE* fSelectedAutonFile;
-
         selector() :
-        page(true, "selector"),
         aSelectedAuton(SELECTOR_NO_AUTON_TEXT),
         lButtonMatrix(nullptr),
         lSelectedAutonLabel(nullptr),
         lRunSelectedAutonButon(nullptr),
-        lRunSelectedAutonButtonLabel(nullptr),
-        fSelectedAutonFile(nullptr)
+        lRunSelectedAutonButtonLabel(nullptr)
         {
             ReadSavedAuton();//Loads if an auton is present
         }
 
         static void SetObjectHidden(lv_obj_t* obj, bool hidden);
+        static void Destroy(); //Destroys and deletes the current instance
 
-        //Saves current auton
         void WriteSavedAuton() const;
-        //Reads last saved auton
-        void ReadSavedAuton();
-
-        protected:
-        void OnSelected_Implementation() override;
-        void OnUnselected_Implementation() override;
+        void ReadSavedAuton();//Will also set aSelectedAuton
+        ~selector(); //Explicit deconstructor for lvgl objects
 
         public:
 
-        void Create() override;
+        void Create();
         void RunSelectedAuton() const;
         void RunAuton(const char* name) const;
-        [[nodiscard]] bool IsAutonSelected() const;
-        [[nodiscard]] const char* GetSelectedAutonName() const;
-
+        void SetVisibility(bool visible) const;
+        bool IsAutonSelected() const;
+        const char* GetSelectedAutonName() const;
         static selector* Get();
+
         private:
+
         static void HandleEvents(lv_event_t * e);
     };
 
@@ -159,12 +168,18 @@ namespace ts
         hidden ? lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN) : lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN);
     }
 
+    inline void selector::Destroy()
+    {
+        delete instance;
+        instance = nullptr;
+    }
+
     inline void selector::WriteSavedAuton() const
     {
         std::ofstream file(SELECTOR_NO_AUTON_TEXT);
         if (!file.is_open()) return;
         file << aSelectedAuton;
-        //Check file validity
+        file.close();
     }
 
     inline void selector::ReadSavedAuton()
@@ -176,26 +191,24 @@ namespace ts
         //Check if auton exists compared to ones in the binary
         static const char* name = line.c_str();
         if (STREQL(name, SELECTOR_NO_AUTON_TEXT)) return;
+        aSelectedAuton = SELECTOR_NO_AUTON_TEXT;
         for (auton* autonomous : registry::autons)
         {
             if (strcmp(autonomous->AutonName, name) == 0)
             {
                 aSelectedAuton = name;
-                return;
+                break;
             }
         }
-
-
-        //Check the file validity
+        AutonFile.close();
     }
 
-    inline void selector::OnSelected_Implementation()
+    inline selector::~selector()
     {
-        //TODO: Toggle the visibility of all objects
-    }
-
-    inline void selector::OnUnselected_Implementation()
-    {
+        lv_obj_delete(lButtonMatrix);
+        lv_obj_delete(lSelectedAutonLabel);
+        lv_obj_delete(lRunSelectedAutonButon);
+        lv_obj_delete(lRunSelectedAutonButtonLabel);
     }
 
     inline void selector::Create()
@@ -272,7 +285,6 @@ namespace ts
             return;
         }
         RunAuton(aSelectedAuton);
-        WriteSavedAuton();
     }
 
     inline void selector::RunAuton(const char *name) const
@@ -286,6 +298,14 @@ namespace ts
                 return;
             }
         }
+    }
+
+    inline void selector::SetVisibility(bool visible) const
+    {
+        SetObjectHidden(lButtonMatrix, visible);
+        SetObjectHidden(lSelectedAutonLabel, visible);
+        SetObjectHidden(lRunSelectedAutonButon, visible);
+        SetObjectHidden(lRunSelectedAutonButtonLabel, visible);
     }
 
     inline bool selector::IsAutonSelected() const
@@ -324,6 +344,7 @@ namespace ts
             std::string format = SELECTOR_LABEL_TEXT;
             format.append(Get()->aSelectedAuton);
             lv_label_set_text(Get()->lSelectedAutonLabel, format.c_str());
+            Get()->WriteSavedAuton(); //Write the new selected auton
         }
     }
 }

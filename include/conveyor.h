@@ -16,13 +16,16 @@
 //Port macros
 #define PORT_NORMAL_A 1
 #define PORT_NORMAL_B -10
-#define PORT_NORMAL_C -9
+#define PORT_NORMAL_C (-9)
 #define PORT_NORMAL_D 2
 #define PORT_SPLITTER 'A'
 
 //Control macros
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
+
+#define SCORE_TOP pros::E_CONTROLLER_DIGITAL_L2
+#define SCORE_BOTTOM pros::E_CONTROLLER_DIGITAL_R2
 
 #define CONVEYOR conveyor::Get()
 
@@ -32,15 +35,16 @@ class conveyor final : public subsystem
 public:
     cpid PID;
     pros::MotorGroup NormalGroup; //Runs the intake and other system requiring the path of movement.
-    pros::MotorGroup InvertedGroup; //Mostly responsible for getting the blocks into storage
+    pros::MotorGroup InvertedGroup; //Scoring Flexwheels
     pros::adi::Pneumatics Splitter; //Dictates whether balls are stowed/scored.
+    bool Inverted;
 
 private:
     //The constructor is private so the only way to access the conveyor is via the Conveyor macro
     conveyor() :
-    NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B}),
-    InvertedGroup({PORT_NORMAL_C, PORT_NORMAL_D}),
-    Splitter(PORT_SPLITTER, false) {}
+    NormalGroup({PORT_NORMAL_A, PORT_NORMAL_B, PORT_NORMAL_D}),
+    InvertedGroup({PORT_NORMAL_C}),
+    Splitter(PORT_SPLITTER, false), Inverted(false) {}
 
 protected:
     void Tick_Implementation() override;
@@ -67,15 +71,36 @@ inline void conveyor::Tick_Implementation()
     if (Controller.get_digital(CONVEYOR_IN))
     {
         Handle(NormalGroup.move(power));
-        Handle(InvertedGroup.move(-power));
+        //Handle(InvertedGroup.move(-power));
     } else if (Controller.get_digital(CONVEYOR_OUT))
     {
         Handle(NormalGroup.move(-power));
-        Handle(InvertedGroup.move(power));
+        //Handle(InvertedGroup.move(power));
     } else
     {
         Handle(NormalGroup.brake());
+        //Handle(InvertedGroup.brake());
+    }
+
+    if (Controller.get_digital(SCORE_TOP))
+    {
+        Handle(InvertedGroup.move(power));
+        //Handle(InvertedGroup.move(-power));
+    } else if (Controller.get_digital(SCORE_BOTTOM))
+    {
+        Handle(InvertedGroup.move(-power));
+        //Handle(InvertedGroup.move(power));
+    } else
+    {
         Handle(InvertedGroup.brake());
+        //Handle(InvertedGroup.brake());
+    }
+
+    // mogo
+    if (Controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+    {
+        Inverted = !Inverted;
+        Handle(Splitter.set_value(Inverted));
     }
 }
 
