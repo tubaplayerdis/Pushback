@@ -1,11 +1,25 @@
-//
-// Created by aaron on 7/25/2025.
-//
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Copyright (c) Aaron Wilk 2025, All rights reserved.                     */
+/*                                                                            */
+/*    Module:     titanselect.hpp                                             */
+/*    Author:     Aaron Wilk                                                  */
+/*    Created:    25 July 2025                                                */
+/*                                                                            */
+/*    Revisions:  V0.1                                                        */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
 
 #ifndef TITANSELECT_HPP
 #define TITANSELECT_HPP
 
-//TITAN-SELECT API Macros
+//TITANSELECT SETTINGS.
+///@brief The number of rows the auton selector has.
+#define SELECTOR_ROWS 3
+///@brief The number of columns the auton selector has.
+#define SELECTOR_COLS 3
+
+//TITANSELECT API Macros
 
 /// @brief Defines an auton and automatically adds it to the selector
 /// @param name Name of the auton
@@ -15,7 +29,7 @@
 
 /// @brief Defines an auton and automatically adds it to the selector
 /// @param name Name of the auton
-/// @param function cpp function that matcches the <void()> function signature. Can be a lambda or raw function pointer
+/// @param function cpp function that matches the void() function signature. Can be a lambda or raw function pointer
 /// EXAMPLE AUTON_RAW(BlueRight, MyAutonFunction);
 #define AUTON_RAW(name, function) inline static ts::auton name(#name, function)
 
@@ -49,12 +63,6 @@
 /// @brief Destroys the selectors object in memory. Use with caution.
 #define SELECTOR_DESTROY() ts::selector::Destroy()
 
-//TITAN-SELECT SETTINGS.
-///@brief The number of rows the auton selector has.
-#define SELECTOR_ROWS 3
-///@brief The number of columns the auton selector has.
-#define SELECTOR_COLS 3
-
 
 //TODO: MAKE Add visual button border to make the selected auton more obvious
 
@@ -87,15 +95,6 @@
 #define SELECTOR_AUTON_FILE_PATH "/usd/LastSelectedAuton.txt"
 
 #define STREQL(str, str2) strcmp(str, str2) == 0
-
-/// <summary>
-/// Defines an auton
-/// </summary>
-/// <param name="name">Name of the auton</param>
-/// <param name="routine">Code of the auton in brackets {}</param>
-/// <returns>None</returns>
-#define AUTON(name, routine) \
-inline static ts::auton name(#name, []()routine); \
 
 namespace ts
 {
