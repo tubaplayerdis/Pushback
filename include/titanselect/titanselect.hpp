@@ -56,7 +56,7 @@
 #define SELECTOR_COLS 3
 
 
-
+//TODO: MAKE Add visual button border to make the selected auton more obvious
 
 
 
@@ -146,6 +146,7 @@ namespace ts
 
         void WriteSavedAuton() const;
         void ReadSavedAuton();//Will also set aSelectedAuton
+        void SetVisuallySelectedAuton(const char* name) const;
         ~selector(); //Explicit deconstructor for lvgl objects
 
         public:
@@ -201,6 +202,11 @@ namespace ts
             }
         }
         AutonFile.close();
+    }
+
+    inline void selector::SetVisuallySelectedAuton(const char *name) const
+    {
+        //TODO implement
     }
 
     inline selector::~selector()
