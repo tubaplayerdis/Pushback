@@ -205,7 +205,7 @@ namespace ts
 
     inline void selector::SetVisuallySelectedAuton(const char *name) const
     {
-        //TODO implement
+        //TODO: implement the visual border on the button
     }
 
     inline selector::~selector()
