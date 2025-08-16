@@ -64,9 +64,6 @@
 #define SELECTOR_DESTROY() ts::selector::Destroy()
 
 
-//TODO: MAKE Add visual button border to make the selected auton more obvious
-
-
 
 //IMPLEMENTATION BELOW! DO NOT CHANGE!
 
@@ -145,7 +142,6 @@ namespace ts
 
         void WriteSavedAuton() const;
         void ReadSavedAuton();//Will also set aSelectedAuton
-        void SetVisuallySelectedAuton(const char* name) const;
         ~selector(); //Explicit deconstructor for lvgl objects
 
         public:
@@ -201,11 +197,6 @@ namespace ts
             }
         }
         AutonFile.close();
-    }
-
-    inline void selector::SetVisuallySelectedAuton(const char *name) const
-    {
-        //TODO: implement the visual border on the button
     }
 
     inline selector::~selector()
@@ -274,7 +265,7 @@ namespace ts
         lRunSelectedAutonButtonLabel = btnlabel;
 
         std::string labelText = SELECTOR_LABEL_TEXT;
-        labelText.append(SELECTOR_NO_AUTON_TEXT);
+        labelText.append(aSelectedAuton);
         lv_obj_t* label = lv_label_create(lv_screen_active());
         lv_label_set_text(label, labelText.c_str());
         lv_obj_set_style_text_font(label, &lv_font_montserrat_24, 0);
