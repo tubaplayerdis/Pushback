@@ -3,7 +3,7 @@
 #define FULL_POWER 127
 
 //Private Singleton
-conveyor* instance;
+std::unique_ptr<conveyor> instance;
 
 void conveyor::Tick_Implementation()
 {
@@ -22,6 +22,6 @@ void conveyor::Tick_Implementation()
 
 conveyor *conveyor::Get()
 {
-    if (!instance) instance = new conveyor();
-    return instance;
+    if (!instance) instance = std::make_unique<conveyor>();
+    return instance.get();
 }

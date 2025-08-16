@@ -39,15 +39,9 @@ bool monitor::MotorsCool()
     }
 
     //Conveyor normal group
-    for (int i = 0; i < Conveyor->NormalGroup.size(); i++)
+    for (int i = 0; i < Conveyor->ConveyorGroup.size(); i++)
     {
-        if (Conveyor->NormalGroup.get_temperature(i) >= MOTOR_TEMPERATURE_OVERHEAT_THRESHOLD_C) return false;
-    }
-
-    //Conveyor inverted group
-    for (int i = 0; i < Conveyor->InvertedGroup.size(); i++)
-    {
-        if (Conveyor->InvertedGroup.get_temperature(i) >= MOTOR_TEMPERATURE_OVERHEAT_THRESHOLD_C) return false;
+        if (Conveyor->ConveyorGroup.get_temperature(i) >= MOTOR_TEMPERATURE_OVERHEAT_THRESHOLD_C) return false;
     }
 
     return true;

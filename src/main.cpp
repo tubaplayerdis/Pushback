@@ -2,8 +2,10 @@
 #include "drivetrain.h"
 #include "conveyor.h"
 #include "titanselect/titanselect.hpp"
+#include "lua/lua.hpp"
 //Not tested but this needs to be included to avoid the autons not showing up.
 #include "autons.h"
+#include "lua_manager.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 /**
@@ -21,6 +23,8 @@ void initialize() {
 	});
 
 	SELECTOR_INIT();
+
+	lua_manager::Get();//Force initialization
 }
 
 /**
