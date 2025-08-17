@@ -17,6 +17,10 @@ public:
     static lua_manager* Get();
 };
 
-
+namespace lua_functions
+{
+    void register_functions();
+    int l_MoveConveyorFor(lua_State* L);
+}
 
 #endif //LUA_MANAGER_H
