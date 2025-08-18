@@ -35,8 +35,7 @@ public:
     pros::adi::Pneumatics Splitter; //Dictates whether balls are scored/thrown.
     bool Inverted;
 
-private:
-    //The constructor is private so the only way to access the conveyor is via the Conveyor macro
+public:
     conveyor() :
     ConveyorGroup({PORT_NORMAL_A, PORT_NORMAL_B}),
     SplitterOptical(PORT_SPLITTER_OPTICAL),
