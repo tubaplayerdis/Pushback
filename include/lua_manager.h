@@ -10,17 +10,31 @@
 #include "lemlib/asset.hpp"
 #include "lua/lua.hpp"
 
+//Used for lua files. use an _ for a dot
 #define LUA_ASSET(x) \
     ASSET(x); \
     static asset_wrapper wrapper_##x = asset_wrapper(x, #x);
 
+//Define lua compatible functions
+#define LUA_FUNCTION(name, lambda) \
+    static lua_function name(#name , lambda);
+
+struct lua_function;
 struct asset_wrapper;
 
 class lua_manager
 {
     static std::vector<asset_wrapper*> assets;
+    static std::vector<lua_function*> function_pointers;
     lua_State *LuaState;
+
 public:
+
+    static void RegisterFunction(lua_function* pointer)
+    {
+        function_pointers.push_back(pointer);
+    }
+
     static void RegisterAsset(asset_wrapper *asset)
     {
         assets.push_back(asset);
@@ -29,6 +43,7 @@ public:
     lua_manager();
     ~lua_manager();
 
+    void RegisterFunctions();
     void RunFile(std::string file);
 
     static lua_State* GetLuaState();
@@ -44,15 +59,15 @@ struct asset_wrapper
         lua_manager::RegisterAsset(this);
     }
 };
-/// Lua function documentation is representative of the lua function.
-namespace lua_functions
+
+struct lua_function
 {
-    void register_functions();
+    int(*function_pointer)(lua_State *);
+    const char* name;
 
-    /// Moves the conveyor at full power for x milliseconds
-    /// @param x How long to move the conveyor, in milliseconds
-    /// @return None.
-    int l_MoveConveyorFor(lua_State* L);
-}
-
+    explicit lua_function(const char* name, int(*_pointer)(lua_State *)) : name(name), function_pointer(_pointer)
+    {
+        lua_manager::RegisterFunction(this);
+    }
+};
 #endif //LUA_MANAGER_H
