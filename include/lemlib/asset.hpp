@@ -5,19 +5,14 @@
 #ifndef _ASSET_H_
 #define _ASSET_H_
 
-extern "C" {
-
-typedef struct __attribute__((__packed__)) _asset {
+struct asset {
         uint8_t* buf;
         size_t size;
-} asset;
-}
+};
 
-#define ASSET(x)                                                                                                       \
-    extern "C" {                                                                                                       \
+#define ASSET(x)                                                                                                                                                                                                          \
     extern uint8_t _binary_static_##x##_start[], _binary_static_##x##_size[];                                          \
     static asset x = {_binary_static_##x##_start, (size_t)_binary_static_##x##_size};                                  \
-    }
 
 #define ASSET_LIB(x)                                                                                                   \
     extern "C" {                                                                                                       \
