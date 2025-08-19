@@ -10,12 +10,12 @@
 #include "lemlib/asset.hpp"
 #include "lua/lua.hpp"
 
-//Used for lua files. use an _ for a dot
+//Used for lua files. use an _ when a dot is present in the file name.
 #define LUA_ASSET(x) \
     ASSET(x); \
     static asset_wrapper wrapper_##x = asset_wrapper(x, #x);
 
-//Define lua compatible functions
+//Define lua compatible functions. lambda does not have to be a lambda it can be a function pointer that matches the int(*)(lua_State *);
 #define LUA_FUNCTION(name, lambda) \
     static lua_function name(#name , lambda);
 
