@@ -4,6 +4,7 @@
 #include "../include/lua_manager.h"
 #include "../include/conveyor.h"
 #include "../include/lemlib/asset.hpp"
+#include "../include/lua_functions.h"
 #include <vector>
 #include <memory>
 
@@ -15,22 +16,6 @@ std::vector<lua_function*> lua_manager::function_pointers = std::vector<lua_func
 
 //Define LUA assets, ie files.
 LUA_ASSET(testing_lua)
-
-LUA_FUNCTION(MoveConveyorFor, [](lua_State* L) -> int
-{
-    int miliseconds = luaL_checkinteger(L, 1);
-    Handle(conveyor::Get()->ConveyorGroup.move(127));
-    pros::delay(miliseconds);
-    Handle(conveyor::Get()->ConveyorGroup.brake());
-    return 0;
-});
-
-LUA_FUNCTION(TurnTo, [](lua_State* L) -> int
-{
-    double heading = luaL_checknumber(L, 1);
-    drivetrain::Get()->Chassis.turnToHeading(heading, 1000);
-    return 0;
-});
 
 lua_manager::lua_manager()
 {
