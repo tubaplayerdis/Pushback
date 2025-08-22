@@ -6,12 +6,10 @@
 #define DRIVETRAIN_H
 
 #include "cls/subsystem.h"
-#include "pros/adi.hpp"
 #include "pros/motor_group.hpp"
-#include "pros/misc.h"
 #include "controller.h"
-#include "monitor.h"
 #include "odometry.h"
+
 
 //Port macros
 #define PORT_LEFT_A -19
@@ -35,7 +33,6 @@
 
 class drivetrain final : public subsystem
 {
-    inline static drivetrain* instance;
 public:
     pros::MotorGroup MotorsLeft;
     pros::MotorGroup MotorsRight;
@@ -59,21 +56,5 @@ protected:
 public:
     static drivetrain* Get();
 };
-
-inline drivetrain * drivetrain::Get()
-{
-    if (!instance) instance = new drivetrain;
-    return instance;
-}
-
-inline void drivetrain::Tick_Implementation()
-{
-    if (!IsActive()) return;
-    ODOMETRY->Tick();
-    const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
-    const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);
-    Chassis.arcade(throttle, turn);
-    //Handle moving the drivetrain.
-}
 
 #endif //DRIVETRAIN_H
