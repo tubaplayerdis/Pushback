@@ -35,7 +35,6 @@
                     "include/lemlib/logger/buffer.hpp",
                     "include/fmt/LICENSE",
                     "include/lemlib/api.hpp",
-                    "static/testing.lua",
                     "include/lemlib/logger/stdout.hpp",
                     "include/lemlib/exitcondition.hpp",
                     "firmware/hot-cold-asset.mk",
