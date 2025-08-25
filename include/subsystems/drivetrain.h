@@ -5,9 +5,9 @@
 #ifndef DRIVETRAIN_H
 #define DRIVETRAIN_H
 
-#include "cls/subsystem.h"
-#include "pros/motor_group.hpp"
-#include "controller.h"
+#include "../cls/subsystem.h"
+#include "../pros/motor_group.hpp"
+#include "../controller.h"
 #include "odometry.h"
 
 

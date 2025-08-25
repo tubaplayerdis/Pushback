@@ -41,49 +41,4 @@ class subsystem
     bool Deactivate();
 };
 
-inline subsystem::subsystem(bool bNeedsInit, bool bStartActive)
-{
-    bNeedsInit ? Initialization = EInitializationState::UNINITIALIZED : Initialization = EInitializationState::NONAPPLICABLE;
-    isActive = bStartActive;
-}
-
-inline bool subsystem::IsActive() const
-{
-    return isActive;
-}
-
-inline EInitializationState subsystem::GetInitializationState() const
-{
-    return Initialization;
-}
-
-inline bool subsystem::Activate_Implementation()
-{
-    return true;
-}
-
-inline bool subsystem::Deactivate_Implementation()
-{
-    return true;
-}
-
-inline bool subsystem::Activate()
-{
-    bool bResult = Activate_Implementation();
-    isActive = true;
-    return bResult;
-}
-
-inline bool subsystem::Deactivate()
-{
-    bool bResult = Deactivate_Implementation();
-    isActive = false;
-    return bResult;
-}
-
-inline void subsystem::Tick()
-{
-    if (IsActive()) Tick_Implementation();
-}
-
 #endif //SUBSYSTEM_H

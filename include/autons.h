@@ -5,18 +5,20 @@
 #ifndef AUTONS_H
 #define AUTONS_H
 
-#include "conveyor.h"
+#include "subsystems/conveyor.h"
 #include "drivetrain.h"
 
 #include "titanselect/titanselect.hpp"
 
 AUTON(testing, {
-    DRIVETRAIN->Chassis.calibrate();
-    DRIVETRAIN->Chassis.moveToPoint(100, 100, 1000);
+    drivetrain* Drivetrain  = drivetrain::Get();
+    Drivetrain->Chassis.calibrate();
+    Drivetrain->Chassis.moveToPoint(100, 100, 1000);
 });
 
 AUTON(BlueLeft, {
-    DRIVETRAIN->Chassis.calibrate();
+    drivetrain* Drivetrain  = drivetrain::Get();
+    Drivetrain->Chassis.calibrate();
 });
 
 

@@ -1,6 +1,6 @@
 #include "main.h"
 #include "drivetrain.h"
-#include "conveyor.h"
+#include "../include/subsystems/conveyor.h"
 #include "titanselect/titanselect.hpp"
 //Not tested but this needs to be included to avoid the autons not showing up.
 #include "autons.h"

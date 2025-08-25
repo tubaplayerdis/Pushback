@@ -5,14 +5,14 @@
 #ifndef CONVEYOR_H
 #define CONVEYOR_H
 
-#include "cls/subsystem.h"
-#include "pros/adi.hpp"
-#include "pros/motor_group.hpp"
-#include "pros/misc.h"
-#include "monitor.h"
-#include "controller.h"
-#include "cpid.h"
-#include "pros/optical.hpp"
+#include "../cls/subsystem.h"
+#include "../pros/adi.hpp"
+#include "../pros/motor_group.hpp"
+#include "../pros/misc.h"
+#include "../monitor.h"
+#include "../controller.h"
+#include "../cpid.h"
+#include "../pros/optical.hpp"
 
 //Port macros
 #define PORT_INTAKE 0
