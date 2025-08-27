@@ -26,7 +26,7 @@
 #define CONVEYOR_IN pros::E_CONTROLLER_DIGITAL_L1
 #define CONVEYOR_OUT pros::E_CONTROLLER_DIGITAL_R1
 
-#define CONVEYOR conveyor::Get()
+constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_R2;
 
 class conveyor final : public subsystem
 {

@@ -1,5 +1,5 @@
 #include "main.h"
-#include "drivetrain.h"
+#include "../include/subsystems/drivetrain.h"
 #include "../include/subsystems/conveyor.h"
 #include "titanselect/titanselect.hpp"
 //Not tested but this needs to be included to avoid the autons not showing up.
@@ -82,8 +82,8 @@ void autonomous()
 void opcontrol() {
 	while (true) {
 		lv_timer_handler();
-		DRIVETRAIN->Tick();
-		CONVEYOR->Tick();
+		drivetrain::Get()->Tick();
+		conveyor::Get()->Tick();
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }

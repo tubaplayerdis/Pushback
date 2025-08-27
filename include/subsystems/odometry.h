@@ -26,7 +26,7 @@ public:
     lemlib::TrackingWheel TrackingVertical;
     lemlib::OdomSensors OdometrySensors;
 
-private:
+public:
     odometry() :
     Inertial(PORT_INERTIAL), RotationVertical(PORT_ROTATION_VERTICAL),
     RotationHorizontal(PORT_ROTATION_HORIZONTAL),

@@ -29,8 +29,6 @@
 #define DRIVETRAIN_HORIZONTAL_DRIFT 2
 #define DRIVETRAIN_MOTOR_CARTRIDGE pros::v5::MotorGears::blue
 
-#define DRIVETRAIN drivetrain::Get()
-
 class drivetrain final : public subsystem
 {
 public:
@@ -39,12 +37,12 @@ public:
     lemlib::Drivetrain LemDrivetrain;
     lemlib::Chassis Chassis;
 
-private:
+public:
     drivetrain() :
     MotorsLeft({PORT_LEFT_A, PORT_LEFT_B, PORT_LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
     MotorsRight({PORT_RIGHT_A, PORT_RIGHT_B, PORT_RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE) ,
     LemDrivetrain(&MotorsLeft, &MotorsRight, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
-    Chassis(LemDrivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, ODOMETRY->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
+    Chassis(LemDrivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, odometry::Get()->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
     {
         Chassis.calibrate();
         Chassis.setPose(0,0,0);//Set the local location controller to zero

@@ -10,7 +10,7 @@
 #include "../../include/monitor.h"
 #include "../../include/subsystems/odometry.h"
 
-std::unique_ptr<drivetrain> instance;
+std::unique_ptr<drivetrain> drivetrain_instance;
 
 void drivetrain::Tick_Implementation()
 {
@@ -24,6 +24,6 @@ void drivetrain::Tick_Implementation()
 
 drivetrain* drivetrain::Get()
 {
-    if (!instance) instance = std::make_unique<drivetrain>();
-    return instance.get();
+    if (!drivetrain_instance) drivetrain_instance = std::make_unique<drivetrain>();
+    return drivetrain_instance.get();
 }

@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <errno.h>
 #include <system_error>
-#include "../include/drivetrain.h"
-#include "../include/conveyor.h"
+#include "../include/subsystems/drivetrain.h"
+#include "../include/subsystems/conveyor.h"
 
 #define Drivetrain drivetrain::Get()
 #define Conveyor conveyor::Get()

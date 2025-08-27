@@ -6,7 +6,7 @@
 #define AUTONS_H
 
 #include "subsystems/conveyor.h"
-#include "drivetrain.h"
+#include "subsystems/drivetrain.h"
 
 #include "titanselect/titanselect.hpp"
 
@@ -17,6 +17,11 @@ AUTON(testing, {
 });
 
 AUTON(BlueLeft, {
+    drivetrain* Drivetrain  = drivetrain::Get();
+    Drivetrain->Chassis.calibrate();
+});
+
+AUTON(BlueRight, {
     drivetrain* Drivetrain  = drivetrain::Get();
     Drivetrain->Chassis.calibrate();
 });
