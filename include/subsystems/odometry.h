@@ -7,13 +7,13 @@
 #include "../cls/subsystem.h"
 #include "../lemlib/chassis/chassis.hpp"
 
-#define PORT_INERTIAL 14
-#define PORT_ROTATION_VERTICAL -13
-#define PORT_ROTATION_HORIZONTAL -8
+constexpr auto PORT_INERTIAL = 14;
+constexpr auto PORT_ROTATION_VERTICAL = -13;
+constexpr auto PORT_ROTATION_HORIZONTAL = -8;
 
-#define ODOMETRY_DIST_FROM_CENTER_HORIZONTAL -1.5
-#define ODOMETRY_DIST_FROM_CENTER_VERTICAL 0
-#define ODOMETRY_WHEEL_SIZE lemlib::Omniwheel::NEW_2
+constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -1.5;
+constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0;
+constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
 
 class odometry final : public subsystem
 {

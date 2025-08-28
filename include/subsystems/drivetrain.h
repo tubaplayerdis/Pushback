@@ -12,22 +12,22 @@
 
 
 //Port macros
-#define PORT_LEFT_A -19
-#define PORT_LEFT_B 15
-#define PORT_LEFT_C 16
-#define PORT_RIGHT_A 17
-#define PORT_RIGHT_B -18
-#define PORT_RIGHT_C -20
+constexpr auto PORT_LEFT_A = -19;
+constexpr auto PORT_LEFT_B = 15;
+constexpr auto PORT_LEFT_C = 16;
+constexpr auto PORT_RIGHT_A = 17;
+constexpr auto PORT_RIGHT_B = -18;
+constexpr auto PORT_RIGHT_C = -20;
 
 //Control macros
-#define VERTICAL_AXIS pros::E_CONTROLLER_ANALOG_LEFT_Y
-#define HORIZONTAL_AXIS pros::E_CONTROLLER_ANALOG_RIGHT_X
+constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
+constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
 
-#define DRIVETRAIN_TRACK_WIDTH 10
-#define DRIVETRAIN_WHEEL_DIAMETER lemlib::Omniwheel::NEW_325
-#define DRIVETRAIN_RPM 450
-#define DRIVETRAIN_HORIZONTAL_DRIFT 2
-#define DRIVETRAIN_MOTOR_CARTRIDGE pros::v5::MotorGears::blue
+constexpr auto DRIVETRAIN_TRACK_WIDTH = 10;
+constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
+constexpr auto DRIVETRAIN_RPM = 450;
+constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
+constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
 
 class drivetrain final : public subsystem
 {

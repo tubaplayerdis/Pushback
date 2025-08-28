@@ -9,16 +9,22 @@ void conveyor::Tick_Implementation()
 {
     if (Controller.get_digital(CONVEYOR_IN))
     {
-        ConveyorGroup.move(FULL_POWER);
+        (void)ConveyorGroup.move(FULL_POWER);
+        (void)Intake.move(FULL_POWER);
     } else if (Controller.get_digital(CONVEYOR_OUT))
     {
-        ConveyorGroup.move(-FULL_POWER);
+        (void)ConveyorGroup.move(-FULL_POWER);
+        (void)Intake.move(-FULL_POWER);
     } else
     {
-        ConveyorGroup.brake();
+        (void)ConveyorGroup.brake();
+        (void)Intake.brake();
     }
 
-    if (Controller.get_digital())
+    if (Controller.get_digital(EXHAUST_OUT))
+    {
+        (void)Exhaust.move(FULL_POWER);
+    } else (void)Exhaust.brake();
     //Add color sensing logic etc
 }
 
