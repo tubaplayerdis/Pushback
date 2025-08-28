@@ -42,6 +42,7 @@ public:
     pros::MotorGroup ConveyorGroup; //Runs the intake and other system requiring the path of movement.
     pros::Optical SplitterOptical;
     pros::adi::Pneumatics Splitter; //Dictates whether balls are scored/thrown.
+    std::unique_ptr<pros::Task> ColorSortTask;
     ColorType ColorSortStatus;
 
 public:
@@ -50,7 +51,16 @@ public:
     Exhaust(PORT_EXHAUST),
     ConveyorGroup({PORT_NORMAL_A, PORT_NORMAL_B}),
     SplitterOptical(PORT_SPLITTER_OPTICAL),
-    Splitter(PORT_SPLITTER, false), ColorSortStatus(ColorType::NEUTRAL) {}
+    Splitter(PORT_SPLITTER, false),
+    ColorSortTask(nullptr),
+    ColorSortStatus(ColorType::NEUTRAL)
+    {
+        SplitterOptical.set_led_pwm(50); //50% brightness
+    };
+
+public:
+    void ActiveColorSort();
+    void DeactivateColorSort();
 
 protected:
     void Tick_Implementation() override;
