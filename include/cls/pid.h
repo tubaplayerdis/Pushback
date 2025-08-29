@@ -9,7 +9,7 @@
 
 
 //Value that is used to determine whether the power is limited or not. Max and Min are set to this by default to signify that no power limit should be in place
-#define MAX_MIN_NO_USE 0
+constexpr int MAX_MIN_NO_USE = 0;
 
 template<typename T>
 T clamp(T val, T mn, T mx){

@@ -14,7 +14,7 @@ std::unique_ptr<drivetrain> drivetrain_instance;
 
 void drivetrain::Tick_Implementation()
 {
-    if (!IsActive()) return;
+    if (!this->IsActive()) return;
     odometry::Get()->Tick();
     const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
     const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);

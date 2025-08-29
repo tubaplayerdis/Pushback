@@ -24,8 +24,8 @@ class subsystem
     public:
     virtual ~subsystem() = default;
 
-    [[nodiscard]] bool IsActive() const;
-    [[nodiscard]] EInitializationState GetInitializationState() const;
+    [[nodiscard]] bool IsActive();
+    [[nodiscard]] EInitializationState GetInitializationState();
 
     protected:
     //Implement this function in derived class. Called inside Activate(). Default returns true

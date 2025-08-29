@@ -10,12 +10,12 @@ subsystem::subsystem(bool bNeedsInit, bool bStartActive)
     isActive = bStartActive;
 }
 
-bool subsystem::IsActive() const
+bool subsystem::IsActive()
 {
     return isActive;
 }
 
-EInitializationState subsystem::GetInitializationState() const
+EInitializationState subsystem::GetInitializationState()
 {
     return Initialization;
 }

@@ -1,4 +1,5 @@
 #include "../../include/subsystems/conveyor.h"
+#include <memory>
 
 constexpr auto FULL_POWER = 127;
 
@@ -81,7 +82,7 @@ void conveyor::Tick_Implementation()
     {
         (void)Exhaust.move(FULL_POWER);
     } else (void)Exhaust.brake();
-    //Add color sensing logic etc
+
 }
 
 conveyor *conveyor::Get()
