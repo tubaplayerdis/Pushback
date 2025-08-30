@@ -75,26 +75,26 @@
 #include "../liblvgl/lvgl.h"
 #include "../pros/misc.hpp"
 
-#define SELECTOR_HEIGHT 200
-#define SELECTOR_WIDTH 475
-#define SELECTOR_X_OFFSET 0
-#define SELECTOR_Y_OFFSET 0
-#define SELECTOR_NO_AUTON_TEXT "No Auton"
-#define SELECTOR_INVALID_AUTON_TEXT "Invalid Auton"
-#define SELECTOR_BUTTON_X 290
-#define SELECTOR_BUTTON_Y 5
-#define SELECTOR_BUTTON_WIDTH 180
-#define SELECTOR_BUTTON_HEIGHT 30
-#define SELECTOR_BUTTON_TEXT "Test Selected Auton"
-#define SELECTOR_LABEL_TEXT "Selected: "
-#define SELECTOR_LABEL_X 10
-#define SELECTOR_LABEL_Y 6
-#define SELECTOR_AUTON_FILE_PATH "/usd/LastSelectedAuton.txt"
-
 #define STREQL(str, str2) strcmp(str, str2) == 0
 
 namespace ts
 {
+    constexpr auto SELECTOR_HEIGHT = 200;
+    constexpr auto SELECTOR_WIDTH = 475;
+    constexpr auto SELECTOR_X_OFFSET = 0;
+    constexpr auto SELECTOR_Y_OFFSET = 0;
+    constexpr auto SELECTOR_NO_AUTON_TEXT = "No Auton";
+    constexpr auto SELECTOR_INVALID_AUTON_TEXT = "Invalid Auton";
+    constexpr auto SELECTOR_BUTTON_X = 290;
+    constexpr auto SELECTOR_BUTTON_Y = 5;
+    constexpr auto SELECTOR_BUTTON_WIDTH = 180;
+    constexpr auto SELECTOR_BUTTON_HEIGHT = 30;
+    constexpr auto SELECTOR_BUTTON_TEXT = "Test Selected Auton";
+    constexpr auto SELECTOR_LABEL_TEXT = "Selected: ";
+    constexpr auto SELECTOR_LABEL_X = 10;
+    constexpr auto SELECTOR_LABEL_Y = 6;
+    constexpr auto SELECTOR_AUTON_FILE_PATH = "/usd/LastSelectedAuton.txt";
+
     struct auton;
 
     class registry
