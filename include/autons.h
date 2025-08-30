@@ -11,19 +11,19 @@
 #include "titanselect/titanselect.hpp"
 
 AUTON(testing, {
-    drivetrain* Drivetrain  = drivetrain::Get();
-    Drivetrain->Chassis.calibrate();
-    Drivetrain->Chassis.moveToPoint(100, 100, 1000);
+    drivetrain* Drivetrain  = drivetrain::get();
+    Drivetrain->lem_chassis.calibrate();
+    Drivetrain->lem_chassis.moveToPoint(100, 100, 1000);
 });
 
 AUTON(BlueLeft, {
-    drivetrain* Drivetrain  = drivetrain::Get();
-    Drivetrain->Chassis.calibrate();
+    drivetrain* Drivetrain  = drivetrain::get();
+    Drivetrain->lem_chassis.calibrate();
 });
 
 AUTON(BlueRight, {
-    drivetrain* Drivetrain  = drivetrain::Get();
-    Drivetrain->Chassis.calibrate();
+    drivetrain* Drivetrain  = drivetrain::get();
+    Drivetrain->lem_chassis.calibrate();
 });
 
 

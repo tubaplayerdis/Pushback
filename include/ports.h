@@ -1,0 +1,73 @@
+//
+// Created by aaron on 8/30/2025.
+//
+
+#ifndef PUSHBACK_PORTS_H
+#define PUSHBACK_PORTS_H
+
+#include "pros/misc.hpp"
+#include "lemlib/chassis/chassis.hpp"
+
+/// ALL ports and constants are defined in this file for simplicity.
+
+namespace ports
+{
+    namespace drivetrain
+    {
+        constexpr auto LEFT_A = -19;
+        constexpr auto LEFT_B = 15;
+        constexpr auto LEFT_C = 16;
+        constexpr auto RIGHT_A = 17;
+        constexpr auto RIGHT_B = -18;
+        constexpr auto RIGHT_C = -20;
+
+        namespace controls
+        {
+            constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
+            constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
+        }
+
+        namespace settings
+        {
+            constexpr auto DRIVETRAIN_TRACK_WIDTH = 10;
+            constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
+            constexpr auto DRIVETRAIN_RPM = 450;
+            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
+            constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
+        }
+    }
+
+    namespace conveyor
+    {
+        constexpr auto INTAKE = 0;
+        constexpr auto EXHAUST = 0;
+        constexpr auto CONVEYOR_A = 1;
+        constexpr auto CONVEYOR_B = -10;
+        constexpr auto SPLITTER = 'A';
+        constexpr auto SPLITTER_OPTICAL = 12;
+
+        namespace controls
+        {
+            constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
+            constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
+            constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_R2;
+        }
+    }
+
+    namespace odometry
+    {
+        constexpr auto INERTIAL = 14;
+        constexpr auto ROTATION_VERTICAL = -13;
+        constexpr auto ROTATION_HORIZONTAL = -8;
+
+        namespace settings
+        {
+            constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -1.5;
+            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0;
+            constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
+        }
+    }
+}
+
+
+#endif //PUSHBACK_PORTS_H

@@ -13,13 +13,6 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	//Add Monitor lambda
-	monitor::registerErrorCallback([](const char*, int, const char*, const char*)
-	{
-		printf("hello!");
-		//How to handle errors
-	});
-
 	SELECTOR_INIT();
 }
 
@@ -80,10 +73,16 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+    odometry* odom = odometry::Get();
+    drivetrain* dt = drivetrain::get();
+    conveyor* conv = conveyor::get();
+
+
 	while (true) {
 		lv_timer_handler();
-		drivetrain::Get()->Tick();
-		conveyor::Get()->Tick();
+        odom->tick();
+        dt->tick();
+        conv->tick();
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }

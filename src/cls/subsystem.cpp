@@ -4,47 +4,41 @@
 
 #include "../../include/cls/subsystem.h"
 
-subsystem::subsystem(bool bNeedsInit, bool bStartActive)
+subsystem::subsystem(bool bStartActive)
 {
-    bNeedsInit ? Initialization = EInitializationState::UNINITIALIZED : Initialization = EInitializationState::NONAPPLICABLE;
-    isActive = bStartActive;
+    b_is_active = bStartActive;
 }
 
-bool subsystem::IsActive()
+bool subsystem::is_active()
 {
-    return isActive;
+    return b_is_active;
 }
 
-EInitializationState subsystem::GetInitializationState()
-{
-    return Initialization;
-}
-
-bool subsystem::Activate_Implementation()
+bool subsystem::activate_implementation()
 {
     return true;
 }
 
-bool subsystem::Deactivate_Implementation()
+bool subsystem::deactivate_implementation()
 {
     return true;
 }
 
-bool subsystem::Activate()
+bool subsystem::activate()
 {
-    bool bResult = Activate_Implementation();
-    isActive = true;
+    bool bResult = activate_implementation();
+    b_is_active = true;
     return bResult;
 }
 
-bool subsystem::Deactivate()
+bool subsystem::deactivate()
 {
-    bool bResult = Deactivate_Implementation();
-    isActive = false;
+    bool bResult = deactivate_implementation();
+    b_is_active = false;
     return bResult;
 }
 
-void subsystem::Tick()
+void subsystem::tick()
 {
-    if (IsActive()) Tick_Implementation();
+    if (is_active()) tick_implementation();
 }

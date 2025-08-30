@@ -1,4 +1,5 @@
 #include "../../include/subsystems/conveyor.h"
+#include "../../include/ports.h"
 #include <memory>
 
 constexpr auto FULL_POWER = 127;
@@ -12,6 +13,22 @@ constexpr auto RED_LOW = 0;
 constexpr auto RED_HIGH = 15;
 constexpr auto BLUE_LOW = 150;
 constexpr auto BLUE_HIGH = 250;
+
+using namespace ports::conveyor;
+using namespace ports::conveyor::controls;
+
+conveyor::conveyor() :
+subsystem(),
+Intake (INTAKE),
+Exhaust(EXHAUST),
+SplitterOptical(SPLITTER_OPTICAL),
+ConveyorGroup({CONVEYOR_A, CONVEYOR_B}),
+Splitter(SPLITTER, false),
+ColorSortTask(nullptr),
+ColorSortStatus(ColorType::NEUTRAL)
+{
+    SplitterOptical.set_led_pwm(50); //50% brightness
+}
 
 /// Detects the color the spliter optical sensor sees
 /// @return Enum representing the color the optical sensor sees.
@@ -27,9 +44,9 @@ static ColorType detect_color(pros::Optical* SplitterOptical)
 
 static void color_sort_loop()
 {
-    pros::Optical* optical = &conveyor::Get()->SplitterOptical;
-    pros::adi::Pneumatics* splitter = &conveyor::Get()->Splitter;
-    ColorType color = conveyor::Get()->ColorSortStatus;
+    pros::Optical* optical = &conveyor::get()->SplitterOptical;
+    pros::adi::Pneumatics* splitter = &conveyor::get()->Splitter;
+    ColorType color = conveyor::get()->ColorSortStatus;
 
     while (true)
     {
@@ -52,7 +69,7 @@ static void color_sort_loop()
 
 void conveyor::ActiveColorSort()
 {
-    if (!ColorSortTask) ColorSortTask = std::make_unique<pros::Task>(color_sort_loop);
+    if (!ColorSortTask) ColorSortTask = std::unique_ptr<pros::Task>( new pros::Task(color_sort_loop) );
 }
 
 void conveyor::DeactivateColorSort()
@@ -62,8 +79,7 @@ void conveyor::DeactivateColorSort()
     ColorSortTask.reset();
 }
 
-void conveyor::Tick_Implementation()
-{
+void conveyor::tick_implementation() {
     if (Controller.get_digital(CONVEYOR_IN))
     {
         (void)ConveyorGroup.move(FULL_POWER);
@@ -85,8 +101,8 @@ void conveyor::Tick_Implementation()
 
 }
 
-conveyor *conveyor::Get()
+conveyor *conveyor::get()
 {
-    if (!conveyor_instance) conveyor_instance = std::make_unique<conveyor>();
+    if (!conveyor_instance) conveyor_instance = std::unique_ptr<conveyor>( new conveyor() );
     return conveyor_instance.get();
 }

@@ -56,7 +56,7 @@
 /// @param visible Visibility toggle the selector should be set too. false is hidden and true is visible.
 #define SELECTOR_SET_VISIBILITY(visible) ts::selector::Get()->SetVisibility(visible)
 
-/// @brief Get the active selector object
+/// @brief get the active selector object
 /// @retval selector The active selector object.
 #define SELECTOR_GET_SELECTOR() ts::selector::Get()
 
@@ -324,7 +324,7 @@ namespace ts
     inline void selector::HandleEvents(lv_event_t *e)
     {
         //There would, be a checking of event type here, but since it is only called on presses it does not matter.
-        lv_obj_t * obj = lv_event_get_target_obj(e); // Get the button matrix object
+        lv_obj_t * obj = lv_event_get_target_obj(e); // get the button matrix object
         if (obj == Get()->lRunSelectedAutonButon)
         {
             auto master = pros::Controller(pros::E_CONTROLLER_MASTER);
@@ -334,7 +334,7 @@ namespace ts
         }
         else if (obj == Get()->lButtonMatrix)
         {
-            uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // Get the ID of the pressed/released button
+            uint32_t btn_id = lv_buttonmatrix_get_selected_button(obj); // get the ID of the pressed/released button
             const char * btn_text = lv_buttonmatrix_get_button_text(obj, btn_id);
             Get()->aSelectedAuton = btn_text;
             std::string format = SELECTOR_LABEL_TEXT;

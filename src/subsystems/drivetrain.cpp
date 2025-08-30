@@ -2,28 +2,35 @@
 // Created by aaron on 8/22/2025.
 //
 #include "../../include/subsystems/drivetrain.h"
-#include "../../include/cls/subsystem.h"
-#include "../../include/pros/adi.hpp"
-#include "../../include/pros/motor_group.hpp"
-#include "../../include/pros/misc.h"
-#include "../../include/controller.h"
-#include "../../include/monitor.h"
-#include "../../include/subsystems/odometry.h"
+#include "../../include/ports.h"
 
 std::unique_ptr<drivetrain> drivetrain_instance;
 
-void drivetrain::Tick_Implementation()
+using namespace ports::drivetrain;
+using namespace ports::drivetrain::settings;
+
+drivetrain::drivetrain() :
+motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
+motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
+lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
+lem_chassis(lem_drivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, odometry::Get()->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
 {
-    if (!this->IsActive()) return;
-    odometry::Get()->Tick();
-    const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
-    const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);
-    Chassis.arcade(throttle, turn);
-    //Handle moving the drivetrain.
+    //Calibrate the chassis object (calibrates the inertial sensor)
+    lem_chassis.calibrate();
+
+    //Sets the "pose" (relative position) of the odometry system to zero.
+    lem_chassis.setPose(0, 0, 0);//Set the local location controller to zero
 }
 
-drivetrain* drivetrain::Get()
+void drivetrain::tick_implementation()
 {
-    if (!drivetrain_instance) drivetrain_instance = std::make_unique<drivetrain>();
+    const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
+    const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);
+    lem_chassis.arcade(throttle, turn);
+}
+
+drivetrain* drivetrain::get()
+{
+    if (!drivetrain_instance) drivetrain_instance = std::unique_ptr<drivetrain>(new drivetrain());
     return drivetrain_instance.get();
 }

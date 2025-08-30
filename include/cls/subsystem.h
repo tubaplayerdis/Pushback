@@ -5,40 +5,49 @@
 #ifndef SUBSYSTEM_H
 #define SUBSYSTEM_H
 
-enum EInitializationState
-{
-    NONAPPLICABLE = 0,
-    INITIALIZED = 1,
-    UNINITIALIZED = 2,
-};
-
 class subsystem
 {
-    bool isActive;
+    /// Determines whether or not tick() executes tick_implementation();
+    bool b_is_active;
 
     protected:
-    EInitializationState Initialization;
-    //Initialization needs to toggled to INITIALIZED in derived class constructor if bNeedsInit is true. Is activated by default.
-    explicit subsystem(bool bNeedsInit = false, bool bStartActive = true);
+
+    /// Creates the subsystem.
+    /// \param bStartActive Whether to allow the subsystem to work after creation of the class object. Defaults to true.
+    explicit subsystem(bool bStartActive = true);
 
     public:
+
+    /// Overrideable virtual constructor to allow for custom de-initialization code.
     virtual ~subsystem() = default;
 
-    [[nodiscard]] bool IsActive();
-    [[nodiscard]] EInitializationState GetInitializationState();
+    /// Whether the subsystem is active
+    /// \return the b_is_active variable by value
+    bool is_active();
 
     protected:
-    //Implement this function in derived class. Called inside Activate(). Default returns true
-    virtual bool Activate_Implementation();
-    //Implement this function in derived class. Called inside Deactivate(). Default returns true
-    virtual bool Deactivate_Implementation();
-    //Called in subsequent loop. Has to be implemented
-    virtual void Tick_Implementation() = 0;
+
+    /// Overrideable function to allow for a custom activation function is necessary.
+    /// \return Whether activation failed or succeeded. Defaults to True
+    virtual bool activate_implementation();
+
+    /// Overrideable function to allow for a custom de-activation function is necessary.
+    /// \return Whether de-activation failed or succeeded. Defaults to True
+    virtual bool deactivate_implementation();
+
+    /// Pure virtual function (mandatory implementation) that is called inside of tick() depending on if the subsystem is active. if b_is_active is false, this function will not be called and vice-versa
+    virtual void tick_implementation() = 0;
 
     public:
-    void Tick();
-    bool Activate();
-    bool Deactivate();
+
+    /// tick function that should be used inside of loops. Calls tick_implementation() depending of whether b_is_active is true
+    void tick();
+
+    /// activation function that calls activate_implementation. Sets b_is_active = true.
+    bool activate();
+
+    /// de-activation function that calls deactivate_implementation. Sets b_is_active = false.
+    bool deactivate();
 };
 
 #endif //SUBSYSTEM_H
