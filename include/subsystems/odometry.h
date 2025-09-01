@@ -7,6 +7,7 @@
 #include "../cls/subsystem.h"
 #include "../lemlib/chassis/chassis.hpp"
 
+/// 3 dimensional vector structure
 struct vector
 {
     double x;
