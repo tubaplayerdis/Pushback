@@ -58,3 +58,15 @@ odometry* odometry::get()
     if (!odometry_instance) odometry_instance = std::unique_ptr<odometry>( new odometry() );
     return odometry_instance.get();
 }
+
+vector odometry::get_estimated_velocity() {
+    vector ret;
+    std::memcpy(&ret, &estimated_velocity, sizeof(vector));
+    return ret;
+}
+
+vector odometry::get_estimated_position() {
+    vector ret;
+    std::memcpy(&ret, &estimated_position, sizeof(vector));
+    return ret;
+}

@@ -13,6 +13,13 @@ struct vector
     double y;
     double z;
 
+    vector()
+    {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
+
     vector(double X, double Y, double Z)
     {
         x = X;
@@ -63,6 +70,12 @@ protected:
     void tick_implementation() override;
 
 public:
+
+    /// Accessor for estimated velocity that keeps passes by pure value copy
+    vector get_estimated_velocity();
+
+    /// Accessor for estimated position that keeps passes by pure value copy
+    vector get_estimated_position();
 
     /// public accessor method for singleton.
     static odometry* get();
