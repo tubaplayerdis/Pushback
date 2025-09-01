@@ -8,9 +8,6 @@
 #include "pros/misc.hpp"
 #include "lemlib/chassis/chassis.hpp"
 
-#define CONTROLLER_VERTICAL_AXIS pros::E_CONTROLLER_ANALOG_LEFT_Y
-#define CONTROLLER_HORIZONTAL_AXIS pros::E_CONTROLLER_ANALOG_RIGHT_X
-
 namespace controller
 {
     inline lemlib::ControllerSettings

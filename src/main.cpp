@@ -13,7 +13,7 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	SELECTOR_INIT();
+	ts::selector::get()->display();
 }
 
 /**
@@ -37,7 +37,7 @@ void disabled()
  */
 void competition_initialize()
 {
-	if (!SELECTOR_IS_AUTON_SELECTED())
+	if (!ts::selector::get()->is_auton_selected())
 	{
 		//Handle no selected auton
 	}
@@ -56,7 +56,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	SELECTOR_RUN_SELECTED();
+	ts::selector::get()->run_selected_auton();
 }
 
 /**

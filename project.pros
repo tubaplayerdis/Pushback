@@ -631,6 +631,23 @@
                 "target": "v5",
                 "user_files": [],
                 "version": "9.2.0"
+            },
+            "titanselect": {
+                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\titanselect@1.0.0",
+                "metadata": {
+                    "origin": "local"
+                },
+                "name": "titanselect",
+                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
+                "supported_kernels": "^4.2.1",
+                "system_files": [
+                    "include\\titanselect\\titanselect.h",
+                    "include\\titanselect\\titanselect.hpp",
+                    "firmware\\titanselect.a"
+                ],
+                "target": "v5",
+                "user_files": [],
+                "version": "1.0.0"
             }
         },
         "upload_options": {

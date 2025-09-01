@@ -10,6 +10,8 @@
 
 #include "titanselect/titanselect.hpp"
 
+#define AUTON(name, routine) inline static ts::auton name = ts::auton(#name, []()routine)
+
 AUTON(testing, {
     drivetrain* Drivetrain  = drivetrain::get();
     Drivetrain->lem_chassis.calibrate();
