@@ -7,6 +7,7 @@
 #include "../../include/pros/imu.h"
 #include <memory>
 #include <chrono>
+#include <cstring>
 
 
 std::unique_ptr<odometry> odometry_instance;
