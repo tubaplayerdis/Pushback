@@ -44,6 +44,7 @@ namespace ports
         constexpr auto CONVEYOR_A = 1;
         constexpr auto CONVEYOR_B = -10;
         constexpr auto SPLITTER = 'A';
+        constexpr auto LIFT = 'B';
         constexpr auto SPLITTER_OPTICAL = 12;
 
         namespace controls
@@ -51,6 +52,8 @@ namespace ports
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_R2;
+            constexpr auto TOGGLE_LIFT = pros::E_CONTROLLER_DIGITAL_A;
+            constexpr auto TOGGLE_COLOR_SORT = pros::E_CONTROLLER_DIGITAL_B;
         }
     }
 

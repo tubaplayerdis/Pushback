@@ -13,7 +13,7 @@ drivetrain::drivetrain() :
 motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
-lem_chassis(lem_drivetrain, controller::ControllerSettingsLateral, controller::ControllerSettingsAngular, odometry::Get()->OdometrySensors, &controller::ExpoCurveThrottle, &controller::ExpoCurveSteer)
+lem_chassis(lem_drivetrain, controller::controller_settings_lateral, controller::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer)
 {
     //Calibrate the chassis object (calibrates the inertial sensor)
     lem_chassis.calibrate();
@@ -24,8 +24,8 @@ lem_chassis(lem_drivetrain, controller::ControllerSettingsLateral, controller::C
 
 void drivetrain::tick_implementation()
 {
-    const int32_t throttle = Controller.get_analog(CONTROLLER_VERTICAL_AXIS);
-    const int32_t turn = -1 * Controller.get_analog(CONTROLLER_HORIZONTAL_AXIS);
+    const int32_t throttle = controller_master.get_analog(CONTROLLER_VERTICAL_AXIS);
+    const int32_t turn = -1 * controller_master.get_analog(CONTROLLER_HORIZONTAL_AXIS);
     lem_chassis.arcade(throttle, turn);
 }
 

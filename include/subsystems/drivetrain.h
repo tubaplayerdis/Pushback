@@ -14,6 +14,7 @@
 /// drivetrain class represents the physical drivetrain of the robot. inherits subsystem
 class drivetrain final : public subsystem
 {
+    /// Friend class to allow unique_ptr to access deconstructor
     friend class std::unique_ptr<drivetrain>;
 
 public:

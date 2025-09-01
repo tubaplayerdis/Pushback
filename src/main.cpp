@@ -73,7 +73,7 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    odometry* odom = odometry::Get();
+    odometry* odom = odometry::get();
     drivetrain* dt = drivetrain::get();
     conveyor* conv = conveyor::get();
 

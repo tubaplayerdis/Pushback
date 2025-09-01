@@ -4,9 +4,9 @@
 
 #include "../../include/cls/subsystem.h"
 
-subsystem::subsystem(bool bStartActive)
+subsystem::subsystem(bool start_active)
 {
-    b_is_active = bStartActive;
+    b_is_active = start_active;
 }
 
 bool subsystem::is_active()
@@ -26,16 +26,16 @@ bool subsystem::deactivate_implementation()
 
 bool subsystem::activate()
 {
-    bool bResult = activate_implementation();
+    bool res = activate_implementation();
     b_is_active = true;
-    return bResult;
+    return res;
 }
 
 bool subsystem::deactivate()
 {
-    bool bResult = deactivate_implementation();
+    bool res = deactivate_implementation();
     b_is_active = false;
-    return bResult;
+    return res;
 }
 
 void subsystem::tick()

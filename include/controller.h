@@ -14,7 +14,7 @@
 namespace controller
 {
     inline lemlib::ControllerSettings
-    ControllerSettingsLateral(8,   // proportional gain (kP)
+    controller_settings_lateral(8,   // proportional gain (kP)
                        0,   // integral gain (kI)
                        4,   // derivative gain (kD)
                        3,   // anti-windup
@@ -27,7 +27,7 @@ namespace controller
 
     // angular PID controller
     inline lemlib::ControllerSettings
-    ControllerSettingsAngular(2,   // proportional gain (kP)
+    controller_settings_angular(2,   // proportional gain (kP)
                        0,   // integral gain (kI)
                        10,  // derivative gain (kD)
                        3,   // anti-windup
@@ -40,19 +40,19 @@ namespace controller
 
     // input curve for throttle input during driver control
     inline lemlib::ExpoDriveCurve
-    ExpoCurveThrottle(3,    // joystick deadband out of 127
+    expo_curve_throttle(3,    // joystick deadband out of 127
                    10,   // minimum output where drivetrain will move out of 127
                    1.019 // expo curve gain
     );
 
     // input curve for steer input during driver control
     inline lemlib::ExpoDriveCurve
-    ExpoCurveSteer(3,    // joystick deadband out of 127
+    expo_curve_steer(3,    // joystick deadband out of 127
                 10,   // minimum output where drivetrain will move out of 127
                 1.035 // expo curve gain
     );
 }
 
-inline pros::Controller Controller(pros::E_CONTROLLER_MASTER);
+inline pros::Controller controller_master(pros::E_CONTROLLER_MASTER);
 
 #endif //CONTROLLER_H

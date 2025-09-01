@@ -12,7 +12,8 @@
 #include "../controller.h"
 #include "../pros/optical.hpp"
 
-enum ColorType
+/// Represents the colors of the game objects.
+enum object_color : uint8_t
 {
     NEUTRAL = 0,
     BLUE = 1,
@@ -21,28 +22,65 @@ enum ColorType
 
 class conveyor final : public subsystem
 {
+    /// Friend class to allow unique_ptr to access deconstructor
     friend class std::unique_ptr<conveyor>;
 
 public:
-    pros::Motor Intake;
-    pros::Motor Exhaust;
-    pros::MotorGroup ConveyorGroup; //Runs the intake and other system requiring the path of movement.
-    pros::Optical SplitterOptical;
-    pros::adi::Pneumatics Splitter; //Dictates whether balls are scored/thrown.
-    std::unique_ptr<pros::Task> ColorSortTask;
-    ColorType ColorSortStatus;
+
+    /// Intake motor
+    pros::Motor intake;
+
+    /// Exhaust/scoring system
+    pros::Motor exhaust;
+
+    /// Dual motors that operate the conveyor
+    pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
+
+    /// Optical sensor that reads colors for the splitter
+    pros::Optical splitter_optical;
+
+    /// Splitter pneumatics that allows for color sorting
+    pros::adi::Pneumatics splitter;
+
+    /// Lift pneumatics for exhaust system.
+    pros::adi::Pneumatics lift;
+
+    /// Pros task that operates the color sorting loop.
+    std::unique_ptr<pros::Task> color_sort_task;
+
+    /// The current color sort sort is excluding. (if it sees that color it activates color sort)
+    object_color color_sort_color;
 
 private:
+
+    /// Color sorting boolean. changing will not induce changes. use activate_color_sort() and deactiveate_color_sort()
+    bool color_sort_active;
+
+    /// Private constructor to enable use of get() method.
     conveyor();
 
 public:
-    void ActiveColorSort();
-    void DeactivateColorSort();
+
+    /// Whether color sort is active.
+    bool is_color_sort_active();
+
+    /// Activate color sorting. Restarts color sorting if already active
+    void activate_color_sort();
+
+    /// De-activate color sorting.
+    void deactivate_color_sort();
+
+    /// Toggles color sort. Returns whether it was tuned on or off.
+    bool toggle_color_sort();
 
 protected:
+
+    /// Custom implementation of tick. reads controller values.
     void tick_implementation() override;
 
 public:
+
+    /// public get accessor for singleton.
     static conveyor* get();
 };
 
