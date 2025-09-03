@@ -70,6 +70,11 @@ namespace ports
             constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
         }
     }
+
+    namespace vision
+    {
+        constexpr auto VISION_FRONT = -0;
+    }
 }
 
 

@@ -9,6 +9,7 @@ namespace ts
 {   
     struct auton;
 
+    /// selector class for titanselect. use get() to get the active selector.
     class selector
     {
         friend struct auton;
@@ -59,7 +60,10 @@ namespace ts
 
     struct auton
     {
+        /// Name of the auton.
         const char* name;
+
+        /// Function pointer of the function the auton should run.
         void(*function)();
 
         /// Creates and registers an auton.
