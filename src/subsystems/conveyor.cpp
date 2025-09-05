@@ -54,6 +54,7 @@ static object_color detect_color(pros::Optical* splitter_optical)
 
 static void color_sort_loop()
 {
+    //Acquire pointers for efficiency
     pros::Optical* optical = &conveyor::get()->splitter_optical;
     pros::adi::Pneumatics* splitter = &conveyor::get()->splitter;
     object_color color = conveyor::get()->color_sort_color;
@@ -62,15 +63,19 @@ static void color_sort_loop()
     {
         pros::Task::delay(100);
 
+        //If an object is not detected, keep the current piston configuration and continue the loop.
+        if (optical->get_proximity() == 255) continue;
+
+        //If the detected color is blue and the chosen color is red, extend the piston
         if (detect_color(optical) == BLUE && color == RED)
         {
             splitter->extend();
         }
-        else if (detect_color(optical) == RED && color == BLUE)
+        else if (detect_color(optical) == RED && color == BLUE) //If the detected color is red and the chosen color is blue, extend the piston
         {
             splitter->extend();
         }
-        else if (detect_color(optical) == color)
+        else if (detect_color(optical) == color) //If the detected color and chosen color match retract the piston.
         {
             splitter->retract();
         }
@@ -79,20 +84,28 @@ static void color_sort_loop()
 
 void conveyor::activate_color_sort()
 {
+    //If the unique_ptr holding the pros task is active, destroy the pros task and reset the pointer
     if(color_sort_task)
     {
         color_sort_task->remove();
         color_sort_task.reset();
     }
+
+    //Reassign and restart the task. notify a status change by updating color_sort_active.
     color_sort_task = std::unique_ptr<pros::Task>( new pros::Task(color_sort_loop) );
     color_sort_active = true;
 }
 
 void conveyor::deactivate_color_sort()
 {
+    //If the color sort was already inactive, return early.
     if (!color_sort_task) return;
+
+    //Destroy the task and reset the pointer
     color_sort_task->remove();
     color_sort_task.reset();
+
+    //Notify that colorsort was turned off by updating color_sort_active
     color_sort_active = false;
 }
 

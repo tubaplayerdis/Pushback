@@ -27,7 +27,8 @@ class conveyor final : public subsystem
 
 public:
 
-    /// Intake motor
+    /// Intake motor.
+    /// @note intake and conveyor could be but are not in a motor group because it is more strategic to have a split intake in auton.
     pros::Motor intake;
 
     /// Exhaust/scoring system
@@ -48,7 +49,7 @@ public:
     /// Pros task that operates the color sorting loop.
     std::unique_ptr<pros::Task> color_sort_task;
 
-    /// The current color sort sort is excluding. (if it sees that color it activates color sort)
+    /// The current color colorsort is including.
     object_color color_sort_color;
 
 private:
@@ -62,6 +63,7 @@ private:
 public:
 
     /// Whether color sort is active.
+    /// @note Returns by value to prevent modification of the color_sort_active variable
     bool is_color_sort_active();
 
     /// Activate color sorting. Restarts color sorting if already active
@@ -71,6 +73,7 @@ public:
     void deactivate_color_sort();
 
     /// Toggles color sort. Returns whether it was tuned on or off.
+    /// @note Returns by value to prevent modification of the color_sort_active variable
     bool toggle_color_sort();
 
 protected:

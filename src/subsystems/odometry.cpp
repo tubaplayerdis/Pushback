@@ -15,6 +15,7 @@ std::unique_ptr<odometry> odometry_instance;
 using namespace ports::odometry;
 using namespace ports::odometry::settings;
 
+/// timepoint value representing the last time the tick function was ran and updated this variable
 static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_call;
 
 odometry::odometry() :
@@ -32,6 +33,13 @@ estimated_position(0,0,0)
 }
 
 void odometry::tick_implementation() {
+
+    /*
+     * Position estimation system.
+     * This system is an experiment on whether the inertial sensor can provide accurate values to estimate position and velocity.
+     * The system is based on kinematics fundamentals which states that position can be found given time and acceleration, both of which can be retrieved from either the robot or the inertial sensor.
+     * The accuracy of this system is untested but the last time I implemented it I got erroneous values due to the time estimation being wrong.
+     */
 
     // Acceleration vector. Acquire before calculations.
     pros::imu_raw_s accel = inertial.get_accel();
@@ -61,12 +69,14 @@ odometry* odometry::get()
 }
 
 vector odometry::get_estimated_velocity() {
+    //Manual std::memcpy for performance. unimportant to the return value.
     vector ret;
     std::memcpy(&ret, &estimated_velocity, sizeof(vector));
     return ret;
 }
 
 vector odometry::get_estimated_position() {
+    //Manual std::memcpy for performance. unimportant to the return value.
     vector ret;
     std::memcpy(&ret, &estimated_position, sizeof(vector));
     return ret;
