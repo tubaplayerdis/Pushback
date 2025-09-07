@@ -42,12 +42,6 @@ public:
     /// Pros rotation sensor for vertical wheel.
     pros::Rotation rotation_vertical;
 
-    /// Pros rotation sensor for horizontal wheel.
-    pros::Rotation rotation_horizontal;
-
-    /// LemLib horizontal tracking wheel for autons
-    lemlib::TrackingWheel tracking_horizontal;
-
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
 
