@@ -10,6 +10,7 @@
 #include "../pros/motor_group.hpp"
 #include "../pros/misc.h"
 #include "../controller.h"
+#include "../pros/distance.hpp"
 #include "../pros/optical.hpp"
 
 /// Represents the colors of the game objects.
@@ -37,13 +38,12 @@ public:
     /// Dual motors that operate the conveyor
     pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
 
+    pros::Distance distance_trough;
+
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;
 
-    /// Splitter pneumatics that allows for color sorting
-    pros::adi::Pneumatics splitter;
-
-    /// Lift pneumatics for exhaust system.
+    /// Lift pneumatics for double park system
     pros::adi::Pneumatics lift;
 
     /// Pros task that operates the color sorting loop.

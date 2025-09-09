@@ -7,6 +7,7 @@
 
 #include "pros/misc.hpp"
 #include "lemlib/chassis/chassis.hpp"
+#include "lemlib/chassis/trackingWheel.hpp"
 
 /// ALL ports and constants are defined in this file for simplicity.
 
@@ -43,7 +44,7 @@ namespace ports
         constexpr auto EXHAUST = 0;
         constexpr auto CONVEYOR_A = 1;
         constexpr auto CONVEYOR_B = -10;
-        constexpr auto SPLITTER = 'A';
+        constexpr auto DISTANCE_TROUGH = 0;
         constexpr auto LIFT = 'B';
         constexpr auto SPLITTER_OPTICAL = 12;
 
@@ -69,11 +70,6 @@ namespace ports
             constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0;
             constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
         }
-    }
-
-    namespace vision
-    {
-        constexpr auto VISION_FRONT = -0;
     }
 }
 

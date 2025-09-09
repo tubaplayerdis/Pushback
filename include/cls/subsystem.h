@@ -7,7 +7,7 @@
 
 class subsystem
 {
-    /// Determines whether or not tick() executes tick_implementation();
+    /// Determines whether tick() executes tick_implementation();
     bool b_is_active;
 
     protected:

@@ -21,7 +21,7 @@ intake (INTAKE),
 exhaust(EXHAUST),
 splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
-splitter(SPLITTER, false),
+distance_trough(DISTANCE_TROUGH),
 lift(LIFT, false),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
@@ -56,7 +56,6 @@ static void color_sort_loop()
 {
     //Acquire pointers for efficiency
     pros::Optical* optical = &conveyor::get()->splitter_optical;
-    pros::adi::Pneumatics* splitter = &conveyor::get()->splitter;
     object_color color = conveyor::get()->color_sort_color;
 
     while (true)
@@ -67,17 +66,13 @@ static void color_sort_loop()
         if (optical->get_proximity() == 255) continue;
 
         //If the detected color is blue and the chosen color is red, extend the piston
-        if (detect_color(optical) == BLUE && color == RED)
+        if ((detect_color(optical) == BLUE && color == RED) || (detect_color(optical) == RED && color == BLUE))
         {
-            splitter->extend();
-        }
-        else if (detect_color(optical) == RED && color == BLUE) //If the detected color is red and the chosen color is blue, extend the piston
-        {
-            splitter->extend();
+            //do color sort
         }
         else if (detect_color(optical) == color) //If the detected color and chosen color match retract the piston.
         {
-            splitter->retract();
+            //do not do color sort
         }
     }
 }
