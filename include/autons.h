@@ -5,28 +5,14 @@
 #ifndef AUTONS_H
 #define AUTONS_H
 
-#include "subsystems/conveyor.h"
-#include "subsystems/drivetrain.h"
-
 #include "titanselect/titanselect.hpp"
 
-#define AUTON(name, routine) inline static ts::auton name = ts::auton(#name, []()routine)
-
-AUTON(testing, {
-    drivetrain* Drivetrain  = drivetrain::get();
-    Drivetrain->lem_chassis.calibrate();
-    Drivetrain->lem_chassis.moveToPoint(100, 100, 1000);
-});
-
-AUTON(BlueLeft, {
-    drivetrain* Drivetrain  = drivetrain::get();
-    Drivetrain->lem_chassis.calibrate();
-});
-
-AUTON(BlueRight, {
-    drivetrain* Drivetrain  = drivetrain::get();
-    Drivetrain->lem_chassis.calibrate();
-});
+namespace autons
+{
+    extern ts::auton testing;
+    extern ts::auton blue_left;
+    extern ts::auton blue_right;
+}
 
 
 #endif //AUTONS_H
