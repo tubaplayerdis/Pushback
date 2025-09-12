@@ -21,6 +21,13 @@ enum object_color : uint8_t
     RED = 2
 };
 
+enum trough_detection : uint8_t
+{
+    NONE_TRUOUGH = 0,
+    HIGH_TROUGH = 1,
+    LOW_TROUGH = 2,
+};
+
 class conveyor final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
@@ -38,6 +45,7 @@ public:
     /// Dual motors that operate the conveyor
     pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
 
+    /// Distance sensor that determines if the tall or short trough is being scored on.
     pros::Distance distance_trough;
 
     /// Optical sensor that reads colors for the splitter
@@ -75,6 +83,10 @@ public:
     /// Toggles color sort. Returns whether it was tuned on or off.
     /// @note Returns by value to prevent modification of the color_sort_active variable
     bool toggle_color_sort();
+
+    /// Which trough is detected. Used in control loop to determine output direction of the exhaust.
+    /// @return Returns the through detected by value.
+    trough_detection get_detected_through();
 
 protected:
 

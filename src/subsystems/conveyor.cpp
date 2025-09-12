@@ -2,6 +2,8 @@
 #include "../../include/ports.h"
 #include <memory>
 
+#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/bits/ranges_util.h"
+
 constexpr auto FULL_POWER = 127;
 
 //Private Singleton
@@ -11,6 +13,10 @@ constexpr auto RED_LOW = 0;
 constexpr auto RED_HIGH = 15;
 constexpr auto BLUE_LOW = 150;
 constexpr auto BLUE_HIGH = 250;
+constexpr auto HIGH_TROUGH_LOW = 100;
+constexpr auto HIGH_TROUGH_HIGH = 100;
+constexpr auto LOW_TROUGH_LOW = 100;
+constexpr auto LOW_TROUGH_HIGH = 100;
 
 using namespace ports::conveyor;
 using namespace ports::conveyor::controls;
@@ -114,11 +120,50 @@ bool conveyor::toggle_color_sort() {
     return is_color_sort_active();
 }
 
+trough_detection conveyor::get_detected_through()
+{
+    if (range(distance_trough.get_distance(), HIGH_TROUGH_LOW, HIGH_TROUGH_HIGH))
+    {
+        return trough_detection::HIGH_TROUGH;
+    } else if (range(distance_trough.get_distance(), LOW_TROUGH_LOW, LOW_TROUGH_HIGH))
+    {
+        return trough_detection::LOW_TROUGH;
+    }
+    return trough_detection::NONE_TRUOUGH;
+}
+
 void conveyor::tick_implementation() {
     if (controller_master.get_digital(CONVEYOR_IN))
     {
         (void)conveyor_group.move(FULL_POWER);
         (void)intake.move(FULL_POWER);
+
+        switch (get_detected_through())
+        {
+            case trough_detection::HIGH_TROUGH:
+            {
+                (void)exhaust.move(FULL_POWER);
+                break;
+            };
+
+            case trough_detection::LOW_TROUGH:
+            {
+                (void)exhaust.move(-FULL_POWER);
+                break;
+            };
+
+            case trough_detection::NONE_TRUOUGH:
+            {
+                (void)exhaust.move( 0.2 * FULL_POWER);
+                break;
+            };
+
+            default:
+            {
+                break;
+            }
+        }
+
     } else if (controller_master.get_digital(CONVEYOR_OUT))
     {
         (void)conveyor_group.move(-FULL_POWER);
@@ -127,6 +172,7 @@ void conveyor::tick_implementation() {
     {
         (void)conveyor_group.brake();
         (void)intake.brake();
+        (void)exhaust.brake();
     }
 
     if (controller_master.get_digital(EXHAUST_OUT))
@@ -143,7 +189,6 @@ void conveyor::tick_implementation() {
     {
         toggle_color_sort();
     }
-
 }
 
 conveyor *conveyor::get()
