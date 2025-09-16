@@ -28,6 +28,7 @@ exhaust(EXHAUST),
 splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
 distance_trough(DISTANCE_TROUGH),
+ears(EARS, false),
 lift(LIFT, false),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
@@ -129,7 +130,7 @@ trough_detection conveyor::get_detected_through()
     {
         return trough_detection::LOW_TROUGH;
     }
-    return trough_detection::NONE_TRUOUGH;
+    return trough_detection::NONE_TROUGH;
 }
 
 void conveyor::tick_implementation() {
@@ -138,6 +139,7 @@ void conveyor::tick_implementation() {
         (void)conveyor_group.move(FULL_POWER);
         (void)intake.move(FULL_POWER);
 
+        //Get and switch on the detected trough
         switch (get_detected_through())
         {
             case trough_detection::HIGH_TROUGH:
@@ -152,8 +154,9 @@ void conveyor::tick_implementation() {
                 break;
             };
 
-            case trough_detection::NONE_TRUOUGH:
+            case trough_detection::NONE_TROUGH:
             {
+                //Move the exhaust on partial power to move balls through the exhaust but not output
                 (void)exhaust.move( 0.2 * FULL_POWER);
                 break;
             };
@@ -187,7 +190,13 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital_new_press(TOGGLE_COLOR_SORT))
     {
-        toggle_color_sort();
+        //Color sort is currently disabled as there is no way for it to work currently.
+        //toggle_color_sort();
+    }
+
+    if (controller_master.get_digital_new_press(TOGGLE_EARS))
+    {
+        (void)ears.toggle();
     }
 }
 

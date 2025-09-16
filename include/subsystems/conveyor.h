@@ -23,7 +23,7 @@ enum object_color : uint8_t
 
 enum trough_detection : uint8_t
 {
-    NONE_TRUOUGH = 0,
+    NONE_TROUGH = 0,
     HIGH_TROUGH = 1,
     LOW_TROUGH = 2,
 };
@@ -53,6 +53,9 @@ public:
 
     /// Lift pneumatics for double park system
     pros::adi::Pneumatics lift;
+
+    /// Pneumatics for the "ear" mechanisms
+    pros::adi::Pneumatics ears;
 
     /// Pros task that operates the color sorting loop.
     std::unique_ptr<pros::Task> color_sort_task;
