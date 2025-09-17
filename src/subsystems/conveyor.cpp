@@ -144,12 +144,14 @@ void conveyor::tick_implementation() {
         {
             case trough_detection::HIGH_TROUGH:
             {
+                //Exhaust forward moving blocks to the upper trough
                 (void)exhaust.move(FULL_POWER);
                 break;
             };
 
             case trough_detection::LOW_TROUGH:
             {
+                //Exhaust reverse moving blocks to the upper trough
                 (void)exhaust.move(-FULL_POWER);
                 break;
             };
