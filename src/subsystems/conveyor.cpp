@@ -198,6 +198,7 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital_new_press(TOGGLE_EARS))
     {
+        // Toggle the ears (wings) that can fit into the long goals.
         (void)ears.toggle();
     }
 }
