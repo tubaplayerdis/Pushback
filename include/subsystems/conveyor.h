@@ -51,11 +51,14 @@ public:
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;
 
+    /// Ramp pneumatics for the piston that pulls the bands down to score on the middle trough.
+    pros::adi::Pneumatics ramp;
+
     /// Lift pneumatics for double park system
     pros::adi::Pneumatics lift;
 
-    /// Pneumatics for the "ear" mechanisms
-    pros::adi::Pneumatics ears;
+    /// Pneumatics for the "wing" mechanisms
+    pros::adi::Pneumatics wings;
 
     /// Pros task that operates the color sorting loop.
     std::unique_ptr<pros::Task> color_sort_task;

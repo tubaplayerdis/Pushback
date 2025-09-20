@@ -28,7 +28,8 @@ exhaust(EXHAUST),
 splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
 distance_trough(DISTANCE_TROUGH),
-ears(EARS, false),
+ramp(RAMP, false),
+wings(WINGS, false),
 lift(LIFT, false),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
@@ -190,16 +191,15 @@ void conveyor::tick_implementation() {
         (void)lift.toggle();
     }
 
-    if (controller_master.get_digital_new_press(TOGGLE_COLOR_SORT))
-    {
-        //Color sort is currently disabled as there is no way for it to work currently.
-        //toggle_color_sort();
-    }
-
-    if (controller_master.get_digital_new_press(TOGGLE_EARS))
+    if (controller_master.get_digital_new_press(TOGGLE_WINGS))
     {
         // Toggle the ears (wings) that can fit into the long goals.
-        (void)ears.toggle();
+        (void)wings.toggle();
+    }
+
+    if (controller_master.get_digital_new_press(TOGGLE_RAMP))
+    {
+        (void)ramp.toggle();
     }
 }
 
