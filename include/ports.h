@@ -15,12 +15,12 @@ namespace ports
 {
     namespace drivetrain
     {
-        constexpr auto LEFT_A = -19;
-        constexpr auto LEFT_B = 15;
-        constexpr auto LEFT_C = 16;
-        constexpr auto RIGHT_A = 17;
-        constexpr auto RIGHT_B = -18;
-        constexpr auto RIGHT_C = -20;
+        constexpr auto LEFT_A = 20;
+        constexpr auto LEFT_B = 1;
+        constexpr auto LEFT_C = 6;
+        constexpr auto RIGHT_A = 11;
+        constexpr auto RIGHT_B = 9;
+        constexpr auto RIGHT_C = 10;
 
         namespace controls
         {
@@ -40,15 +40,15 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto INTAKE = 0;
+        constexpr auto INTAKE = 8;
         constexpr auto EXHAUST = 0;
-        constexpr auto CONVEYOR_A = 1;
-        constexpr auto CONVEYOR_B = -10;
+        constexpr auto CONVEYOR_A = 0;
+        constexpr auto CONVEYOR_B = 0;
         constexpr auto DISTANCE_TROUGH = 0;
         constexpr auto LIFT = 'B';
         constexpr auto WINGS = 'C';
         constexpr auto RAMP = 'D';
-        constexpr auto SPLITTER_OPTICAL = 12;
+        constexpr auto SPLITTER_OPTICAL = 0;
 
         namespace controls
         {

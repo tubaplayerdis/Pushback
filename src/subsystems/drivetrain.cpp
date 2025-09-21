@@ -25,11 +25,11 @@ lem_chassis(lem_drivetrain, controller::controller_settings_lateral, controller:
 void drivetrain::tick_implementation()
 {
     //Acquire throttle and turning values
-    const int32_t throttle = controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
-    const int32_t turn = -1 * controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
+    int32_t throttle = controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
+    int32_t turn = -1 * controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
     //Apply inputs
-    lem_chassis.arcade(throttle, turn);
+    lem_chassis.arcade(turn, throttle);
 }
 
 drivetrain* drivetrain::get()
