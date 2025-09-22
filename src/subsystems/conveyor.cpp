@@ -138,7 +138,7 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(CONVEYOR_IN))
     {
         (void)conveyor_group.move(FULL_POWER);
-        (void)intake.move(FULL_POWER);
+        (void)intake.move(-FULL_POWER);
 
         //Get and switch on the detected trough
         switch (get_detected_through())
@@ -173,7 +173,7 @@ void conveyor::tick_implementation() {
     } else if (controller_master.get_digital(CONVEYOR_OUT))
     {
         (void)conveyor_group.move(-FULL_POWER);
-        (void)intake.move(-FULL_POWER);
+        (void)intake.move(FULL_POWER);
     } else
     {
         (void)conveyor_group.brake();

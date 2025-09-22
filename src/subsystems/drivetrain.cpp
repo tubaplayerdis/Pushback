@@ -28,7 +28,7 @@ void drivetrain::tick_implementation()
     int32_t throttle = controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
     int32_t turn = -1 * controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
-    //Apply inputs
+    //Apply inputs. I have no idea as to why turn is being interpreted as throttle and vice versa (they are swaped for some reason.), but this works.
     lem_chassis.arcade(turn, throttle);
 }
 
