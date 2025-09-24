@@ -45,9 +45,6 @@ public:
     /// Dual motors that operate the conveyor
     pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
 
-    /// Distance sensor that determines if the tall or short trough is being scored on.
-    pros::Distance distance_trough;
-
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;
 

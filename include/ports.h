@@ -44,7 +44,6 @@ namespace ports
         constexpr auto EXHAUST = 0;
         constexpr auto CONVEYOR_A = 2;
         constexpr auto CONVEYOR_B = -3;
-        constexpr auto DISTANCE_TROUGH = 0;
         constexpr auto LIFT = 'B';
         constexpr auto WINGS = 'C';
         constexpr auto RAMP = 'D';

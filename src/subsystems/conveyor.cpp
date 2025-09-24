@@ -27,7 +27,6 @@ intake (INTAKE),
 exhaust(EXHAUST),
 splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
-distance_trough(DISTANCE_TROUGH),
 ramp(RAMP, false),
 wings(WINGS, false),
 lift(LIFT, false),
@@ -120,18 +119,6 @@ bool conveyor::toggle_color_sort() {
     if (is_color_sort_active()) deactivate_color_sort();
     else activate_color_sort();
     return is_color_sort_active();
-}
-
-trough_detection conveyor::get_detected_through()
-{
-    if (range(distance_trough.get_distance(), HIGH_TROUGH_LOW, HIGH_TROUGH_HIGH))
-    {
-        return trough_detection::HIGH_TROUGH;
-    } else if (range(distance_trough.get_distance(), LOW_TROUGH_LOW, LOW_TROUGH_HIGH))
-    {
-        return trough_detection::LOW_TROUGH;
-    }
-    return trough_detection::NONE_TROUGH;
 }
 
 void conveyor::tick_implementation() {
