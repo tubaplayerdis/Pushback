@@ -126,37 +126,6 @@ void conveyor::tick_implementation() {
     {
         (void)conveyor_group.move(FULL_POWER);
         (void)intake.move(-FULL_POWER);
-
-        //Get and switch on the detected trough
-        switch (get_detected_through())
-        {
-            case trough_detection::HIGH_TROUGH:
-            {
-                //Exhaust forward moving blocks to the upper trough
-                (void)exhaust.move(FULL_POWER);
-                break;
-            };
-
-            case trough_detection::LOW_TROUGH:
-            {
-                //Exhaust reverse moving blocks to the upper trough
-                (void)exhaust.move(-FULL_POWER);
-                break;
-            };
-
-            case trough_detection::NONE_TROUGH:
-            {
-                //Move the exhaust on partial power to move balls through the exhaust but not output
-                (void)exhaust.move( 0.2 * FULL_POWER);
-                break;
-            };
-
-            default:
-            {
-                break;
-            }
-        }
-
     } else if (controller_master.get_digital(CONVEYOR_OUT))
     {
         (void)conveyor_group.move(-FULL_POWER);
@@ -171,7 +140,12 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(EXHAUST_OUT))
     {
         (void)exhaust.move(FULL_POWER);
-    } else (void)exhaust.brake();
+    } else if (controller_master.get_digital(EXHAUST_IN))
+    {
+        (void)exhaust.move(-FULL_POWER);
+    }
+
+    else (void)exhaust.brake();
 
     if (controller_master.get_digital_new_press(TOGGLE_LIFT))
     {

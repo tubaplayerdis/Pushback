@@ -87,10 +87,6 @@ public:
     /// @note Returns by value to prevent modification of the color_sort_active variable
     bool toggle_color_sort();
 
-    /// Which trough is detected. Used in control loop to determine output direction of the exhaust.
-    /// @return Returns the through detected by value.
-    trough_detection get_detected_through();
-
 protected:
 
     /// Custom implementation of tick. reads controller values.

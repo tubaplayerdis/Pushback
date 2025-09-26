@@ -41,7 +41,7 @@ namespace ports
     namespace conveyor
     {
         constexpr auto INTAKE = 8;
-        constexpr auto EXHAUST = 0;
+        constexpr auto EXHAUST = 5;
         constexpr auto CONVEYOR_A = 2;
         constexpr auto CONVEYOR_B = -3;
         constexpr auto LIFT = 'B';
@@ -54,6 +54,7 @@ namespace ports
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
+            constexpr auto EXHAUST_IN = pros::E_CONTROLLER_DIGITAL_LEFT;
             constexpr auto TOGGLE_LIFT = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_UP;
             constexpr auto TOGGLE_RAMP = pros::E_CONTROLLER_DIGITAL_R2;
