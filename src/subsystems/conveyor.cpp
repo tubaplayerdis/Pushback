@@ -29,7 +29,7 @@ splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
 ramp(RAMP, false),
 wings(WINGS, false),
-lift(LIFT, false),
+lift(LIFT, true),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
 color_sort_active(false)
@@ -122,30 +122,40 @@ bool conveyor::toggle_color_sort() {
 }
 
 void conveyor::tick_implementation() {
-    if (controller_master.get_digital(CONVEYOR_IN))
-    {
-        (void)conveyor_group.move(FULL_POWER);
-        (void)intake.move(-FULL_POWER);
-    } else if (controller_master.get_digital(CONVEYOR_OUT))
-    {
-        (void)conveyor_group.move(-FULL_POWER);
-        (void)intake.move(FULL_POWER);
-    } else
-    {
-        (void)conveyor_group.brake();
-        (void)intake.brake();
-        (void)exhaust.brake();
-    }
 
-    if (controller_master.get_digital(EXHAUST_OUT))
+    if (controller_master.get_digital(RAMP_MACRO))
     {
         (void)exhaust.move(FULL_POWER);
-    } else if (controller_master.get_digital(EXHAUST_IN))
+        (void)conveyor_group.move(FULL_POWER);
+        (void)intake.move(-FULL_POWER);
+        (void)ramp.extend();
+    } else
     {
-        (void)exhaust.move(-FULL_POWER);
-    }
+        if (controller_master.get_digital(CONVEYOR_IN))
+        {
+            if (ramp.is_extended()) ramp.retract();
+            (void)conveyor_group.move(FULL_POWER);
+            (void)intake.move(-FULL_POWER);
+        } else if (controller_master.get_digital(CONVEYOR_OUT))
+        {
+            if (ramp.is_extended()) ramp.retract();
+            (void)conveyor_group.move(-FULL_POWER);
+            (void)intake.move(FULL_POWER);
+        } else
+        {
+            (void)conveyor_group.brake();
+            (void)intake.brake();
+            (void)exhaust.brake();
+        }
 
-    else (void)exhaust.brake();
+        if (controller_master.get_digital(EXHAUST_OUT))
+        {
+            (void)exhaust.move(FULL_POWER);
+        } else if (controller_master.get_digital(EXHAUST_IN))
+        {
+            (void)exhaust.move(-FULL_POWER);
+        } else (void)exhaust.brake();
+    }
 
     if (controller_master.get_digital_new_press(TOGGLE_LIFT))
     {
@@ -158,9 +168,14 @@ void conveyor::tick_implementation() {
         (void)wings.toggle();
     }
 
-    if (controller_master.get_digital_new_press(TOGGLE_RAMP))
+    if (controller_master.get_digital_new_press(OVERRIDE_RAMP_UP))
     {
-        (void)ramp.toggle();
+        (void)ramp.extend();
+    }
+
+    if (controller_master.get_digital_new_press(OVERRIDE_RAMP_DOWN))
+    {
+        (void)ramp.retract();
     }
 }
 

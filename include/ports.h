@@ -9,7 +9,7 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
 
-/// ALL ports and constants are defined in this file for simplicity.
+/// All ports and constants are defined in this file for simplicity.
 
 namespace ports
 {
@@ -44,9 +44,9 @@ namespace ports
         constexpr auto EXHAUST = 5;
         constexpr auto CONVEYOR_A = 2;
         constexpr auto CONVEYOR_B = -3;
-        constexpr auto LIFT = 'B';
-        constexpr auto WINGS = 'C';
-        constexpr auto RAMP = 'D';
+        constexpr auto LIFT = 'G';
+        constexpr auto WINGS = 'A';
+        constexpr auto RAMP = 'B';
         constexpr auto SPLITTER_OPTICAL = 0;
 
         namespace controls
@@ -57,7 +57,9 @@ namespace ports
             constexpr auto EXHAUST_IN = pros::E_CONTROLLER_DIGITAL_LEFT;
             constexpr auto TOGGLE_LIFT = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_UP;
-            constexpr auto TOGGLE_RAMP = pros::E_CONTROLLER_DIGITAL_R2;
+            constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slighty
+            constexpr auto OVERRIDE_RAMP_UP = pros::E_CONTROLLER_DIGITAL_A;
+            constexpr auto OVERRIDE_RAMP_DOWN = pros::E_CONTROLLER_DIGITAL_B;
         }
     }
 
