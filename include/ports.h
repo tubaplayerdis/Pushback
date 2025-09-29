@@ -43,6 +43,7 @@ namespace ports
         constexpr auto INTAKE = 8;
         constexpr auto EXHAUST = 5;
         constexpr auto CONVEYOR_A = 2;
+        constexpr auto CONVEYOR_B = -3;
         constexpr auto LIFT = 'G';
         constexpr auto WINGS = 'A';
         constexpr auto RAMP = 'B';
