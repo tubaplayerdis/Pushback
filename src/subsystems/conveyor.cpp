@@ -25,11 +25,11 @@ conveyor::conveyor() :
 subsystem(),
 intake (INTAKE),
 exhaust(EXHAUST),
+conveyor_motor(CONVEYOR_A),
 splitter_optical(SPLITTER_OPTICAL),
-conveyor_group({CONVEYOR_A, CONVEYOR_B}),
 ramp(RAMP, false),
-wings(WINGS, false),
 lift(LIFT, true),
+wings(WINGS, false),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
 color_sort_active(false)
@@ -126,7 +126,7 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(RAMP_MACRO))
     {
         (void)exhaust.move(FULL_POWER);
-        (void)conveyor_group.move(FULL_POWER);
+        (void)conveyor_motor.move(FULL_POWER);
         (void)intake.move(-FULL_POWER);
         (void)ramp.extend();
     } else
@@ -134,16 +134,16 @@ void conveyor::tick_implementation() {
         if (controller_master.get_digital(CONVEYOR_IN))
         {
             if (ramp.is_extended()) ramp.retract();
-            (void)conveyor_group.move(FULL_POWER);
+            (void)conveyor_motor.move(FULL_POWER);
             (void)intake.move(-FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (ramp.is_extended()) ramp.retract();
-            (void)conveyor_group.move(-FULL_POWER);
+            (void)conveyor_motor.move(-FULL_POWER);
             (void)intake.move(FULL_POWER);
         } else
         {
-            (void)conveyor_group.brake();
+            (void)conveyor_motor.brake();
             (void)intake.brake();
             (void)exhaust.brake();
         }
