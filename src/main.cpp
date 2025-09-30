@@ -2,6 +2,10 @@
 #include "../include/subsystems/drivetrain.h"
 #include "../include/subsystems/conveyor.h"
 #include "titanselect/titanselect.hpp"
+extern "C"
+{
+	#include "titanselect/titanselect.h"
+}
 //Not tested but this needs to be included to avoid the autons not showing up.
 #include "autons.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
@@ -13,7 +17,7 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	ts::selector::get()->display();
+	ts_display_selector();
 }
 
 /**
@@ -37,7 +41,7 @@ void disabled()
  */
 void competition_initialize()
 {
-	if (!ts::selector::get()->is_auton_selected())
+	if (ts_is_auton_selected() != 0)
 	{
 		//Handle no selected auton
 	}
@@ -56,7 +60,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	ts::selector::get()->run_selected_auton();
+	ts_run_selected_auton();
 }
 
 /**
