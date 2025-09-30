@@ -25,11 +25,11 @@ conveyor::conveyor() :
 subsystem(),
 intake (INTAKE),
 exhaust(EXHAUST),
-splitter_optical(SPLITTER_OPTICAL),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
+splitter_optical(SPLITTER_OPTICAL),
 ramp(RAMP, false),
+lift(LIFT, false),
 wings(WINGS, false),
-lift(LIFT, true),
 color_sort_task(nullptr),
 color_sort_color(object_color::NEUTRAL),
 color_sort_active(false)
