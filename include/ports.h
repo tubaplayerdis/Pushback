@@ -22,6 +22,10 @@ namespace ports
         constexpr auto RIGHT_B = 9;
         constexpr auto RIGHT_C = 10;
 
+        constexpr auto LOCAL_REAR = 0;
+        constexpr auto LOCAL_LEFT = 0;
+        constexpr auto LOCAL_RIGHT = 0;
+
         namespace controls
         {
             constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
@@ -35,6 +39,17 @@ namespace ports
             constexpr auto DRIVETRAIN_RPM = 450;
             constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
             constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
+
+            namespace offsets
+            {
+                //All of these are in inches. X is positive and negative from center of robot perpendicular from looking at the front of the robot.
+                constexpr auto REAR_X = 0;
+                constexpr auto REAR_Y = 0;
+                constexpr auto LEFT_X = 0;
+                constexpr auto LEFT_Y = 0;
+                constexpr auto RIGHT_X = 0;
+                constexpr auto RIGHT_Y = 0;
+            }
         }
     }
 
