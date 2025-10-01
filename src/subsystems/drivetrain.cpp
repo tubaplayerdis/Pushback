@@ -14,9 +14,9 @@ motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
 lem_chassis(lem_drivetrain, controller::controller_settings_lateral, controller::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
-localization_rear(offsets::REAR_X, offsets::REAR_Y, LOCAL_REAR),
-localization_left(offsets::LEFT_X, offsets::LEFT_Y, LOCAL_LEFT),
-localization_right(offsets::RIGHT_X, offsets::RIGHT_Y, LOCAL_RIGHT)
+localization_rear(0, offsets::REAR_Y, LOCAL_REAR),
+localization_left(offsets::LEFT_X, 0, LOCAL_LEFT),
+localization_right(offsets::RIGHT_X, 0, LOCAL_RIGHT)
 {
     //Acquire localization values then feed it into LemLib chassis pose.
     double x_localization = get_x_position_from_sensors();

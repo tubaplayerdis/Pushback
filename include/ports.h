@@ -42,13 +42,10 @@ namespace ports
 
             namespace offsets
             {
-                //All of these are in inches. X is positive and negative from center of robot perpendicular from looking at the front of the robot.
-                constexpr auto REAR_X = 0;
+                //All of these are in inches. They are all positive distances from the robots center.
                 constexpr auto REAR_Y = 0;
                 constexpr auto LEFT_X = 0;
-                constexpr auto LEFT_Y = 0;
                 constexpr auto RIGHT_X = 0;
-                constexpr auto RIGHT_Y = 0;
             }
         }
     }
