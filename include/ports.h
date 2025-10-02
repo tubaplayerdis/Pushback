@@ -73,6 +73,7 @@ namespace ports
             constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
             constexpr auto OVERRIDE_RAMP_UP = pros::E_CONTROLLER_DIGITAL_A;
             constexpr auto OVERRIDE_RAMP_DOWN = pros::E_CONTROLLER_DIGITAL_B;
+            constexpr auto TOGGLE_COLOR_SORT = pros::E_CONTROLLER_DIGITAL_Y;
         }
     }
 

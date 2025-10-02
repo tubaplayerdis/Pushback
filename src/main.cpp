@@ -21,7 +21,7 @@ conveyor* conv = nullptr;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	//ts_display_selector();
+	ts_display_selector();
 	odom = odometry::get();
 	dt = drivetrain::get();
 	conv = conveyor::get();
@@ -48,7 +48,7 @@ void disabled()
  */
 void competition_initialize()
 {
-	//if (ts_is_auton_selected() != 0)
+	if (ts_is_auton_selected() != 0)
 	{
 		//Handle no selected auton
 	}
@@ -67,7 +67,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	//ts_run_selected_auton();
+	ts_run_selected_auton();
 }
 
 /**

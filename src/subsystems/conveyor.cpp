@@ -30,8 +30,7 @@ splitter_optical(SPLITTER_OPTICAL),
 ramp(RAMP, false),
 lift(LIFT, false),
 wings(WINGS, false),
-color_sort_color(object_color::BLUE),
-color_sort_active(true)
+color_sort_color(object_color::NEUTRAL)
 {
     splitter_optical.set_led_pwm(SPLITTER_BRIGHTNESS); //50% brightness
 }
@@ -80,39 +79,41 @@ void conveyor::do_color_sort(bool* out_did_color_sort)
 }
 
 bool conveyor::is_color_sort_active() {
-    return color_sort_active;
+    return color_sort_color != NEUTRAL;
 }
 
 bool conveyor::toggle_color_sort() {
-    color_sort_active = !color_sort_active;
+    switch (color_sort_color)
+    {
+        case NEUTRAL:
+            color_sort_color = BLUE;
+            break;
+        case BLUE:
+            color_sort_color = RED;
+            break;
+        case RED:
+            color_sort_color = NEUTRAL;
+            break;
+    }
     return is_color_sort_active();
 }
 
 void conveyor::tick_implementation() {
 
-    controller_master.print(1,0,"Detecting HUE: %f", splitter_optical.get_hue());
-    switch (detect_color(&splitter_optical))
+    const char* color_display_code = "NONE ";
+    switch (color_sort_color)
     {
+        case NEUTRAL:
+            color_display_code = "NONE ";
+            break;
         case BLUE:
-        {
-            controller_master.clear();
-            controller_master.print(0,0,"Detecting BLUE");
+            color_display_code = "RED  ";
             break;
-        }
-
         case RED:
-        {
-            controller_master.clear();
-            controller_master.print(0,0,"Detecting RED ");
-           break;
-        }
-
-        default:
-        {
+            color_display_code = "BLUE ";
             break;
-        }
-
-    };
+    }
+    controller_master.print(1,0,"Excluding Color: %s", color_display_code);
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
@@ -127,7 +128,7 @@ void conveyor::tick_implementation() {
         {
             (void)exhaust.move(FULL_POWER);
 
-            if (color_sort_active)
+            if (is_color_sort_active())
             {
                 do_color_sort(&did_color_sort);
             }
@@ -175,6 +176,11 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital_new_press(OVERRIDE_RAMP_DOWN))
     {
         (void)ramp.retract();
+    }
+
+    if (controller_master.get_digital_new_press(TOGGLE_COLOR_SORT))
+    {
+        toggle_color_sort();
     }
 }
 

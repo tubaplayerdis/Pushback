@@ -62,9 +62,6 @@ public:
 
 private:
 
-    /// Color sorting boolean.
-    bool color_sort_active;
-
     /// Color sorting function
     void do_color_sort(bool* out_did_color_sort);
 
