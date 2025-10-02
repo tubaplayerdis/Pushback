@@ -11,7 +11,7 @@ std::unique_ptr<conveyor> conveyor_instance;
 
 constexpr auto RED_LOW = 0;
 constexpr auto RED_HIGH = 15;
-constexpr auto BLUE_LOW = 150;
+constexpr auto BLUE_LOW = 100;
 constexpr auto BLUE_HIGH = 250;
 constexpr auto HIGH_TROUGH_LOW = 100;
 constexpr auto HIGH_TROUGH_HIGH = 100;
@@ -30,11 +30,10 @@ splitter_optical(SPLITTER_OPTICAL),
 ramp(RAMP, false),
 lift(LIFT, false),
 wings(WINGS, false),
-color_sort_task(nullptr),
-color_sort_color(object_color::NEUTRAL),
-color_sort_active(false)
+color_sort_color(object_color::BLUE),
+color_sort_active(true)
 {
-    splitter_optical.set_led_pwm(50); //50% brightness
+    splitter_optical.set_led_pwm(SPLITTER_BRIGHTNESS); //50% brightness
 }
 
 /// Whether x is in the specified range. (inclusive)
@@ -44,7 +43,7 @@ color_sort_active(false)
 /// \return boolean representative of whether x was in the specified range.
 static bool range(double x, double low, double high)
 {
-    return x <= low && x >= high;
+    return x >= low && x <= high;
 }
 
 /// Detects the color the spliter optical sensor sees
@@ -59,56 +58,25 @@ static object_color detect_color(pros::Optical* splitter_optical)
     return NEUTRAL;
 }
 
-static void color_sort_loop()
+void conveyor::do_color_sort(bool* out_did_color_sort)
 {
-    //Acquire pointers for efficiency
-    pros::Optical* optical = &conveyor::get()->splitter_optical;
-    object_color color = conveyor::get()->color_sort_color;
-
-    while (true)
+    //If an object is not detected, keep the current piston configuration and continue the loop.
+    if (splitter_optical.get_proximity() == 255)
     {
-        pros::Task::delay(100);
-
-        //If an object is not detected, keep the current piston configuration and continue the loop.
-        if (optical->get_proximity() == 255) continue;
-
-        //If the detected color is blue and the chosen color is red, extend the piston
-        if ((detect_color(optical) == BLUE && color == RED) || (detect_color(optical) == RED && color == BLUE))
-        {
-            //do color sort
-        }
-        else if (detect_color(optical) == color) //If the detected color and chosen color match retract the piston.
-        {
-            //do not do color sort
-        }
-    }
-}
-
-void conveyor::activate_color_sort()
-{
-    //If the unique_ptr holding the pros task is active, destroy the pros task and reset the pointer
-    if(color_sort_task)
-    {
-        color_sort_task->remove();
-        color_sort_task.reset();
+        if (ramp.is_extended()) ramp.retract();
     }
 
-    //Reassign and restart the task. notify a status change by updating color_sort_active.
-    color_sort_task = std::unique_ptr<pros::Task>( new pros::Task(color_sort_loop) );
-    color_sort_active = true;
-}
-
-void conveyor::deactivate_color_sort()
-{
-    //If the color sort was already inactive, return early.
-    if (!color_sort_task) return;
-
-    //Destroy the task and reset the pointer
-    color_sort_task->remove();
-    color_sort_task.reset();
-
-    //Notify that colorsort was turned off by updating color_sort_active
-    color_sort_active = false;
+    //If the detected color is blue and the chosen color is red, extend the piston
+    if ((detect_color(&splitter_optical) == BLUE && color_sort_color == RED) || (detect_color(&splitter_optical) == RED && color_sort_color == BLUE))
+    {
+        ramp.extend();
+        *out_did_color_sort = true;
+    }
+    else if (detect_color(&splitter_optical) == color_sort_color) //If the detected color and chosen color match retract the piston.
+    {
+        ramp.retract();
+        *out_did_color_sort = true;
+    }
 }
 
 bool conveyor::is_color_sort_active() {
@@ -116,12 +84,35 @@ bool conveyor::is_color_sort_active() {
 }
 
 bool conveyor::toggle_color_sort() {
-    if (is_color_sort_active()) deactivate_color_sort();
-    else activate_color_sort();
+    color_sort_active = !color_sort_active;
     return is_color_sort_active();
 }
 
 void conveyor::tick_implementation() {
+
+    controller_master.print(1,0,"Detecting HUE: %f", splitter_optical.get_hue());
+    switch (detect_color(&splitter_optical))
+    {
+        case BLUE:
+        {
+            controller_master.clear();
+            controller_master.print(0,0,"Detecting BLUE");
+            break;
+        }
+
+        case RED:
+        {
+            controller_master.clear();
+            controller_master.print(0,0,"Detecting RED ");
+           break;
+        }
+
+        default:
+        {
+            break;
+        }
+
+    };
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
@@ -131,9 +122,24 @@ void conveyor::tick_implementation() {
         (void)ramp.extend();
     } else
     {
+        bool did_color_sort = false;
+        if (controller_master.get_digital(EXHAUST_OUT))
+        {
+            (void)exhaust.move(FULL_POWER);
+
+            if (color_sort_active)
+            {
+                do_color_sort(&did_color_sort);
+            }
+
+        } else if (controller_master.get_digital(EXHAUST_IN))
+        {
+            (void)exhaust.move(-FULL_POWER);
+        } else (void)exhaust.brake();
+
         if (controller_master.get_digital(CONVEYOR_IN))
         {
-            if (ramp.is_extended()) ramp.retract();
+            if (ramp.is_extended() && !did_color_sort) ramp.retract(); //Color sort will do this
             (void)conveyor_group.move(FULL_POWER);
             (void)intake.move(-FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
@@ -145,16 +151,9 @@ void conveyor::tick_implementation() {
         {
             (void)conveyor_group.brake();
             (void)intake.brake();
-            (void)exhaust.brake();
         }
 
-        if (controller_master.get_digital(EXHAUST_OUT))
-        {
-            (void)exhaust.move(FULL_POWER);
-        } else if (controller_master.get_digital(EXHAUST_IN))
-        {
-            (void)exhaust.move(-FULL_POWER);
-        } else (void)exhaust.brake();
+
     }
 
     if (controller_master.get_digital_new_press(TOGGLE_LIFT))

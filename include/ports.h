@@ -22,9 +22,9 @@ namespace ports
         constexpr auto RIGHT_B = 9;
         constexpr auto RIGHT_C = 10;
 
-        constexpr auto LOCAL_REAR = 0;
-        constexpr auto LOCAL_LEFT = 0;
-        constexpr auto LOCAL_RIGHT = 0;
+        constexpr auto LOCAL_REAR = 12;
+        constexpr auto LOCAL_LEFT = 15;
+        constexpr auto LOCAL_RIGHT = 18;
 
         namespace controls
         {
@@ -37,15 +37,15 @@ namespace ports
             constexpr auto DRIVETRAIN_TRACK_WIDTH = 10;
             constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
             constexpr auto DRIVETRAIN_RPM = 450;
-            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
+            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 8;
             constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
 
             namespace offsets
             {
                 //All of these are in inches. They are all positive distances from the robots center.
-                constexpr auto REAR_Y = 0;
-                constexpr auto LEFT_X = 0;
-                constexpr auto RIGHT_X = 0;
+                constexpr auto REAR_Y = 4;
+                constexpr auto LEFT_X = 6;
+                constexpr auto RIGHT_X = 5.5;
             }
         }
     }
@@ -59,7 +59,8 @@ namespace ports
         constexpr auto LIFT = 'C';
         constexpr auto WINGS = 'A';
         constexpr auto RAMP = 'B';
-        constexpr auto SPLITTER_OPTICAL = 0;
+        constexpr auto SPLITTER_OPTICAL = 19;
+        constexpr auto SPLITTER_BRIGHTNESS = 0;
 
         namespace controls
         {
@@ -77,14 +78,12 @@ namespace ports
 
     namespace odometry
     {
-        constexpr auto INERTIAL = 14;
-        constexpr auto ROTATION_VERTICAL = -13;
-        constexpr auto ROTATION_HORIZONTAL = -8;
+        constexpr auto INERTIAL = 4;
+        constexpr auto ROTATION_VERTICAL = 7;
 
         namespace settings
         {
-            constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -1.5;
-            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0;
+            constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = 0; //The horizontal offset of the tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
         }
     }

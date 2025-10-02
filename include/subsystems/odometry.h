@@ -39,7 +39,7 @@ public:
     /// Inertial sensor responsible for things like velocity and rotation
     pros::Imu inertial;
 
-    /// Pros rotation sensor for vertical wheel.
+    /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;
 
     /// LemLib vertical tracking wheel for autons
@@ -50,10 +50,10 @@ public:
 
 private:
 
-    /// velocity based off inertial acceleration readings.
+    /// Velocity based off inertial sensor acceleration readings.
     vector estimated_velocity;
 
-    /// position based off inertial acceleration readings.
+    /// Position based off inertial sensor acceleration readings.
     vector estimated_position;
 
     /// Private constructor to enforce usage of get()

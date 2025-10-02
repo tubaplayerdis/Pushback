@@ -21,12 +21,12 @@ static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_
 odometry::odometry() :
 inertial(INERTIAL),
 rotation_vertical(ROTATION_VERTICAL),
-tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
+tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
 odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
 estimated_position(0,0,0)
 {
-    inertial.reset(true);
+    //inertial.reset(true);
     time_at_last_call = std::chrono::high_resolution_clock::now();
 }
 

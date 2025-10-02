@@ -57,16 +57,16 @@ public:
     /// Pneumatics for the "wing" mechanisms
     pros::adi::Pneumatics wings;
 
-    /// Pros task that operates the color sorting loop.
-    std::unique_ptr<pros::Task> color_sort_task;
-
     /// The current color colorsort is including.
     object_color color_sort_color;
 
 private:
 
-    /// Color sorting boolean. changing will not induce changes. use activate_color_sort() and deactiveate_color_sort()
+    /// Color sorting boolean.
     bool color_sort_active;
+
+    /// Color sorting function
+    void do_color_sort(bool* out_did_color_sort);
 
     /// Private constructor to enable use of get() method.
     conveyor();
@@ -76,12 +76,6 @@ public:
     /// Whether color sort is active.
     /// @note Returns by value to prevent modification of the color_sort_active variable
     bool is_color_sort_active();
-
-    /// Activate color sorting. Restarts color sorting if already active
-    void activate_color_sort();
-
-    /// De-activate color sorting.
-    void deactivate_color_sort();
 
     /// Toggles color sort. Returns whether it was tuned on or off.
     /// @note Returns by value to prevent modification of the color_sort_active variable

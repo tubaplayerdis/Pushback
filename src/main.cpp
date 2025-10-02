@@ -10,6 +10,10 @@ extern "C"
 #include "autons.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
+odometry* odom = nullptr;
+drivetrain* dt = nullptr;
+conveyor* conv = nullptr;
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -17,7 +21,10 @@ extern "C"
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	ts_display_selector();
+	//ts_display_selector();
+	odom = odometry::get();
+	dt = drivetrain::get();
+	conv = conveyor::get();
 }
 
 /**
@@ -41,7 +48,7 @@ void disabled()
  */
 void competition_initialize()
 {
-	if (ts_is_auton_selected() != 0)
+	//if (ts_is_auton_selected() != 0)
 	{
 		//Handle no selected auton
 	}
@@ -60,7 +67,7 @@ void competition_initialize()
  */
 void autonomous()
 {
-	ts_run_selected_auton();
+	//ts_run_selected_auton();
 }
 
 /**
@@ -77,10 +84,9 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    odometry* odom = odometry::get();
-    drivetrain* dt = drivetrain::get();
-    conveyor* conv = conveyor::get();
-
+    odom = odometry::get();
+    dt = drivetrain::get();
+    conv = conveyor::get();
 
 	while (true) {
 		lv_timer_handler();
