@@ -4,6 +4,7 @@
 
 #include "../liblvgl/lvgl.h"
 #include <memory>
+#include <vector>
 
 namespace ts
 {   
@@ -47,8 +48,17 @@ namespace ts
         void run_auton(const char* name);
 
         /// The selected autons name.
-        /// @return nullptr if none is selected, otherwise the selected autons name.
-        const char* get_selected_auton_name();
+        /// @return "none" if none is selected, otherwise the selected autons name.
+        std::string get_selected_auton_name();
+
+        /// The names of all the autons registered with titanselect.
+        /// @return vector of strings with the No Auton autons omited.
+        std::vector<std::string> get_auton_names();
+
+        /// Attempts to select an auton on the selector.
+        /// @param name Name of the Auton.
+        /// @return Whether the inputted auton was selected.
+        bool select_auton(const char* name);
 
         public:
 
@@ -59,7 +69,10 @@ namespace ts
 
     struct auton
     {
+        /// Name of the auton
         const char* name;
+
+        /// Function pointer to the auton function
         void(*function)();
 
         /// Creates and registers an auton.
