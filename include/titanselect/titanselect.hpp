@@ -57,7 +57,7 @@ namespace ts
 
         /// Attempts to select an auton on the selector.
         /// @param name Name of the Auton.
-        /// @return Whether the inputted auton was selected.
+        /// @return Whether an auton was selected.
         bool select_auton(const char* name);
 
         public:
@@ -69,10 +69,7 @@ namespace ts
 
     struct auton
     {
-        /// Name of the auton
         const char* name;
-
-        /// Function pointer to the auton function
         void(*function)();
 
         /// Creates and registers an auton.
