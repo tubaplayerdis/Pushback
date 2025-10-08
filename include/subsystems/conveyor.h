@@ -51,7 +51,7 @@ public:
     /// Ramp pneumatics for the piston that pulls the bands down to score on the middle trough.
     pros::adi::Pneumatics ramp;
 
-    /// Lift pneumatics for double park system
+    /// Lift pneumatics for match loader "little will mech"
     pros::adi::Pneumatics lift;
 
     /// Pneumatics for the "wing" mechanisms

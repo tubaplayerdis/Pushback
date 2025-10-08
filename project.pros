@@ -635,7 +635,7 @@
             "titanselect": {
                 "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\titanselect@0.0.7",
                 "metadata": {
-                    "origin": "local"
+                    "origin": "titanselect"
                 },
                 "name": "titanselect",
                 "py/object": "pros.conductor.templates.local_template.LocalTemplate",
