@@ -33,6 +33,7 @@ wings(WINGS, false),
 color_sort_color(object_color::NEUTRAL)
 {
     splitter_optical.set_led_pwm(SPLITTER_BRIGHTNESS); //50% brightness
+    exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 /// Whether x is in the specified range. (inclusive)
@@ -68,12 +69,12 @@ void conveyor::do_color_sort(bool* out_did_color_sort)
     //If the detected color is blue and the chosen color is red, extend the piston
     if ((detect_color(&splitter_optical) == BLUE && color_sort_color == RED) || (detect_color(&splitter_optical) == RED && color_sort_color == BLUE))
     {
-        ramp.extend();
+        ramp.extend(); //Reversed due to setup IRL
         *out_did_color_sort = true;
     }
     else if (detect_color(&splitter_optical) == color_sort_color) //If the detected color and chosen color match retract the piston.
     {
-        ramp.retract();
+        ramp.retract(); //Reversed due to setup IRL
         *out_did_color_sort = true;
     }
 }
