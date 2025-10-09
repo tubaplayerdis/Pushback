@@ -5,6 +5,7 @@
 #include "../../include/ports.h"
 #include "../../include/pros/imu.hpp"
 #include "../../include/pros/imu.h"
+#include "../../include/controller.h"
 #include <memory>
 #include <chrono>
 #include <cstring>
@@ -31,7 +32,6 @@ estimated_position(0,0,0)
 }
 
 void odometry::tick_implementation() {
-
     /*
      * Position estimation system.
      * This system is an experiment on whether the inertial sensor can provide accurate values to estimate position and velocity.

@@ -10,8 +10,11 @@
 
 void testing_auton()
 {
+    odometry* od = odometry::get();
     drivetrain* dt  = drivetrain::get();
-    dt->lem_chassis.moveToPoint(100, 100, 1000);
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+    chassis->setPose(0,0,0);
+    chassis->moveToPoint(8, 0, 400);
 }
 
 void blue_left_auton()

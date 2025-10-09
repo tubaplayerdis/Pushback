@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/bits/ranges_util.h"
+#include "../../include/subsystems/odometry.h"
 
 constexpr auto FULL_POWER = 127;
 
@@ -114,7 +115,7 @@ void conveyor::tick_implementation() {
             color_display_code = "BLUE ";
             break;
     }
-    controller_master.print(1,0,"Excluding Color: %s", color_display_code);
+    //controller_master.print(1,0,"Excluding Color: %s", color_display_code);
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
