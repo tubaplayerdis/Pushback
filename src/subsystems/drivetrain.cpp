@@ -4,6 +4,33 @@
 #include "../../include/subsystems/drivetrain.h"
 #include "../../include/ports.h"
 
+namespace pid
+{
+    lemlib::ControllerSettings
+    controller_settings_lateral(10, // proportional gain (kP)
+                                  0, // integral gain (kI)
+                                  3, // derivative gain (kD)
+                                  3, // anti windup
+                                  1, // small error range, in inches
+                                  100, // small error range timeout, in milliseconds
+                                  3, // large error range, in inches
+                                  500, // large error range timeout, in milliseconds
+                                  20 // maximum acceleration (slew)
+    );
+
+    lemlib::ControllerSettings
+    controller_settings_angular(2,   // proportional gain (kP)
+                       0,   // integral gain (kI)
+                       10,  // derivative gain (kD)
+                       3,   // anti-windup
+                       1,   // small error range, in degrees
+                       100, // small error range timeout, in milliseconds
+                       3,   // large error range, in degrees
+                       500, // large error range timeout, in milliseconds
+                       0    // maximum acceleration (slew)
+    );
+}
+
 std::unique_ptr<drivetrain> drivetrain_instance;
 
 using namespace ports::drivetrain;
@@ -13,7 +40,7 @@ drivetrain::drivetrain() :
 motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
-lem_chassis(lem_drivetrain, controller::controller_settings_lateral, controller::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
+lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
 localization_rear(0, offsets::REAR_Y, LOCAL_REAR),
 localization_left(offsets::LEFT_X, 0, LOCAL_LEFT),
 localization_right(offsets::RIGHT_X, 0, LOCAL_RIGHT)
