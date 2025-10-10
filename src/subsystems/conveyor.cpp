@@ -126,6 +126,7 @@ void conveyor::tick_implementation() {
     } else
     {
         bool did_color_sort = false;
+        bool did_exhaust = false;
         if (controller_master.get_digital(EXHAUST_OUT))
         {
             (void)exhaust.move(FULL_POWER);
@@ -135,10 +136,8 @@ void conveyor::tick_implementation() {
                 do_color_sort(&did_color_sort);
             }
 
-        } else if (controller_master.get_digital(EXHAUST_IN))
-        {
-            (void)exhaust.move(-FULL_POWER);
-        } else (void)exhaust.brake();
+            did_exhaust = true;
+        }
 
         if (controller_master.get_digital(CONVEYOR_IN))
         {
@@ -148,12 +147,14 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (ramp.is_extended()) ramp.retract();
+            (void)exhaust.move(-FULL_POWER);
             (void)conveyor_group.move(-FULL_POWER);
             (void)intake.move(FULL_POWER);
         } else
         {
             (void)conveyor_group.brake();
             (void)intake.brake();
+            if(!did_exhaust) (void)exhaust.brake();
         }
 
 
