@@ -7,7 +7,7 @@ extern "C" {
 
 /// Creates an auton.
 /// @param name Name of the auton
-/// @param function Function pointer to the autons function.
+/// @param function Function pointer to the auton's function.
 void ts_create_auton(const char* name, void(*function)());
 
 /// Initializes and displays the selector.
@@ -41,8 +41,11 @@ void ts_get_auton_names(const char** buffer);
 
 /// Attempts to select an auton on the selector.
 /// @param name Name of the Auton.
-/// @return Whether an auton was selected.
+/// @return Whether the inputted auton was selected.
 bool ts_select_auton(const char* name);
+
+/// Selects the next auton. Will go back to the first registered atuon after reaching the end.
+void ts_cycle_autons();
 
 #ifdef __cplusplus
 }

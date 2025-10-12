@@ -1,6 +1,7 @@
 #include "main.h"
 #include "../include/subsystems/drivetrain.h"
 #include "../include/subsystems/conveyor.h"
+#include "../include/ports.h"
 #include "titanselect/titanselect.hpp"
 extern "C"
 {
@@ -25,6 +26,8 @@ void initialize() {
 	odom = odometry::get();
 	dt = drivetrain::get();
 	conv = conveyor::get();
+
+    controller_master.clear();
 }
 
 /**
@@ -89,6 +92,18 @@ void opcontrol() {
     conv = conveyor::get();
 
 	while (true) {
+        controller_master.print(3, 0, "SEL: %s", ts_get_selected_auton_name());
+
+        if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
+        {
+            controller_master.print(2, 0, "MOTORS HOT");
+        }
+
+        if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
+        {
+            ts_cycle_autons();
+        }
+
 		lv_timer_handler();
         odom->tick();
         dt->tick();

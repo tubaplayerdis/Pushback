@@ -13,6 +13,8 @@
 
 namespace ports
 {
+    constexpr auto CYCLE_AUTONS = pros::E_CONTROLLER_DIGITAL_DOWN;
+
     namespace drivetrain
     {
         constexpr auto LEFT_A = 20;

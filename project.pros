@@ -633,7 +633,7 @@
                 "version": "9.2.0"
             },
             "titanselect": {
-                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\titanselect@0.0.7",
+                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\titanselect@0.0.9",
                 "metadata": {
                     "origin": "titanselect"
                 },
@@ -642,12 +642,12 @@
                 "supported_kernels": "^4.2.1",
                 "system_files": [
                     "include\\titanselect\\titanselect.hpp",
-                    "include\\titanselect\\titanselect.h",
-                    "firmware\\titanselect.a"
+                    "firmware\\titanselect.a",
+                    "include\\titanselect\\titanselect.h"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "0.0.7"
+                "version": "0.0.9"
             }
         },
         "upload_options": {

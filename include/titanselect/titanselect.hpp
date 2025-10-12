@@ -18,6 +18,8 @@ namespace ts
         static void register_auton(auton a);
         static void handle_events(lv_event_t *e);
 
+        void refresh_selector();
+
         const char* a_selected_auton;
 
         lv_obj_t* l_button_matrix;
@@ -57,8 +59,11 @@ namespace ts
 
         /// Attempts to select an auton on the selector.
         /// @param name Name of the Auton.
-        /// @return Whether an auton was selected.
+        /// @return Whether the inputted auton was selected.
         bool select_auton(const char* name);
+
+        /// Selects the next auton. Will go back to the first registered atuon after reaching the end.
+        void cycle_autons();
 
         public:
 
@@ -69,7 +74,10 @@ namespace ts
 
     struct auton
     {
+        /// Name of the auton
         const char* name;
+
+        /// Function pointer to the auton function
         void(*function)();
 
         /// Creates and registers an auton.
