@@ -34,7 +34,7 @@ wings(WINGS, false),
 color_sort_color(object_color::NEUTRAL)
 {
     splitter_optical.set_led_pwm(SPLITTER_BRIGHTNESS); //50% brightness
-    exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
 /// Whether x is in the specified range. (inclusive)

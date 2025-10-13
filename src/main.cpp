@@ -27,7 +27,7 @@ void initialize() {
 	dt = drivetrain::get();
 	conv = conveyor::get();
 
-    controller_master.clear();
+	controller_master.clear();
 }
 
 /**
@@ -90,6 +90,8 @@ void opcontrol() {
     odom = odometry::get();
     dt = drivetrain::get();
     conv = conveyor::get();
+
+	controller_master.clear();
 
 	while (true) {
         controller_master.print(3, 0, "SEL: %s", ts_get_selected_auton_name());
