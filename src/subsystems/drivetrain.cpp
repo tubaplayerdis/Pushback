@@ -49,11 +49,11 @@ localization_right(offsets::RIGHT_X, 0, LOCAL_RIGHT)
     double x_localization = get_x_position_from_sensors();
     double y_localization = get_y_position_from_sensor();
 
-    //Calibrate the chassis object (calibrates the inertial sensor which sets its rotation to zero.)
-    lem_chassis.calibrate();
+    //Calibrate the chassis object (inertial is calibrated in odometry)
+    lem_chassis.calibrate(false);
 
     //Sets the "pose" (relative position) of the odometry system to zero.
-    lem_chassis.setPose(0, 0, 0);//Set the local location controller to zero
+    //lem_chassis.setPose(x_localization, y_localization, 0);//Set the local location controller to zero
 }
 
 //The robots back faces the wall to start.

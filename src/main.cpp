@@ -24,6 +24,7 @@ conveyor* conv = nullptr;
 void initialize() {
 	ts_display_selector();
 	odom = odometry::get();
+	odom->inertial.reset(true);
 	dt = drivetrain::get();
 	conv = conveyor::get();
 
@@ -105,6 +106,8 @@ void opcontrol() {
         {
             ts_cycle_autons();
         }
+
+		controller_master.print(1, 0, "X: %f", dt->lem_chassis.getPose().x);
 
 		lv_timer_handler();
         odom->tick();

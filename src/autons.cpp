@@ -14,7 +14,18 @@ void testing_auton()
     drivetrain* dt  = drivetrain::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
     chassis->setPose(0,0,0);
-    chassis->moveToPoint(8, 0, 400);
+    chassis->moveToPose(2.12, 18.77, /*16.9*/0, 5000, {.maxSpeed = 30});
+    //2.12, 19.77, 16.9
+
+
+    while (true)
+    {
+        lemlib::Pose pose = chassis->getPose();
+        controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+    }
+
+
+    //chassis->moveToPose(8,8,0,600);
 }
 
 void blue_left_auton()
