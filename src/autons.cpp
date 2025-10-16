@@ -14,7 +14,8 @@ void testing_auton()
     drivetrain* dt  = drivetrain::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
     chassis->setPose(0,0,0);
-    chassis->moveToPose(2.12, 18.77, /*16.9*/0, 5000, {.maxSpeed = 30});
+    //Look at notebook for rough guesstimations of auton locations
+    chassis->moveToPose(0, 18.77, /*16.9*/0, 5000, {.maxSpeed = 30});
     //2.12, 19.77, 16.9
 
 
