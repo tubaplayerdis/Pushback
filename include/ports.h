@@ -24,10 +24,6 @@ namespace ports
         constexpr auto RIGHT_B = 9;
         constexpr auto RIGHT_C = 10;
 
-        constexpr auto LOCAL_REAR = 12;
-        constexpr auto LOCAL_LEFT = 15;
-        constexpr auto LOCAL_RIGHT = 18;
-
         namespace controls
         {
             constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
@@ -41,14 +37,6 @@ namespace ports
             constexpr auto DRIVETRAIN_RPM = 450;
             constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
             constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
-
-            namespace offsets
-            {
-                //All of these are in inches. They are all positive distances from the robots center.
-                constexpr auto REAR_Y = 4;
-                constexpr auto LEFT_X = 6;
-                constexpr auto RIGHT_X = 5.5;
-            }
         }
     }
 
