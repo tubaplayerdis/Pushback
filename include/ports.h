@@ -20,7 +20,7 @@ namespace ports
         constexpr auto LEFT_A = 20;
         constexpr auto LEFT_B = 1;
         constexpr auto LEFT_C = 6;
-        constexpr auto RIGHT_A = 11;
+        constexpr auto RIGHT_A = 12;
         constexpr auto RIGHT_B = 9;
         constexpr auto RIGHT_C = 10;
 
@@ -32,10 +32,10 @@ namespace ports
 
         namespace settings
         {
-            constexpr auto DRIVETRAIN_TRACK_WIDTH = 10;
+            constexpr auto DRIVETRAIN_TRACK_WIDTH = 11;
             constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
             constexpr auto DRIVETRAIN_RPM = 450;
-            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
+            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 8;
             constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
         }
     }

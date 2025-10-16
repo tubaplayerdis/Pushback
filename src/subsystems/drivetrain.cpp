@@ -8,26 +8,26 @@ namespace pid
 {
     lemlib::ControllerSettings
     controller_settings_lateral(10, // proportional gain (kP)
-                                  0, // integral gain (kI)
-                                  3, // derivative gain (kD)
-                                  3, // anti windup
-                                  1, // small error range, in inches
-                                  100, // small error range timeout, in milliseconds
-                                  3, // large error range, in inches
-                                  500, // large error range timeout, in milliseconds
-                                  20 // maximum acceleration (slew)
+                                              0, // integral gain (kI)
+                                              3, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
     );
 
     lemlib::ControllerSettings
-    controller_settings_angular(2,   // proportional gain (kP)
-                       0,   // integral gain (kI)
-                       10,  // derivative gain (kD)
-                       3,   // anti-windup
-                       1,   // small error range, in degrees
-                       100, // small error range timeout, in milliseconds
-                       3,   // large error range, in degrees
-                       500, // large error range timeout, in milliseconds
-                       0    // maximum acceleration (slew)
+    controller_settings_angular(1.0,  // kP (start lower than 2)
+    0.0,  // kI
+    5.0,  // kD (gentle damping)
+    0.0,  // anti windup
+    1.0,  // small error range (deg)
+    250,  // small error timeout (ms)
+    3.0,  // large error range (deg)
+    500,  // large error timeout (ms)
+    80.0  // max accel (slew)
     );
 }
 
@@ -42,6 +42,8 @@ motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
 lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer)
 {
+    motors_left.set_zero_position_all(0);
+    motors_right.set_zero_position_all(0);
 
     //Calibrate the chassis object (inertial is calibrated in odometry)
     lem_chassis.calibrate(false);
