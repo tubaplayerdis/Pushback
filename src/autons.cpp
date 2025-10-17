@@ -7,6 +7,7 @@
 #include "../include/subsystems/drivetrain.h"
 #include "../include/subsystems/conveyor.h"
 #include "../Include/pros/adi.hpp"
+#include "../include/pros/rtos.h"
 #include "../include/pros/motors.hpp"
 #include "stdio.h"
 
@@ -29,20 +30,29 @@ void testing_auton()
     //chassis->moveToPose(0.0, 26, /*16.9*/0, 5000, {.maxSpeed = 30});
     //2.12, 19.77, 16.9
 
+    for (int i = 0; i < 500; i++)
+    {
+        pros::delay(1);
+        dt->motors_left.move(127);
+        dt->motors_right.brake();
+    }
+
+    for (int i = 0; i < 500; i++)
+    {
+        pros::delay(1);
+        dt->motors_left.brake();
+        dt->motors_right.move(127);
+    }
+
+    dt->motors_left.brake();
+    dt->motors_right.brake();
 
     //TODO: Run test where one side is set to 100 power for 0.5 seconds and compare amount driven
 
     while (true)
     {
         lemlib::Pose pose = chassis->getPose();
-        controller_master.print(1,0, "%.2f, %.2f, %.2f", dt->motors_left.get_position(0), dt->motors_right.get_position(2), pose.theta);
-        printf("L0 %.2f L1 %.2f L2 %.2f | R0 %.2f R1 %.2f R2 %.2f\n",
-        dt->motors_left.get_position(0),
-        dt->motors_left.get_position(1),
-        dt->motors_left.get_position(2),
-        dt->motors_right.get_position(0),
-        dt->motors_right.get_position(1),
-        dt->motors_right.get_position(2));
+        controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
     }
 
 
