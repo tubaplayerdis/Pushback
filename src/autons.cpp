@@ -30,6 +30,8 @@ void testing_auton()
     //2.12, 19.77, 16.9
 
 
+    //TODO: Run test where one side is set to 100 power for 0.5 seconds and compare amount driven
+
     while (true)
     {
         lemlib::Pose pose = chassis->getPose();
