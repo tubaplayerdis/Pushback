@@ -18,17 +18,16 @@ namespace pid
                                               0 // maximum acceleration (slew)
     );
 
-    lemlib::ControllerSettings
-    controller_settings_angular(1.0,  // kP (start lower than 2)
-    0.0,  // kI
-    5.0,  // kD (gentle damping)
-    0.0,  // anti windup
-    1.0,  // small error range (deg)
-    250,  // small error timeout (ms)
-    3.0,  // large error range (deg)
-    500,  // large error timeout (ms)
-    80.0  // max accel (slew)
-    );
+    lemlib::ControllerSettings//0.33
+    controller_settings_angular(0.34,  // kP - increased
+                               0,   // kI - keep at 0
+                               0.1,   // kD - significantly reduced
+                               0,   // anti windup
+                               0,   // small error range
+                               0,   // small error timeout
+                               0,   // large error range
+                               0,   // large error timeout
+                               80); // slew rate
 }
 
 std::unique_ptr<drivetrain> drivetrain_instance;
@@ -45,8 +44,8 @@ lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_se
     motors_left.set_zero_position_all(0);
     motors_right.set_zero_position_all(0);
 
-    //Calibrate the chassis object (inertial is calibrated in odometry)
-    lem_chassis.calibrate(false);
+    //Calibrate the chassis object
+    lem_chassis.calibrate(true);
 
     //Sets the "pose" (relative position) of the odometry system to zero.
     //lem_chassis.setPose(x_localization, y_localization, 0);//Set the local location controller to zero
@@ -60,8 +59,8 @@ void drivetrain::tick_implementation()
     int32_t throttle = controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
     int32_t turn = -1 * controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
-    //Apply inputs. I have no idea as to why turn is being interpreted as throttle and vice versa (they are swaped for some reason.), but this works.
-    lem_chassis.arcade(turn, throttle);
+    //Apply inputs.
+    lem_chassis.arcade(throttle, turn);
 }
 
 drivetrain* drivetrain::get()

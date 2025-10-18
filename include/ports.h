@@ -20,9 +20,9 @@ namespace ports
         constexpr auto LEFT_A = 20;
         constexpr auto LEFT_B = 1;
         constexpr auto LEFT_C = 6;
-        constexpr auto RIGHT_A = 12;
-        constexpr auto RIGHT_B = 9;
-        constexpr auto RIGHT_C = 10;
+        constexpr auto RIGHT_A = -12;
+        constexpr auto RIGHT_B = -9;
+        constexpr auto RIGHT_C = -10;
 
         namespace controls
         {

@@ -27,7 +27,6 @@ odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
 estimated_position(0,0,0)
 {
-    //inertial.reset(true);
     time_at_last_call = std::chrono::high_resolution_clock::now();
 }
 

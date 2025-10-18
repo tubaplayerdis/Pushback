@@ -25,11 +25,12 @@ void testing_auton()
     //Look at notebook for rough guesstimations of auton locations
     //(void)conv->conveyor_group.move(FULL_POWER);
     //(void)conv->intake.move(-FULL_POWER);
-    //chassis->turnToHeading(90, 1000);
-    //chassis->swingToHeading(90, lemlib::DriveSide::LEFT,8000);
+    chassis->turnToHeading(90, 1000);
+    //chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 10000);
     //chassis->moveToPose(0.0, 26, /*16.9*/0, 5000, {.maxSpeed = 30});
     //2.12, 19.77, 16.9
 
+    /*
     for (int i = 0; i < 500; i++)
     {
         pros::delay(1);
@@ -45,9 +46,8 @@ void testing_auton()
     }
 
     dt->motors_left.brake();
-    dt->motors_right.brake();
-
-    //TODO: Run test where one side is set to 100 power for 0.5 seconds and compare amount driven
+    dt->motors_right.brake()
+    */
 
     while (true)
     {
