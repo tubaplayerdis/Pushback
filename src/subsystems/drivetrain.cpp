@@ -6,28 +6,31 @@
 
 namespace pid
 {
+    // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(10, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              0, // anti windup
-                                              0, // small error range, in inches
-                                              0, // small error range timeout, in milliseconds
-                                              0, // large error range, in inches
-                                              0, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
+    controller_settings_lateral(3.5,  // kP - reduced from 10
+                               0.05, // kI - small for steady-state error
+                               8,    // kD - added damping
+                               5,    // anti windup
+                               1.0,  // small error range (inches)
+                               150,  // small error timeout (ms)
+                               4.0,  // large error range (inches)
+                               300,  // large error timeout (ms)
+                               40    // slew rate for smooth acceleration
     );
 
-    lemlib::ControllerSettings//0.33
-    controller_settings_angular(0.34,  // kP - increased
-                               0,   // kI - keep at 0
-                               0.1,   // kD - significantly reduced
-                               0,   // anti windup
-                               0,   // small error range
-                               0,   // small error timeout
-                               0,   // large error range
-                               0,   // large error timeout
-                               80); // slew rate
+    // Angular/turning settings
+    lemlib::ControllerSettings
+    controller_settings_angular(2.8,  // kP - increased from 0.3
+                               0.1,  // kI - for precise stopping
+                               12,   // kD - increased for better damping
+                               3,    // anti windup
+                               2.0,  // small error range (degrees)
+                               200,  // small error timeout (ms)
+                               8.0,  // large error range (degrees)
+                               400,  // large error timeout (ms)
+                               60    // slew rate for smooth turns
+    );
 }
 
 std::unique_ptr<drivetrain> drivetrain_instance;

@@ -10,11 +10,14 @@
 #include "../include/pros/rtos.h"
 #include "../include/pros/motors.hpp"
 #include "stdio.h"
+#include "math.h"
+#include <math.h>
+
+#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/numbers"
 
 constexpr auto FULL_POWER = 127;
 
 //Autons should set color sorting color for driver control.
-
 void testing_auton()
 {
     odometry* od = odometry::get();
@@ -25,9 +28,8 @@ void testing_auton()
     //Look at notebook for rough guesstimations of auton locations
     //(void)conv->conveyor_group.move(FULL_POWER);
     //(void)conv->intake.move(-FULL_POWER);
-    chassis->turnToHeading(90, 1000);
-    //chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 10000);
-    //chassis->moveToPose(0.0, 26, /*16.9*/0, 5000, {.maxSpeed = 30});
+    chassis->turnToHeading(45, 3000);
+    //chassis->moveToPose(0.0, -20, /*16.9*/0, 5000);
     //2.12, 19.77, 16.9
 
     /*
@@ -53,6 +55,7 @@ void testing_auton()
     {
         lemlib::Pose pose = chassis->getPose();
         controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+        pros::delay(100);
     }
 
 

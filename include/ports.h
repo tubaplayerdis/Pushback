@@ -69,7 +69,7 @@ namespace ports
 
     namespace odometry
     {
-        constexpr auto INERTIAL = 4;
+        constexpr auto INERTIAL = 13;
         constexpr auto ROTATION_VERTICAL = 7;
 
         namespace settings

@@ -92,22 +92,24 @@ void opcontrol() {
     dt = drivetrain::get();
     conv = conveyor::get();
 
-	controller_master.clear();
+	//controller_master.clear();
 
 	while (true) {
-        controller_master.print(3, 0, "SEL: %s", ts_get_selected_auton_name());
+        //controller_master.print(3, 0, "SEL: %s", ts_get_selected_auton_name());
 
         if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
         {
-            controller_master.print(2, 0, "MOTORS HOT");
-        }
+            controller_master.print(1, 0, "MOTORS HOT");
+        } else
+		{
+			lemlib::Pose pose = dt->lem_chassis.getPose();
+			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+		}
 
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
         {
             ts_cycle_autons();
         }
-
-		controller_master.print(1, 0, "X: %f", dt->lem_chassis.getPose().x);
 
 		lv_timer_handler();
         odom->tick();

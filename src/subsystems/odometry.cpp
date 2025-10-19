@@ -38,6 +38,9 @@ void odometry::tick_implementation() {
      * The accuracy of this system is untested but the last time I implemented it I got erroneous values due to the time estimation being wrong.
      */
 
+    //Return early for now.
+    return;
+
     // Acceleration vector. Acquire before calculations.
     pros::imu_raw_s accel = inertial.get_accel();
 
