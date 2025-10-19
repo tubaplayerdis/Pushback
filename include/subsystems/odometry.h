@@ -5,6 +5,7 @@
 #ifndef ODOMETRY_H
 #define ODOMETRY_H
 #include "../cls/subsystem.h"
+#include "../pros/rotation.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 
 /// 3 dimensional vector structure

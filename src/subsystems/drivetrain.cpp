@@ -8,28 +8,28 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(3.5,  // kP - reduced from 10
-                               0.05, // kI - small for steady-state error
-                               8,    // kD - added damping
-                               5,    // anti windup
-                               1.0,  // small error range (inches)
-                               150,  // small error timeout (ms)
-                               4.0,  // large error range (inches)
-                               300,  // large error timeout (ms)
-                               40    // slew rate for smooth acceleration
+    controller_settings_lateral(9.5, // proportional gain (kP)
+                                              0, // integral gain (kI)
+                                              30, // derivative gain (kD)
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
     );
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.8,  // kP - increased from 0.3
-                               0.1,  // kI - for precise stopping
-                               12,   // kD - increased for better damping
-                               3,    // anti windup
-                               2.0,  // small error range (degrees)
-                               200,  // small error timeout (ms)
-                               8.0,  // large error range (degrees)
-                               400,  // large error timeout (ms)
-                               60    // slew rate for smooth turns
+    controller_settings_angular(1.0,  // kP — reduce a bit (was 1.6)
+                                0.0,  // kI — keep off
+                                3.09,  // kD — increase slightly for more damping
+                                3,    // anti-windup
+                                1.0,  // small error range
+                                300,  // small error timeout
+                                6.0,  // large error range
+                                500,  // large error timeout
+                                0     // slew rate
     );
 }
 
@@ -59,8 +59,8 @@ lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_se
 void drivetrain::tick_implementation()
 {
     //Acquire throttle and turning values
-    int32_t throttle = controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
-    int32_t turn = -1 * controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
+    int32_t throttle = -1 * controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
+    int32_t turn = controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
     //Apply inputs.
     lem_chassis.arcade(throttle, turn);
