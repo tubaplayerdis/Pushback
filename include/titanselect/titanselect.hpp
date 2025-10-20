@@ -5,6 +5,8 @@
 #include "../liblvgl/lvgl.h"
 #include <memory>
 #include <vector>
+#include <string>
+#include <functional>
 
 namespace ts
 {   
@@ -20,7 +22,7 @@ namespace ts
 
         void refresh_selector();
 
-        const char* a_selected_auton;
+        std::string a_selected_auton;
 
         lv_obj_t* l_button_matrix;
         lv_obj_t* l_selected_auton_label;
@@ -47,10 +49,10 @@ namespace ts
 
         /// Runs an auton by name.
         /// @param name Name of the auton to run.
-        void run_auton(const char* name);
+        void run_auton(std::string name);
 
         /// The selected autons name.
-        /// @return "none" if none is selected, otherwise the selected autons name.
+        /// @return "No Auton" if none is selected, otherwise the selected autons name.
         std::string get_selected_auton_name();
 
         /// The names of all the autons registered with titanselect.
@@ -60,7 +62,7 @@ namespace ts
         /// Attempts to select an auton on the selector.
         /// @param name Name of the Auton.
         /// @return Whether the inputted auton was selected.
-        bool select_auton(const char* name);
+        bool select_auton(std::string name);
 
         /// Selects the next auton. Will go back to the first registered atuon after reaching the end.
         void cycle_autons();
@@ -75,17 +77,14 @@ namespace ts
     struct auton
     {
         /// Name of the auton
-        const char* name;
+        std::string name;
 
         /// Function pointer to the auton function
-        void(*function)();
+        std::function<void()> function;
 
         /// Creates and registers an auton.
         /// @param Name Name of the auton
         /// @param Function Function pointer of the function the auton should run.
-        auton(const char* Name, void(*Function)()) : name(Name), function(Function)
-        {
-            ts::selector::register_auton(*this);
-        }
+        auton(std::string Name, std::function<void()> Function);
     };
 }

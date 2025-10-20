@@ -29,7 +29,6 @@ void initialize() {
 	conv = conveyor::get();
 
 	controller_master.clear();
-	ts::selector::get()->select_auton("blue_left");
 }
 
 /**
