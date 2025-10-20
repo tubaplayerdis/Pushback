@@ -10,8 +10,10 @@
 namespace autons
 {
     extern ts::auton testing;
-    extern ts::auton blue_left;
-    extern ts::auton blue_right;
+    extern ts::auton nine_left;
+    extern ts::auton nine_right;
+    extern ts::auton nine_awp_low;
+    extern ts::auton nine_awp_high;
 }
 
 
