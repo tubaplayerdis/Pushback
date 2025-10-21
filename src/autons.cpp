@@ -9,14 +9,6 @@
 #include "../include/pros/adi.hpp"
 #include "../include/pros/rtos.h"
 #include "../include/pros/motors.hpp"
-#include "stdio.h"
-#include "math.h"
-#include <math.h>
-
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iostream"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/fstream"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iosfwd"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iosfwd"
 
 constexpr auto FULL_POWER = 127;
 
@@ -46,7 +38,6 @@ void nine_right_auton()
 
 void testing_auton()
 {
-    std::ofstream deb = std::ofstream("/usd/deb.txt");
     lemlib::TurnToHeadingParams turnParams;
     turnParams.maxSpeed = 60;
     turnParams.minSpeed = 10;
