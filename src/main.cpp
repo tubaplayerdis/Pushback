@@ -52,9 +52,13 @@ void disabled()
  */
 void competition_initialize()
 {
-	if (ts_is_auton_selected() != 0)
+    ts::selector* selector = ts::selector::get();
+    std::string selected_auton_name = selector->get_selected_auton_name();
+    controller_master.print(1,0, selected_auton_name.c_str());
+	if (!selector->is_auton_selected())
 	{
-		//Handle no selected auton
+		controller_master.rumble(".-.-.-.-");
+        pros::delay(100);
 	}
 }
 

@@ -10,14 +10,6 @@
 #include "../include/pros/misc.hpp"
 #include "../include/pros/rtos.hpp"
 #include "../include/pros/motors.hpp"
-#include "stdio.h"
-#include "math.h"
-#include <math.h>
-
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iostream"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/fstream"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iosfwd"
-#include "../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/iosfwd"
 
 constexpr auto FULL_POWER = 127;
 
