@@ -108,7 +108,7 @@ void opcontrol() {
 
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
         {
-            ts_cycle_autons();
+            //ts_cycle_autons();
         }
 
 		lv_timer_handler();
