@@ -2,13 +2,12 @@
 #include "../include/subsystems/drivetrain.h"
 #include "../include/subsystems/conveyor.h"
 #include "../include/ports.h"
+#include "autons.h"//This is needed for autons to show up
 #include "titanselect/titanselect.hpp"
 extern "C"
 {
 	#include "titanselect/titanselect.h"
 }
-//Not tested but this needs to be included to avoid the autons not showing up.
-#include "autons.h"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 odometry* odom = nullptr;
