@@ -42,7 +42,7 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto INTAKE = 8;
+        constexpr auto INTAKE = -8;
         constexpr auto EXHAUST = 5;
         constexpr auto CONVEYOR_A = 2;
         constexpr auto CONVEYOR_B = -3;
