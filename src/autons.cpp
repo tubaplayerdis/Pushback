@@ -23,58 +23,104 @@ void nine_left_auton()
 
 void nine_right_auton()
 {
+    //Get drivetrain object
     drivetrain* dt  = drivetrain::get();
+
+    //Get conveyor object
     conveyor* conv = conveyor::get();
+
+    //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    //Set lemlib chassis object pose.
     chassis->setPose(0, 0, 0);
 
-    conv->intake.move(-FULL_POWER);
-    conv->conveyor_group.move(FULL_POWER);
-    conv->exhaust.move(-0.3 * FULL_POWER);
+    {   //Start intake and conveyor
+        conv->intake.move(-FULL_POWER);
+        conv->conveyor_group.move(FULL_POWER);
+        conv->exhaust.move(-0.3 * FULL_POWER);
+    }
 
-    chassis->moveToPose(-14.00, -25.26, 42.70, 1400, {.forwards = false, .maxSpeed = 65 , .minSpeed = 30}, false);
-    //                    -35.91
-    chassis->moveToPose(-35.96, -43.93, 51.88, 1600, {.forwards = false, .maxSpeed = 65, .minSpeed = 30, .earlyExitRange = 1}, false);
-    conveyor::get()->lift.toggle();
-    pros::delay(500);
-    chassis->moveToPose(-28.00, -13.00, 0, 1500, {.minSpeed = 30}, false);
-    chassis->moveToPose(-43.71, -24.00, 180.0, 1500, {.earlyExitRange = 0}, true);
-    {
+    {   //Pick up blocks (trio) and block rush (duo under goal)
+        chassis->moveToPose(-14.00, -25.26, 42.70, 1400, {.forwards = false, .maxSpeed = 65 , .minSpeed = 30}, false);
+        chassis->moveToPose(-35.96, -43.93, 51.88, 1600, {.forwards = false, .maxSpeed = 65, .minSpeed = 30, .earlyExitRange = 1}, false);
+    }
+
+    {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
+        conveyor::get()->lift.toggle();
+        pros::delay(500);
+    }
+
+    {   //Drive to primer location then drive to long goal prime position
+        chassis->moveToPose(-28.00, -13.00, 0, 1500, {.minSpeed = 30}, false);
+        chassis->moveToPose(-43.71, -24.50, 180.0, 1500, {.earlyExitRange = 0.5}, true);
+    }
+
+    {   //Async anti jam block while to robot is moving to the long goal. notice the last moveToPose() command has the final parameter (the async parameter) set to true.
         conv->conveyor_group.move(-FULL_POWER);
         pros::delay(600);
     }
-    chassis->waitUntilDone();
-    chassis->tank(30,30, true);
-    conv->conveyor_group.move(FULL_POWER);
-    conv->exhaust.move(FULL_POWER);
-    conv->intake.move(-FULL_POWER);
-    pros::delay(2600);
-    conv->conveyor_group.brake();
-    conv->exhaust.brake();
-    conv->intake.brake();
-    chassis->moveToPose(-42.50, 4.90, 180, 1500, {.forwards = false, .minSpeed = 50}, false);
-    chassis->tank(-55,-55, true);
-    conv->intake.move(-FULL_POWER);
-    conv->conveyor_group.move(FULL_POWER);
-    conv->exhaust.move(-0.3 * FULL_POWER);
-    pros::delay(1000);
 
-    //Final Score.
-    chassis->moveToPose(-43.71, -24.00, 180.0, 1500, {.earlyExitRange = 0}, false);
-    chassis->tank(30,30, true);
-    conv->conveyor_group.move(FULL_POWER);
-    conv->exhaust.move(FULL_POWER);
-    conv->intake.move(-FULL_POWER);
-    pros::delay(1400);
-    chassis->tank(-100,-100, true);
-    pros::delay(300);
-    chassis->tank(100, 100, true);
+    {   //Sync movement and stop anti jam
+        conv->conveyor_group.brake();
+        chassis->waitUntilDone();
+    }
 
-    //0.34, -19.13, -0.136
-    //-7.13, -56.53, 53.88
-    //-42.71 -23.33, 180
+    {   //Tank to apply pressure while in scoring position and enable scoring with the conveyor, intake and exhaust. Wait for 2600 for scoring
+        chassis->tank(30,30, true);
+        conv->conveyor_group.move(FULL_POWER);
+        conv->exhaust.move(FULL_POWER);
+        conv->intake.move(-FULL_POWER);
+        pros::delay(2600);
+    }
 
-    //Match Loader: -44.20, 5.9, 180
+    {   //Stop all elements before moving to match loader
+        conv->conveyor_group.brake();
+        conv->exhaust.brake();
+        conv->intake.brake();
+    }
+
+    {   //Move to match loader prime then tank into to match loader free blocks
+        chassis->moveToPose(-42.50, 4.90, 180, 1500, {.forwards = false, .minSpeed = 50}, false);
+        chassis->tank(-55,-55, true);
+    }
+
+    {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
+        conv->intake.move(-FULL_POWER);
+        conv->conveyor_group.move(FULL_POWER);
+        conv->exhaust.move(-0.3 * FULL_POWER);
+        pros::delay(1000);
+    }
+
+    {   //Move to long goal prime and tank into scoring position.
+        chassis->moveToPose(-43.71, -24.50, 180.0, 1500, {.earlyExitRange = 0.5}, false);
+        chassis->tank(30,30, true);
+    }
+
+    {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
+        conv->conveyor_group.move(FULL_POWER);
+        conv->exhaust.move(FULL_POWER);
+        conv->intake.move(-FULL_POWER);
+        pros::delay(1400);
+    }
+
+    {   //Stop element manipulators
+        conv->conveyor_group.brake();
+        conv->exhaust.brake();
+        conv->intake.brake();
+    }
+
+    {   //Reverse then ram blocks
+        chassis->tank(-80,-80, true);
+        pros::delay(400);
+        chassis->tank(100, 100, true);
+    }
+
+    //0.34, -19.13, -0.136 // Block trio
+    //-35.96, -43.93, 51.88 // Block duo under goal
+    //-28.00, -13.00, 0 // Primer location before scoring coming out of under goal
+    //-43.71 -24.50, 180 // Long Goal (prime) (right infront of)
+    //-42.50, 4.90, 180 // Match Loader
 }
 
 void testing_auton()
@@ -99,6 +145,23 @@ void testing_auton()
         pros::delay(50);
     }
 }
+
+void skills_auton()
+{
+    drivetrain* dt  = drivetrain::get();
+    conveyor* conv = conveyor::get();
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+    chassis->setPose(0, 0, 0);
+    chassis->moveToPose(0, 20, 0, 3000, {}, false);
+    { //Start intake and conveyor
+        conv->intake.move(-FULL_POWER);
+        conv->conveyor_group.move(FULL_POWER);
+        conv->exhaust.move(FULL_POWER);
+    }
+    chassis->tank(-70, -70, true);
+    pros::delay(1700);
+    chassis->tank(0,0,true);
+}
 //-5.59, -53.15, 20.25
 
 // Definitions below
@@ -107,3 +170,4 @@ ts::auton autons::nine_left = ts::auton("9 Left", nine_left_auton);
 ts::auton autons::nine_right = ts::auton("9 Right", nine_right_auton);
 ts::auton autons::nine_awp_low = ts::auton("9 AWP Low", testing_auton);
 ts::auton autons::nine_awp_high = ts::auton("9 AWP High", testing_auton);
+ts::auton autons::skills = ts::auton("Skills", skills_auton);

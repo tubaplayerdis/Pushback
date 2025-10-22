@@ -14,6 +14,7 @@ namespace autons
     extern ts::auton nine_right;
     extern ts::auton nine_awp_low;
     extern ts::auton nine_awp_high;
+    extern ts::auton skills;
 }
 
 

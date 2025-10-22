@@ -26,8 +26,6 @@ void initialize() {
 	odom = odometry::get();
 	dt = drivetrain::get();
 	conv = conveyor::get();
-
-	controller_master.clear();
 }
 
 /**
@@ -51,13 +49,17 @@ void disabled()
  */
 void competition_initialize()
 {
-    ts::selector* selector = ts::selector::get();
-    std::string selected_auton_name = selector->get_selected_auton_name();
-    controller_master.print(1,0, selected_auton_name.c_str());
-	if (!selector->is_auton_selected())
+	if (!ts::selector::get()->is_auton_selected())
 	{
 		controller_master.rumble(".-.-.-.-");
         pros::delay(100);
+	}
+	while (true)
+	{
+		pros::delay(100);
+		controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
+		lemlib::Pose pose = dt->lem_chassis.getPose();
+		controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
 	}
 }
 
@@ -97,9 +99,10 @@ void opcontrol() {
 
     pros::Task controller_screen_task([]() -> void {
         controller_master.clear();
+    	pros::delay(200);
         while(true)
         {
-            pros::delay(100);
+            pros::delay(200);
             controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
             if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
             {
@@ -111,8 +114,6 @@ void opcontrol() {
             }
         }
     });
-
-    controller_screen_task.resume();
 
 	while (true) {
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
