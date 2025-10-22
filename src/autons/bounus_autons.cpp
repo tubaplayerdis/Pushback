@@ -45,7 +45,7 @@ void nine_left_auton()
 
     {   //Drive to primer location then drive to long goal prime position
         chassis->moveToPose(28.00, -13.00, 0, 1500, {.minSpeed = 30}, false);
-        chassis->moveToPose(43.71, -24.50, 180.0, 1500, {.earlyExitRange = 0.5}, true);
+        chassis->moveToPose(43.71, -24.50, -180.0, 1500, {.earlyExitRange = 0.5}, true);
     }
 
     {   //Async anti jam block while to robot is moving to the long goal. notice the last moveToPose() command has the final parameter (the async parameter) set to true.
@@ -73,7 +73,7 @@ void nine_left_auton()
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
-        chassis->moveToPose(42.50, 4.90, 180, 1500, {.forwards = false, .minSpeed = 50}, false);
+        chassis->moveToPose(42.50, 4.90, -180.0, 1500, {.forwards = false, .minSpeed = 50}, false);
         chassis->tank(-55,-55, true);
     }
 
@@ -85,7 +85,7 @@ void nine_left_auton()
     }
 
     {   //Move to long goal prime and tank into scoring position.
-        chassis->moveToPose(43.71, -24.50, 180.0, 1500, {.earlyExitRange = 0.5}, false);
+        chassis->moveToPose(43.71, -24.50, -180.0, 1500, {.earlyExitRange = 0.5}, false);
         chassis->tank(30,30, true);
     }
 
@@ -111,8 +111,8 @@ void nine_left_auton()
     //14.00, -25.26, -42.70 // Block trio
     //35.96, -43.93, -51.88 // Block duo under goal
     //28.00, -13.00, 0 // Primer location before scoring coming out of under goal
-    //43.71 -24.50, 180 // Long Goal (prime) (right infront of)
-    //42.50, 4.90, 180 // Match Loader
+    //43.71 -24.50, -180 // Long Goal (prime) (right infront of)
+    //42.50, 4.90, -180 // Match Loader
 }
 
 void nine_right_auton()
@@ -168,7 +168,7 @@ void nine_right_auton()
         pros::delay(2600);
     }
 
-    {   //Stop all elements before moving to match loader
+    {   //Stop all game element manipulators before moving to match loader
         conv->conveyor_group.brake();
         conv->exhaust.brake();
         conv->intake.brake();
