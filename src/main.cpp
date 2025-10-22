@@ -24,7 +24,6 @@ conveyor* conv = nullptr;
 void initialize() {
 	ts_display_selector();
 	odom = odometry::get();
-	odom->inertial.reset(true);
 	dt = drivetrain::get();
 	conv = conveyor::get();
 
