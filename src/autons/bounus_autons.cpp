@@ -37,10 +37,10 @@ namespace coords
     namespace left
     {
         const pos block_trio(14.00, -25.26, -45.10);
-        const pos block_duo(35.66, -41.5, -57.88);
-        const pos primer_score(26.00, -13.00, 0);
-        const pos long_goal_prime(44.0, -24.50, -180.0);
-        const pos match_loader_prime(43.50, 4.90, -180.0);
+        const pos block_duo(36.00, -41.5, -57.88);
+        const pos primer_score(24.00, -14.00, 0);
+        const pos long_goal_prime(44.5, -24.50, -180.0);
+        const pos match_loader_prime(43.50, 5.00, -180.0);
     }
 
     //-14.00, -25.26, 42.70 // Block trio
@@ -93,7 +93,7 @@ void nine_left_auton()
 
     {   //Drive to primer location then drive to long goal prime position
         chassis->moveToPose(POS(primer_score), 1500, {.minSpeed = 30}, false);
-        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, true);
+        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.4}, true);
     }
 
     {   //Async anti jam block while the robot is moving to the long goal. notice the last moveToPose() command has the final parameter (the async parameter) set to true.
@@ -121,7 +121,7 @@ void nine_left_auton()
 
     {   //Move to match loader prime then tank into to match loader free blocks
         chassis->moveToPose(POS(match_loader_prime), 1500, {.forwards = false, .minSpeed = 50}, false);
-        chassis->tank(-55,-55, true);
+        chassis->tank(-57,-57, true);
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
