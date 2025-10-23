@@ -36,10 +36,10 @@ namespace coords
 
     namespace left
     {
-        const pos block_trio(14.00, -25.26, -45.10);
-        const pos block_duo(36.00, -41.5, -57.88);
-        const pos primer_score(24.00, -14.00, 0);
-        const pos long_goal_prime(44.5, -24.50, -180.0);
+        const pos block_trio(14.30, -25.26, -45.10);
+        const pos block_duo(36.30, -41.5, -57.88);
+        const pos primer_score(23.50, -14.00, 0);
+        const pos long_goal_prime(44.5, -24.30, -180.0);
         const pos match_loader_prime(43.50, 5.00, -180.0);
     }
 
@@ -121,7 +121,7 @@ void nine_left_auton()
 
     {   //Move to match loader prime then tank into to match loader free blocks
         chassis->moveToPose(POS(match_loader_prime), 1500, {.forwards = false, .minSpeed = 50}, false);
-        chassis->tank(-57,-57, true);
+        chassis->tank(-55,-55, true);
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
@@ -152,7 +152,7 @@ void nine_left_auton()
     {   //Reverse then ram blocks
         chassis->tank(-80,-80, true);
         pros::delay(400);
-        chassis->tank(100, 100, true);
+        chassis->tank(90, 90, true);
     }
 }
 

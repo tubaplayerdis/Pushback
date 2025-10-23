@@ -95,29 +95,23 @@ void opcontrol() {
     odom = odometry::get();
     dt = drivetrain::get();
     conv = conveyor::get();
-
-    pros::Task controller_screen_task([]() -> void {
-        controller_master.clear();
-    	pros::delay(200);
-        while(true)
-        {
-            pros::delay(200);
-            //controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
-            if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
-            {
-                controller_master.print(1, 0, "MOTORS HOT");
-            } else
-            {
-                lemlib::Pose pose = dt->lem_chassis.getPose();
-                controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
-            }
-        }
-    });
+	ts::selector* sel = ts::selector::get();
 
 	while (true) {
+		if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
+		{
+			controller_master.print(1, 0, "MOTORS HOT");
+		} else
+		{
+			static std::string auton_name = sel->get_selected_auton_name();
+			controller_master.print(1, 0, "TSA: %s", auton_name.c_str());
+			//lemlib::Pose pose = dt->lem_chassis.getPose();
+			//controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+		}
+
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
         {
-            ts_cycle_autons();
+            sel->cycle_autons();
         }
 
 		lv_timer_handler();
