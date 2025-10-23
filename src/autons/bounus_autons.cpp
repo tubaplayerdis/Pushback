@@ -23,11 +23,11 @@ namespace coords
 
     namespace left
     {
-        pos block_trio(14.00, -25.26, -42.70);
-        pos block_duo(35.96, -43.93, -51.88);
-        pos primer_score(28.00, -13.00, 0);
-        pos long_goal_prime(43.71, -24.50, -180.0);
-        pos match_loader_prime(42.50, 4.90, -180.0);
+        const pos block_trio(14.00, -25.26, -42.70);
+        const pos block_duo(35.96, -43.93, -51.88);
+        const pos primer_score(28.00, -13.00, 0);
+        const pos long_goal_prime(43.71, -24.50, -180.0);
+        const pos match_loader_prime(42.50, 4.90, -180.0);
     }
 
     //-14.00, -25.26, 42.70 // Block trio
@@ -38,11 +38,11 @@ namespace coords
 
     namespace right
     {
-        pos block_trio(-14.00, -25.26, 42.70);
-        pos block_duo(-35.96, -43.93, 51.88);
-        pos primer_score(-28.00, -13.00, 0);
-        pos long_goal_prime(-43.71, -24.50, 180.0);
-        pos match_loader_prime(-42.50, 4.90, 180.0);
+        const pos block_trio(-14.00, -25.26, 42.70);
+        const pos block_duo(-35.96, -43.93, 51.88);
+        const pos primer_score(-28.00, -13.00, 0);
+        const pos long_goal_prime(-43.71, -24.50, 180.0);
+        const pos match_loader_prime(-42.50, 4.90, 180.0);
     }
 }
 
