@@ -7,6 +7,18 @@
 
 #include "titanselect/titanselect.hpp"
 
+//Macro expands the pos struct to use with lemlib commands
+#define POS(pos) pos.X, pos.Y, pos.T
+
+struct pos
+{
+    const float X;
+    const float Y;
+    const float T;
+
+    pos(const float x, const float y, const float t) : X(x), Y(y), T(t) {}
+};
+
 namespace autons
 {
     extern ts::auton testing;

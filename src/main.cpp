@@ -102,7 +102,7 @@ void opcontrol() {
         while(true)
         {
             pros::delay(200);
-            controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
+            //controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
             if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
             {
                 controller_master.print(1, 0, "MOTORS HOT");
