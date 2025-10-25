@@ -39,18 +39,26 @@ void skills_auton()
     conveyor* conv = conveyor::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
     chassis->setPose(0, 0, 0);
-    chassis->moveToPose(0, 20, 0, 3000, {}, false);
     {   //Start intake and conveyor
         conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
     }
-    chassis->tank(-70, -70, true);
-    pros::delay(1700);
+    conv->lift.toggle();
+    pros::delay(700);
+    chassis->tank(-100, -100, true);
+    pros::delay(650);
     chassis->tank(0,0,true);
+    pros::delay(5000);
+
+    {   //Start intake and conveyor
+        conv->intake.brake();
+        conv->conveyor_group.brake();
+        conv->exhaust.brake();
+    }
+
 }
 //-5.59, -53.15, 20.25
 
 // Definitions below
-ts::auton autons::testing = ts::auton("Dogs Out", testing_auton);
 ts::auton autons::skills = ts::auton("Skills", skills_auton);
