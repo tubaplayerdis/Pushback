@@ -105,9 +105,9 @@ void opcontrol() {
 		} else
 		{
 			auton_name = sel->get_selected_auton_name();
-			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
-			//lemlib::Pose pose = dt->lem_chassis.getPose();
-			//controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+			//controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
+			lemlib::Pose pose = dt->lem_chassis.getPose();
+			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
 		}
 
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))

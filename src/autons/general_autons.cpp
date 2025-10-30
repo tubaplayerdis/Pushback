@@ -61,4 +61,5 @@ void skills_auton()
 //-5.59, -53.15, 20.25
 
 // Definitions below
+ts::auton autons::testing = ts::auton("Testing", testing_auton);
 ts::auton autons::skills = ts::auton("Skills", skills_auton);
