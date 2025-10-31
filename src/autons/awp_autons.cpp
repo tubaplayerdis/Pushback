@@ -39,7 +39,7 @@ namespace coords
     namespace high
     {
         const pos block_trio(14.30, -25.26, -45.10);
-        const pos block_duo(36.45, -42.0, -57.88);
+        const pos block_duo(36.47, -42.0, -57.88);
         const pos primer_score(23.25, -14.00, 0);
         const pos long_goal_prime(44.25, -24.30, -180.0);
         const pos match_loader_prime_prime(40.40, -3.00, -130.0);
@@ -108,7 +108,9 @@ void nine_awp_high_auton()
     }
 
     {   //Drive to primer location then drive to long goal prime position
-        chassis->moveToPose(POS(high_goal), 1500, {.maxSpeed = 70}, false);
+        chassis->moveToPose(POS(high_goal), 1500, {.maxSpeed = 70}, true);
+        anti_jam_sync_awp(conv, 4);
+        chassis->waitUntilDone();
     }
 
     {
