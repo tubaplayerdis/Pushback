@@ -2,8 +2,8 @@
 // Created by aaron on 8/30/2025.
 //
 
-#ifndef PUSHBACK_PORTS_H
-#define PUSHBACK_PORTS_H
+#ifndef PUSHBACK_PORTS_HPP
+#define PUSHBACK_PORTS_HPP
 
 #include "pros/misc.hpp"
 #include "lemlib/chassis/chassis.hpp"
@@ -67,10 +67,11 @@ namespace ports
         }
     }
 
-    namespace odometry
+    namespace localization
     {
         constexpr auto INERTIAL = 13;
         constexpr auto ROTATION_VERTICAL = -7;
+        constexpr auto GPS = 0;
 
         namespace settings
         {
@@ -81,4 +82,4 @@ namespace ports
 }
 
 
-#endif //PUSHBACK_PORTS_H
+#endif //PUSHBACK_PORTS_HPP

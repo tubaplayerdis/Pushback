@@ -1,8 +1,8 @@
 //
 // Created by aaron on 8/22/2025.
 //
-#include "../../include/subsystems/drivetrain.h"
-#include "../../include/ports.h"
+#include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/ports.hpp"
 
 namespace pid
 {
@@ -42,7 +42,7 @@ drivetrain::drivetrain() :
 motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
 lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
-lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odometry::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer)
+lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, localization::get()->odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer)
 {
     motors_left.set_zero_position_all(0);
     motors_right.set_zero_position_all(0);
@@ -50,7 +50,7 @@ lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_se
     //Calibrate the chassis object
     lem_chassis.calibrate(true);
 
-    //Sets the "pose" (relative position) of the odometry system to zero.
+    //Sets the "pose" (relative position) of the localization system to zero.
     //lem_chassis.setPose(x_localization, y_localization, 0);//Set the local location controller to zero
 
     //This behavior has been moved to autons (referring to setting the chassis pose).

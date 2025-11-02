@@ -4,7 +4,7 @@
 
 #ifndef ODOMETRY_H
 #define ODOMETRY_H
-#include "../cls/subsystem.h"
+#include "../cls/subsystem.hpp"
 #include "../pros/rotation.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 
@@ -30,10 +30,10 @@ struct vector
     }
 };
 
-class odometry final : public subsystem
+class localization final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
-    friend class std::unique_ptr<odometry>;
+    friend class std::unique_ptr<localization>;
 
 public:
 
@@ -43,10 +43,13 @@ public:
     /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;
 
+    // GPS sensor used during skills for localization
+    pros::Gps game_positioning_system_sensor{};
+
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
 
-    /// LemLib "odometry" object for autons
+    /// LemLib "localization" object for autons
     lemlib::OdomSensors odom_sensors;
 
 private:
@@ -58,11 +61,11 @@ private:
     vector estimated_position;
 
     /// Private constructor to enforce usage of get()
-    odometry();
+    localization();
 
 protected:
 
-    /// Custom tick implementation for odometry. updates estimated velocity and position values.
+    /// Custom tick implementation for localization. updates estimated velocity and position values.
     void tick_implementation() override;
 
 public:
@@ -74,7 +77,7 @@ public:
     vector get_estimated_position();
 
     /// public accessor method for singleton.
-    static odometry* get();
+    static localization* get();
 };
 
 #endif //ODOMETRY_H

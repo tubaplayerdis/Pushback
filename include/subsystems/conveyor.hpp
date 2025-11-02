@@ -5,11 +5,11 @@
 #ifndef CONVEYOR_H
 #define CONVEYOR_H
 
-#include "../cls/subsystem.h"
+#include "../cls/subsystem.hpp"
 #include "../pros/adi.hpp"
 #include "../pros/motor_group.hpp"
 #include "../pros/misc.h"
-#include "../controller.h"
+#include "../controller.hpp"
 #include "../pros/distance.hpp"
 #include "../pros/optical.hpp"
 

@@ -1,27 +1,28 @@
 //
 // Created by aaron on 8/25/2025.
 //
-#include "../../include/subsystems/odometry.h"
-#include "../../include/ports.h"
+#include "../../include/subsystems/localization.hpp"
+#include "../../include/ports.hpp"
 #include "../../include/pros/imu.hpp"
 #include "../../include/pros/imu.h"
-#include "../../include/controller.h"
+#include "../../include/controller.hpp"
 #include <memory>
 #include <chrono>
 #include <cstring>
 
 
-std::unique_ptr<odometry> odometry_instance;
+std::unique_ptr<localization> odometry_instance;
 
-using namespace ports::odometry;
-using namespace ports::odometry::settings;
+using namespace ports::localization;
+using namespace ports::localization::settings;
 
 /// timepoint value representing the last time the tick function was ran and updated this variable
 static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_call;
 
-odometry::odometry() :
+localization::localization() :
 inertial(INERTIAL),
 rotation_vertical(ROTATION_VERTICAL),
+game_positioning_system_sensor(GPS),
 tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
 odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
@@ -30,7 +31,7 @@ estimated_position(0,0,0)
     time_at_last_call = std::chrono::high_resolution_clock::now();
 }
 
-void odometry::tick_implementation() {
+void localization::tick_implementation() {
     /*
      * Position estimation system.
      * This system is an experiment on whether the inertial sensor can provide accurate values to estimate position and velocity.
@@ -62,20 +63,20 @@ void odometry::tick_implementation() {
     estimated_position.z += estimated_velocity.z * duration_s + 0.5 * accel.z * (duration_s * duration_s);
 }
 
-odometry* odometry::get()
+localization* localization::get()
 {
-    if (!odometry_instance) odometry_instance = std::unique_ptr<odometry>( new odometry() );
+    if (!odometry_instance) odometry_instance = std::unique_ptr<localization>(new localization() );
     return odometry_instance.get();
 }
 
-vector odometry::get_estimated_velocity() {
+vector localization::get_estimated_velocity() {
     //Manual std::memcpy for performance. unimportant to the return value.
     vector ret;
     std::memcpy(&ret, &estimated_velocity, sizeof(vector));
     return ret;
 }
 
-vector odometry::get_estimated_position() {
+vector localization::get_estimated_position() {
     //Manual std::memcpy for performance. unimportant to the return value.
     vector ret;
     std::memcpy(&ret, &estimated_position, sizeof(vector));

@@ -2,10 +2,10 @@
 // Created by aaron on 10/31/2025.
 //
 
-#include "../../include/autons.h"
+#include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.h"
-#include "../../include/subsystems/conveyor.h"
+#include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
 #include "../../include/pros/misc.hpp"
 #include "../../include/pros/rtos.hpp"

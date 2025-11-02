@@ -122,7 +122,7 @@ class TrackingWheel {
         /**
          * @brief Reset the tracking wheel position to 0
          *
-         * If you are using odometry provided by LemLib, this will automatically be called when
+         * If you are using localization provided by LemLib, this will automatically be called when
          * the chassis is calibrated
          *
          * @b Example

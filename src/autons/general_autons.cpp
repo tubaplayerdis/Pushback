@@ -2,10 +2,10 @@
 // Created by aaron on 9/10/2025.
 //
 
-#include "../../include/autons.h"
+#include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.h"
-#include "../../include/subsystems/conveyor.h"
+#include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
 #include "../../include/pros/misc.hpp"
 #include "../../include/pros/rtos.hpp"
@@ -33,7 +33,7 @@ void testing_auton()
     }
 }
 
-void skills_auton()
+void old_skills_auton()
 {
     drivetrain* dt  = drivetrain::get();
     conveyor* conv = conveyor::get();
@@ -62,4 +62,3 @@ void skills_auton()
 
 // Definitions below
 ts::auton autons::testing = ts::auton("Testing", testing_auton);
-ts::auton autons::skills = ts::auton("Skills", skills_auton);

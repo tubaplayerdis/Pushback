@@ -2,7 +2,7 @@
 // Created by aaron on 8/25/2025.
 //
 
-#include "../../include/cls/subsystem.h"
+#include "../../include/cls/subsystem.hpp"
 
 subsystem::subsystem(bool start_active)
 {

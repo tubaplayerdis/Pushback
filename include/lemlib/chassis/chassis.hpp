@@ -12,7 +12,7 @@
 namespace lemlib {
 
 /**
- * @brief class containing the sensors used for odometry
+ * @brief class containing the sensors used for localization
  */
 class OdomSensors {
     public:
@@ -337,7 +337,7 @@ class Chassis {
          * @param drivetrain drivetrain to be used for the chassis
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
-         * @param sensors sensors to be used for odometry
+         * @param sensors sensors to be used for localization
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
          *

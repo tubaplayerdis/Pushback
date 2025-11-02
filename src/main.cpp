@@ -1,8 +1,8 @@
 #include "main.h"
-#include "../include/subsystems/drivetrain.h"
-#include "../include/subsystems/conveyor.h"
-#include "../include/ports.h"
-#include "autons.h"//This is needed for autons to show up
+#include "../include/subsystems/drivetrain.hpp"
+#include "../include/subsystems/conveyor.hpp"
+#include "../include/ports.hpp"
+#include "autons.hpp"//This is needed for autons to show up
 #include "titanselect/titanselect.hpp"
 extern "C"
 {
@@ -10,7 +10,7 @@ extern "C"
 }
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
-odometry* odom = nullptr;
+localization* odom = nullptr;
 drivetrain* dt = nullptr;
 conveyor* conv = nullptr;
 
@@ -22,7 +22,7 @@ conveyor* conv = nullptr;
  */
 void initialize() {
 	ts_display_selector();
-	odom = odometry::get();
+	odom = localization::get();
 	dt = drivetrain::get();
 	conv = conveyor::get();
 }
@@ -92,7 +92,7 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    odom = odometry::get();
+    odom = localization::get();
     dt = drivetrain::get();
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();

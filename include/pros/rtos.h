@@ -833,23 +833,23 @@ bool task_notify_clear(task_t task);
  * 
  * \b Example
  * \code
- * // Global variables for the robot's odometry, which the rest of the robot's
+ * // Global variables for the robot's localization, which the rest of the robot's
  * // subsystems will utilize
  * double odom_x = 0.0;
  * double odom_y = 0.0;
  * double odom_heading = 0.0;
  * 
- * // This mutex protects the odometry data. Whenever we read or write to the
- * // odometry data, we should make copies into the local variables, and read
+ * // This mutex protects the localization data. Whenever we read or write to the
+ * // localization data, we should make copies into the local variables, and read
  * // all 3 values at once to avoid errors.
  * mutex_t odom_mutex;
  * 
  * void odom_task(void* param) {
  *   while(true) {
  *     // First we fetch the odom coordinates from the previous iteration of the
- *     // odometry task. These are put into local variables so that we can
+ *     // localization task. These are put into local variables so that we can
  *     // keep the size of the critical section as small as possible. This lets
- *     // other tasks that need to use the odometry data run until we need to
+ *     // other tasks that need to use the localization data run until we need to
  *     // update it again.
  *     mutex_take(odom_mutex, MAX_DELAY);
  *     double x_old = odom_x;
@@ -877,7 +877,7 @@ bool task_notify_clear(task_t task);
  * void chassis_task(void* param) {
  *   while(true) {
  *     // Here we copy the current odom values into local variables so that
- *     // we can use them without worrying about the odometry task changing say,
+ *     // we can use them without worrying about the localization task changing say,
  *     // the y value right after we've read the x. This ensures our values are
  *     // sound.
  *     mutex_take(odom_mutex, MAX_DELAY);
@@ -922,23 +922,23 @@ mutex_t mutex_create(void);
  * 
  * \b Example
  * \code
- * // Global variables for the robot's odometry, which the rest of the robot's
+ * // Global variables for the robot's localization, which the rest of the robot's
  * // subsystems will utilize
  * double odom_x = 0.0;
  * double odom_y = 0.0;
  * double odom_heading = 0.0;
  * 
- * // This mutex protects the odometry data. Whenever we read or write to the
- * // odometry data, we should make copies into the local variables, and read
+ * // This mutex protects the localization data. Whenever we read or write to the
+ * // localization data, we should make copies into the local variables, and read
  * // all 3 values at once to avoid errors.
  * mutex_t odom_mutex;
  * 
  * void odom_task(void* param) {
  *   while(true) {
  *     // First we fetch the odom coordinates from the previous iteration of the
- *     // odometry task. These are put into local variables so that we can
+ *     // localization task. These are put into local variables so that we can
  *     // keep the size of the critical section as small as possible. This lets
- *     // other tasks that need to use the odometry data run until we need to
+ *     // other tasks that need to use the localization data run until we need to
  *     // update it again.
  *     mutex_take(odom_mutex, MAX_DELAY);
  *     double x_old = odom_x;
@@ -966,7 +966,7 @@ mutex_t mutex_create(void);
  * void chassis_task(void* param) {
  *   while(true) {
  *     // Here we copy the current odom values into local variables so that
- *     // we can use them without worrying about the odometry task changing say,
+ *     // we can use them without worrying about the localization task changing say,
  *     // the y value right after we've read the x. This ensures our values are
  *     // sound.
  *     mutex_take(odom_mutex, MAX_DELAY);
@@ -1006,23 +1006,23 @@ bool mutex_take(mutex_t mutex, uint32_t timeout);
  * 
  * \b Example
  * \code
- * // Global variables for the robot's odometry, which the rest of the robot's
+ * // Global variables for the robot's localization, which the rest of the robot's
  * // subsystems will utilize
  * double odom_x = 0.0;
  * double odom_y = 0.0;
  * double odom_heading = 0.0;
  * 
- * // This mutex protects the odometry data. Whenever we read or write to the
- * // odometry data, we should make copies into the local variables, and read
+ * // This mutex protects the localization data. Whenever we read or write to the
+ * // localization data, we should make copies into the local variables, and read
  * // all 3 values at once to avoid errors.
  * mutex_t odom_mutex;
  * 
  * void odom_task(void* param) {
  *   while(true) {
  *     // First we fetch the odom coordinates from the previous iteration of the
- *     // odometry task. These are put into local variables so that we can
+ *     // localization task. These are put into local variables so that we can
  *     // keep the size of the critical section as small as possible. This lets
- *     // other tasks that need to use the odometry data run until we need to
+ *     // other tasks that need to use the localization data run until we need to
  *     // update it again.
  *     mutex_take(odom_mutex, MAX_DELAY);
  *     double x_old = odom_x;
@@ -1050,7 +1050,7 @@ bool mutex_take(mutex_t mutex, uint32_t timeout);
  * void chassis_task(void* param) {
  *   while(true) {
  *     // Here we copy the current odom values into local variables so that
- *     // we can use them without worrying about the odometry task changing say,
+ *     // we can use them without worrying about the localization task changing say,
  *     // the y value right after we've read the x. This ensures our values are
  *     // sound.
  *     mutex_take(odom_mutex, MAX_DELAY);
