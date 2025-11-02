@@ -13,6 +13,7 @@
 
 constexpr auto FULL_POWER = 127;
 
+//time is in 100ms
 void anti_jam_sync_awp(conveyor* conv, int time)
 {
     int i = 0;
@@ -120,7 +121,7 @@ void nine_awp_high_auton()
     }
 
     {
-        pros::delay(600);
+        pros::delay(800);
     }
 
     {
@@ -150,7 +151,9 @@ void nine_awp_high_auton()
     }
 
     {
-        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, false);
+        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, true);
+        anti_jam_sync_awp(conv, 4);
+        chassis->waitUntilDone();
     }
 
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring

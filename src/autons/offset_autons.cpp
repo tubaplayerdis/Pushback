@@ -232,7 +232,7 @@ void nine_awp_high_auton_offset()
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
         conv->intake.move(FULL_POWER);
-        pros::delay(2900);
+        pros::delay(3100);
     }
 
     {   //Stop element manipulators
