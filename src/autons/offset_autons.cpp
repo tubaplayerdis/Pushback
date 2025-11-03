@@ -68,7 +68,6 @@ void nine_right_auton_offset()
     chassis->setPose(-4, 0, 0);
 
     {   //Start intake and conveyor
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -101,14 +100,12 @@ void nine_right_auton_offset()
         chassis->tank(30,30, true);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(2600);
     }
 
     {   //Stop all elements before moving to match loader
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
@@ -117,7 +114,6 @@ void nine_right_auton_offset()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
         pros::delay(700);
@@ -131,14 +127,12 @@ void nine_right_auton_offset()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(1800);
     }
 
     {   //Stop element manipulators
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Reverse then ram blocks
@@ -167,7 +161,6 @@ void nine_awp_high_auton_offset()
     conv->wings.toggle();
 
     {   //Start intake and conveyor
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -191,7 +184,6 @@ void nine_awp_high_auton_offset()
     {
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
     }
 
     {
@@ -201,7 +193,6 @@ void nine_awp_high_auton_offset()
     {
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {
@@ -214,7 +205,6 @@ void nine_awp_high_auton_offset()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(0.8 * FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -231,14 +221,12 @@ void nine_awp_high_auton_offset()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(3100);
     }
 
     {   //Stop element manipulators
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Reverse then ram blocks

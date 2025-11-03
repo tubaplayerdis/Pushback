@@ -1,6 +1,7 @@
 //
 // Created by aaron on 8/25/2025.
 //
+
 #include "../../include/subsystems/localization.hpp"
 #include "../../include/ports.hpp"
 #include "../../include/pros/imu.hpp"
@@ -22,7 +23,7 @@ static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_
 localization::localization() :
 inertial(INERTIAL),
 rotation_vertical(ROTATION_VERTICAL),
-game_positioning_system_sensor(GPS),
+gps_sensor(GPS),
 tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
 odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
@@ -43,6 +44,7 @@ void localization::tick_implementation() {
     return;
 
     // Acceleration vector. Acquire before calculations.
+    /*
     pros::imu_raw_s accel = inertial.get_accel();
 
     auto now = std::chrono::high_resolution_clock::now();
@@ -61,6 +63,7 @@ void localization::tick_implementation() {
     estimated_position.x += estimated_velocity.x * duration_s + 0.5 * accel.x * (duration_s * duration_s);
     estimated_position.y += estimated_velocity.y * duration_s + 0.5 * accel.y * (duration_s * duration_s);
     estimated_position.z += estimated_velocity.z * duration_s + 0.5 * accel.z * (duration_s * duration_s);
+    */
 }
 
 localization* localization::get()
@@ -70,15 +73,9 @@ localization* localization::get()
 }
 
 vector localization::get_estimated_velocity() {
-    //Manual std::memcpy for performance. unimportant to the return value.
-    vector ret;
-    std::memcpy(&ret, &estimated_velocity, sizeof(vector));
-    return ret;
+    return estimated_velocity;
 }
 
 vector localization::get_estimated_position() {
-    //Manual std::memcpy for performance. unimportant to the return value.
-    vector ret;
-    std::memcpy(&ret, &estimated_position, sizeof(vector));
-    return ret;
+    return estimated_position;
 }

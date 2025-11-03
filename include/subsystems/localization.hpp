@@ -47,7 +47,7 @@ public:
     pros::Rotation rotation_vertical;
 
     // GPS sensor used during skills for localization
-    pros::Gps game_positioning_system_sensor;
+    pros::Gps gps_sensor;
 
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;

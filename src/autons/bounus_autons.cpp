@@ -80,7 +80,6 @@ void nine_left_auton()
     conv->wings.toggle();
 
     {   //Start intake and conveyor
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -113,14 +112,12 @@ void nine_left_auton()
         chassis->tank(30,30, true);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(2600);
     }
 
     {   //Stop all elements before moving to match loader
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
@@ -129,7 +126,6 @@ void nine_left_auton()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
         pros::delay(700);
@@ -143,14 +139,12 @@ void nine_left_auton()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(1700);
     }
 
     {   //Stop element manipulators
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Reverse then ram blocks
@@ -179,7 +173,6 @@ void nine_right_auton()
     chassis->setPose(0, 0, 0);
 
     {   //Start intake and conveyor
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -212,14 +205,12 @@ void nine_right_auton()
         chassis->tank(30,30, true);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(2600);
     }
 
     {   //Stop all elements before moving to match loader
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
@@ -228,7 +219,6 @@ void nine_right_auton()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
         pros::delay(700);
@@ -242,14 +232,12 @@ void nine_right_auton()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        conv->intake.move(FULL_POWER);
         pros::delay(1800);
     }
 
     {   //Stop element manipulators
         conv->conveyor_group.brake();
         conv->exhaust.brake();
-        conv->intake.brake();
     }
 
     {   //Reverse then ram blocks

@@ -22,7 +22,6 @@ using namespace ports::conveyor::controls;
 
 conveyor::conveyor() :
 subsystem(),
-intake (INTAKE),
 exhaust(EXHAUST),
 conveyor_group({CONVEYOR_A, CONVEYOR_B}),
 splitter_optical(SPLITTER_OPTICAL),
@@ -119,7 +118,6 @@ void conveyor::tick_implementation() {
     {
         (void)exhaust.move(FULL_POWER);
         (void)conveyor_group.move(FULL_POWER);
-        (void)intake.move(FULL_POWER);
         (void)ramp.extend();
     } else
     {
@@ -141,18 +139,15 @@ void conveyor::tick_implementation() {
         {
             if (ramp.is_extended() && !did_color_sort) ramp.retract(); //Color sort will do this
             (void)conveyor_group.move(FULL_POWER);
-            (void)intake.move(FULL_POWER);
             if (!did_exhaust) (void)exhaust.move(-0.1 * FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (ramp.is_extended()) ramp.retract();
             (void)exhaust.move(-FULL_POWER);
             (void)conveyor_group.move(-FULL_POWER);
-            (void)intake.move(-FULL_POWER);
         } else
         {
             (void)conveyor_group.brake();
-            (void)intake.brake();
             if(!did_exhaust) (void)exhaust.brake();
         }
 

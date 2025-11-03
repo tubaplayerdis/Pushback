@@ -40,7 +40,6 @@ void old_skills_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
     chassis->setPose(0, 0, 0);
     {   //Start intake and conveyor
-        conv->intake.move(FULL_POWER);
         conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
     }
@@ -52,7 +51,6 @@ void old_skills_auton()
     pros::delay(5000);
 
     {   //Start intake and conveyor
-        conv->intake.brake();
         conv->conveyor_group.brake();
         conv->exhaust.brake();
     }

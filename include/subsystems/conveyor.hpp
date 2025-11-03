@@ -35,14 +35,10 @@ class conveyor final : public subsystem
 
 public:
 
-    /// Intake motor.
-    /// @note intake and conveyor could be but are not in a motor group because it is more strategic to have a split intake in auton.
-    pros::Motor intake;
-
     /// Exhaust/scoring system
     pros::Motor exhaust;
 
-    /// Dual motors that operate the conveyor
+    /// Dual motors that operate the conveyor and intake
     pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
 
     /// Optical sensor that reads colors for the splitter
