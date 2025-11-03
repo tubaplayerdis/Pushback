@@ -2,10 +2,13 @@
 // Created by aaron on 7/23/2025.
 //
 
-#ifndef ODOMETRY_H
-#define ODOMETRY_H
+#ifndef LOCALIZATION_H
+#define LOCALIZATION_H
+
+#include <memory>
 #include "../cls/subsystem.hpp"
 #include "../pros/rotation.hpp"
+#include "../pros/gps.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 
 /// 3 dimensional vector structure
@@ -44,7 +47,7 @@ public:
     pros::Rotation rotation_vertical;
 
     // GPS sensor used during skills for localization
-    pros::Gps game_positioning_system_sensor{};
+    pros::Gps game_positioning_system_sensor;
 
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
@@ -80,4 +83,4 @@ public:
     static localization* get();
 };
 
-#endif //ODOMETRY_H
+#endif //LOCALIZATION_H

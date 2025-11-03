@@ -1,8 +1,6 @@
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/ports.hpp"
 #include <memory>
-
-#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/bits/ranges_util.h"
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
