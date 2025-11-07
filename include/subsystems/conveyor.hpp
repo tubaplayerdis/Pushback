@@ -38,8 +38,8 @@ public:
     /// Exhaust/scoring system
     pros::Motor exhaust;
 
-    /// Dual motors that operate the conveyor and intake
-    pros::Motor conveyor_group; //Runs the intake and other system requiring the path of movement.
+    /// Motor that operates the conveyor and intake
+    pros::Motor conveyor_intake;
 
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;

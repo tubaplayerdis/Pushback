@@ -21,14 +21,14 @@ using namespace ports::conveyor;
 using namespace ports::conveyor::controls;
 
 conveyor::conveyor() :
-subsystem(),
-exhaust(EXHAUST),
-conveyor_group(CONVEYOR),
-splitter_optical(SPLITTER_OPTICAL),
-ramp(RAMP, false),
-lift(LIFT, false),
-wings(WINGS, false),
-color_sort_color(object_color::NEUTRAL)
+        subsystem(),
+        exhaust(EXHAUST),
+        conveyor_intake(CONVEYOR),
+        splitter_optical(SPLITTER_OPTICAL),
+        ramp(RAMP, false),
+        lift(LIFT, false),
+        wings(WINGS, false),
+        color_sort_color(object_color::NEUTRAL)
 {
     splitter_optical.set_led_pwm(SPLITTER_BRIGHTNESS); //50% brightness
     exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -117,7 +117,7 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(RAMP_MACRO))
     {
         (void)exhaust.move(FULL_POWER);
-        (void)conveyor_group.move(FULL_POWER);
+        (void)conveyor_intake.move(FULL_POWER);
         (void)ramp.extend();
     } else
     {
@@ -138,16 +138,16 @@ void conveyor::tick_implementation() {
         if (controller_master.get_digital(CONVEYOR_IN))
         {
             if (ramp.is_extended() && !did_color_sort) ramp.retract(); //Color sort will do this
-            (void)conveyor_group.move(FULL_POWER);
+            (void)conveyor_intake.move(FULL_POWER);
             if (!did_exhaust) (void)exhaust.move(-0.1 * FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (ramp.is_extended()) ramp.retract();
             (void)exhaust.move(-FULL_POWER);
-            (void)conveyor_group.move(-FULL_POWER);
+            (void)conveyor_intake.move(-FULL_POWER);
         } else
         {
-            (void)conveyor_group.brake();
+            (void)conveyor_intake.brake();
             if(!did_exhaust) (void)exhaust.brake();
         }
 
