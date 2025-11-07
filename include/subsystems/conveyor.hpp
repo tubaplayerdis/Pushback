@@ -39,7 +39,7 @@ public:
     pros::Motor exhaust;
 
     /// Dual motors that operate the conveyor and intake
-    pros::MotorGroup conveyor_group; //Runs the intake and other system requiring the path of movement.
+    pros::Motor conveyor_group; //Runs the intake and other system requiring the path of movement.
 
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;

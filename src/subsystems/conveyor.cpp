@@ -23,7 +23,7 @@ using namespace ports::conveyor::controls;
 conveyor::conveyor() :
 subsystem(),
 exhaust(EXHAUST),
-conveyor_group({CONVEYOR_A, CONVEYOR_B}),
+conveyor_group(CONVEYOR),
 splitter_optical(SPLITTER_OPTICAL),
 ramp(RAMP, false),
 lift(LIFT, false),
