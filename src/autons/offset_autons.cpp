@@ -18,12 +18,12 @@ void anti_jam_sync_off(conveyor* conv, int time)
     int i = 0;
     while (i < time/2)
     {
-        if (i % 2 == 0) conv->conveyor_group.move(-FULL_POWER);
-        else conv->conveyor_group.move(FULL_POWER);
+        if (i % 2 == 0) conv->conveyor_intake.move(-FULL_POWER);
+        else conv->conveyor_intake.move(FULL_POWER);
         pros::delay(200);
         i++;
     }
-    conv->conveyor_group.brake();
+    conv->conveyor_intake.brake();
 }
 
 namespace coords
@@ -68,7 +68,7 @@ void nine_right_auton_offset()
     chassis->setPose(-4, 0, 0);
 
     {   //Start intake and conveyor
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
 
@@ -92,19 +92,19 @@ void nine_right_auton_offset()
     }
 
     {   //Sync movement and stop anti jam
-        conv->conveyor_group.brake();
+        conv->conveyor_intake.brake();
         chassis->waitUntilDone();
     }
 
     {   //Tank to apply pressure while in scoring position and enable scoring with the conveyor, intake and exhaust. Wait for 2600 for scoring
         chassis->tank(30,30, true);
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
         pros::delay(2600);
     }
 
     {   //Stop all elements before moving to match loader
-        conv->conveyor_group.brake();
+        conv->conveyor_intake.brake();
         conv->exhaust.brake();
     }
 
@@ -114,7 +114,7 @@ void nine_right_auton_offset()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
         pros::delay(700);
     }
@@ -125,13 +125,13 @@ void nine_right_auton_offset()
     }
 
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
         pros::delay(1800);
     }
 
     {   //Stop element manipulators
-        conv->conveyor_group.brake();
+        conv->conveyor_intake.brake();
         conv->exhaust.brake();
     }
 
@@ -161,7 +161,7 @@ void nine_awp_high_auton_offset()
     conv->wings.toggle();
 
     {   //Start intake and conveyor
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
 
@@ -182,7 +182,7 @@ void nine_awp_high_auton_offset()
     }
 
     {
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
     }
 
@@ -191,7 +191,7 @@ void nine_awp_high_auton_offset()
     }
 
     {
-        conv->conveyor_group.brake();
+        conv->conveyor_intake.brake();
         conv->exhaust.brake();
     }
 
@@ -205,7 +205,7 @@ void nine_awp_high_auton_offset()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->conveyor_group.move(0.8 * FULL_POWER);
+        conv->conveyor_intake.move(0.8 * FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
 
@@ -219,13 +219,13 @@ void nine_awp_high_auton_offset()
     }
 
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
-        conv->conveyor_group.move(FULL_POWER);
+        conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
         pros::delay(3100);
     }
 
     {   //Stop element manipulators
-        conv->conveyor_group.brake();
+        conv->conveyor_intake.brake();
         conv->exhaust.brake();
     }
 
