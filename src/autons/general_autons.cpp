@@ -25,6 +25,10 @@ void testing_auton()
     conveyor* conv = conveyor::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
+    chassis->setPose(0,0,0);
+
+    chassis->moveToPoint(0, 10, 3000, {}, false);
+
     while (true)
     {
         lemlib::Pose pose = chassis->getPose();

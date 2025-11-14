@@ -10,7 +10,7 @@ namespace pid
     lemlib::ControllerSettings
     controller_settings_lateral(9.5, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              30, // derivative gain (kD)
+                                              50.99, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -21,9 +21,9 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(1.0,  // kP — reduce a bit (was 1.6)
+    controller_settings_angular(0.95,  // kP — reduce a bit (was 1.6)
                                 0.0,  // kI — keep off
-                                3.09,  // kD — increase slightly for more damping
+                                3.01,  // kD — increase slightly for more damping
                                 3,    // anti-windup
                                 1.0,  // small error range
                                 300,  // small error timeout
@@ -49,6 +49,8 @@ lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_se
 
     //Calibrate the chassis object
     lem_chassis.calibrate(true);
+
+    lem_chassis.setPose(0,0,0);
 
     //Sets the "pose" (relative position) of the localization system to zero.
     //lem_chassis.setPose(x_localization, y_localization, 0);//Set the local location controller to zero

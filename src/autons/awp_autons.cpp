@@ -42,9 +42,9 @@ namespace coords
         const pos block_trio(14.30, -25.26, -45.10);
         const pos block_duo(36.47, -42.0, -57.88);
         const pos primer_score(23.25, -14.00, 0);
-        const pos long_goal_prime(44.25, -24.30, -180.0);
+        const pos long_goal_prime(44.00, -24.30, -180.0);
         const pos match_loader_prime_prime(40.40, -3.00, -130.0);
-        const pos match_loader_prime(46.4, 2.00, -180.0);
+        const pos match_loader_prime(45.4, 2.00, -180.0);
         const pos high_goal(4.52, -41.12, -135.918);
     }
 
@@ -99,36 +99,24 @@ void nine_awp_high_auton()
 
     {   //Pick up blocks (trio) and block rush (duo under goal)
         chassis->moveToPose(POS(block_trio), 1400, {.forwards = false, .maxSpeed = 65 , .minSpeed = 30}, false);
-        chassis->moveToPose(POS(block_duo), 1600, {.forwards = false, .maxSpeed = 65, .minSpeed = 32, .earlyExitRange = 0.7}, false);
+        chassis->moveToPose(POS(block_duo), 1600, {.forwards = false, .maxSpeed = 65, .minSpeed = 32, .earlyExitRange = 0.5}, false);
     }
 
     {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
-        //conveyor::get()->lift.toggle();
+        conveyor::get()->lift.toggle();
         pros::delay(500);
     }
 
     {   //Drive to primer location then drive to long goal prime position
-        chassis->moveToPose(POS(high_goal), 1500, {.maxSpeed = 70}, true);
-        anti_jam_sync_awp(conv, 4);
-        chassis->waitUntilDone();
+        chassis->moveToPose(POS(high_goal), 1500, {.maxSpeed = 70}, false);
     }
 
     {
-        conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-    }
-
-    {
-        pros::delay(800);
-    }
-
-    {
-        conv->conveyor_group.brake();
-        conv->exhaust.brake();
-    }
-
-    {
-        conv->lift.toggle();
+        conv->ramp.toggle();
+        pros::delay(600);
+        conv->ramp.toggle();
+        conv->exhaust.move(-0.3 * FULL_POWER);
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
@@ -137,7 +125,7 @@ void nine_awp_high_auton()
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
-        conv->conveyor_group.move(0.8 * FULL_POWER);
+        conv->conveyor_group.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
 
@@ -147,9 +135,7 @@ void nine_awp_high_auton()
     }
 
     {
-        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, true);
-        anti_jam_sync_awp(conv, 4);
-        chassis->waitUntilDone();
+        chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, false);
     }
 
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring

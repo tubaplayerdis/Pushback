@@ -68,8 +68,8 @@ namespace ports
 
     namespace localization
     {
-        constexpr auto INERTIAL = 13;
-        constexpr auto ROTATION_VERTICAL = -7;
+        constexpr auto INERTIAL = 14;
+        constexpr auto ROTATION_VERTICAL = 10;
         constexpr auto GPS = 0;
 
         namespace settings
