@@ -13,13 +13,6 @@
 
 constexpr auto FULL_POWER = 127;
 
-//time is in 100ms
-void anti_jam_sync_awp(conveyor* conv, int time)
-{
-
-}
-
-
 namespace coords
 {
     //14.00, -25.26, -42.70 // Block trio
@@ -96,7 +89,7 @@ void nine_awp_high_auton()
 
     {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
         conveyor::get()->lift.toggle();
-        pros::delay(500);
+        pros::Task::delay(500);
     }
 
     {   //Drive to primer location then drive to long goal prime position
@@ -106,7 +99,7 @@ void nine_awp_high_auton()
     {
         conv->exhaust.move(FULL_POWER);
         conv->ramp.toggle();
-        pros::delay(600);
+        pros::Task::delay(600);
         conv->ramp.toggle();
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
@@ -123,7 +116,7 @@ void nine_awp_high_auton()
 
     {   //Move to match loader
         chassis->tank(-40,-40, true);
-        pros::delay(1000);
+        pros::Task::delay(1000);
     }
 
     {
@@ -133,7 +126,7 @@ void nine_awp_high_auton()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        pros::delay(2500);
+        pros::Task::delay(2500);
     }
 
     {   //Stop element manipulators
@@ -143,7 +136,7 @@ void nine_awp_high_auton()
 
     {   //Reverse then ram blocks
         chassis->tank(-80,-80, true);
-        pros::delay(400);
+        pros::Task::delay(400);
         chassis->tank(90, 90, true);
     }
 }

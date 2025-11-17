@@ -20,7 +20,7 @@ void anti_jam_sync_off(conveyor* conv, int time)
     {
         if (i % 2 == 0) conv->conveyor_intake.move(-FULL_POWER);
         else conv->conveyor_intake.move(FULL_POWER);
-        pros::delay(200);
+        pros::Task::delay(200);
         i++;
     }
     conv->conveyor_intake.brake();
@@ -78,7 +78,7 @@ void nine_right_auton_offset()
     }
 
     {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
-        pros::delay(500);
+        pros::Task::delay(500);
     }
 
     {   //Drive to primer location then drive to long goal prime position
@@ -100,7 +100,7 @@ void nine_right_auton_offset()
         chassis->tank(30,30, true);
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        pros::delay(2600);
+        pros::Task::delay(2600);
     }
 
     {   //Stop all elements before moving to match loader
@@ -116,7 +116,7 @@ void nine_right_auton_offset()
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(-0.3 * FULL_POWER);
-        pros::delay(700);
+        pros::Task::delay(700);
     }
 
     {   //Move to long goal prime and tank into scoring position.
@@ -127,7 +127,7 @@ void nine_right_auton_offset()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        pros::delay(1800);
+        pros::Task::delay(1800);
     }
 
     {   //Stop element manipulators
@@ -137,7 +137,7 @@ void nine_right_auton_offset()
 
     {   //Reverse then ram blocks
         chassis->tank(-80,-80, true);
-        pros::delay(400);
+        pros::Task::delay(400);
         chassis->tank(100, 100, true);
     }
 }
@@ -172,7 +172,7 @@ void nine_awp_high_auton_offset()
 
     {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
         //conveyor::get()->lift.toggle();
-        pros::delay(500);
+        pros::Task::delay(500);
     }
 
     {   //Drive to primer location then drive to long goal prime position
@@ -187,7 +187,7 @@ void nine_awp_high_auton_offset()
     }
 
     {
-        pros::delay(600);
+        pros::Task::delay(600);
     }
 
     {
@@ -211,7 +211,7 @@ void nine_awp_high_auton_offset()
 
     {   //Move to match loader
         chassis->tank(-40,-40, true);
-        pros::delay(700);
+        pros::Task::delay(700);
     }
 
     {
@@ -221,7 +221,7 @@ void nine_awp_high_auton_offset()
     {   //Set element manipulator to scoring and allow 1.4 seconds of scoring
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
-        pros::delay(3100);
+        pros::Task::delay(3100);
     }
 
     {   //Stop element manipulators
@@ -231,7 +231,7 @@ void nine_awp_high_auton_offset()
 
     {   //Reverse then ram blocks
         chassis->tank(-80,-80, true);
-        pros::delay(400);
+        pros::Task::delay(400);
         chassis->tank(90, 90, true);
     }
 }

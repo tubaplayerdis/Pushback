@@ -33,7 +33,7 @@ void testing_auton()
     {
         lemlib::Pose pose = chassis->getPose();
         controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
-        pros::delay(50);
+        pros::Task::delay(50);
     }
 }
 
@@ -48,11 +48,11 @@ void old_skills_auton()
         conv->exhaust.move(FULL_POWER);
     }
     conv->lift.toggle();
-    pros::delay(700);
+    pros::Task::delay(700);
     chassis->tank(-100, -100, true);
-    pros::delay(650);
+    pros::Task::delay(650);
     chassis->tank(0,0,true);
-    pros::delay(5000);
+    pros::Task::delay(5000);
 
     {   //Start intake and conveyor
         conv->conveyor_intake.brake();

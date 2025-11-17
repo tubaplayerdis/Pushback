@@ -10,8 +10,6 @@
 #include "../../include/pros/rtos.hpp"
 #include "../../include/pros/motors.hpp"
 
-constexpr auto FULL_POWER = 127;
-
 namespace coords
 {
     namespace quad_uno
@@ -22,6 +20,8 @@ namespace coords
 
 namespace power_values
 {
+    constexpr auto FULL_POWER = 127;
+    constexpr auto NO_POWER = 127;
     constexpr auto MATCH_LOADER = -55;
     constexpr auto LONG_GOAL = 30;
 }
@@ -43,8 +43,8 @@ void skills_routine()
     chassis->setPose(9.5, 17, 90);
 
     {   //Move to match loader priming position with 2 position movement
-        chassis->moveToPoint(MPOS(coords::quad_uno::match_loader_prime), 3000, {}, false);
-        chassis->turnToHeading(match_loader_prime.T, 500, {}, false);
+        chassis->moveToPoint(MPOS(match_loader_prime), 3000, {}, false);
+        chassis->turnToHeading(TPOS(match_loader_prime), 500, {}, false);
     }
 
     {   //Setup conveyor and exhaust to handle 7 blocks
@@ -54,6 +54,8 @@ void skills_routine()
 
     {
         chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
+        pros::Task::delay(1000);
+        chassis->tank(NO_POWER,NO_POWER, true);
     }
 }
 
