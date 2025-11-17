@@ -10,20 +10,51 @@
 #include "../../include/pros/rtos.hpp"
 #include "../../include/pros/motors.hpp"
 
-void do_checkpoint_reset()
-{
+constexpr auto FULL_POWER = 127;
 
+namespace coords
+{
+    namespace quad_uno
+    {
+        pos match_loader_prime(-24, 18, 180);
+    }
 }
 
-void quadrant_one_skills()
+namespace power_values
 {
-
+    constexpr auto MATCH_LOADER = -55;
+    constexpr auto LONG_GOAL = 30;
 }
 
 void skills_routine()
 {
-    do_checkpoint_reset();
-    quadrant_one_skills();
+    using namespace coords::quad_uno;
+    using namespace power_values;
+
+    //Get drivetrain object
+    drivetrain* dt  = drivetrain::get();
+
+    //Get conveyor object
+    conveyor* conv = conveyor::get();
+
+    //Get lemlib chassis object
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    chassis->setPose(9.5, 17, 90);
+
+    {   //Move to match loader priming position with 2 position movement
+        chassis->moveToPoint(MPOS(coords::quad_uno::match_loader_prime), 3000, {}, false);
+        chassis->turnToHeading(match_loader_prime.T, 500, {}, false);
+    }
+
+    {   //Setup conveyor and exhaust to handle 7 blocks
+        conv->conveyor_intake.move(FULL_POWER);
+        conv->exhaust.move(-0.3 * FULL_POWER);
+    }
+
+    {
+        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
+    }
 }
 
 ts::auton autons::skills = ts::auton("Skills", skills_routine);

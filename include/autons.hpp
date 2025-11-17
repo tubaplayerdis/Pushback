@@ -7,8 +7,14 @@
 
 #include "titanselect/titanselect.hpp"
 
-//Macro expands the pos struct to use with lemlib commands
+//Macro that expands the pos struct for use with the moveToPose command
 #define POS(pos) pos.X, pos.Y, pos.T
+
+//Macro that expands the pos struct for use with the moveToPoint command
+#define MPOS(pos) pos.X, pos.Y
+
+//Macro that expands the pos struct for use with the turnToHeading command
+#define TPOS(pos) pos.T
 
 struct pos
 {

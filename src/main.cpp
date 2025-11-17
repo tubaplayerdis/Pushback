@@ -92,10 +92,14 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+
     odom = localization::get();
     dt = drivetrain::get();
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
+
+	//FOR SKILLS ONLY
+	dt->lem_chassis.setPose(9.5, 17, 90);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -104,10 +108,10 @@ void opcontrol() {
 			controller_master.print(1, 0, "MOTORS HOT");
 		} else
 		{
-			auton_name = sel->get_selected_auton_name();
-			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
-			//lemlib::Pose pose = dt->lem_chassis.getPose();
-			//controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+			//auton_name = sel->get_selected_auton_name();
+			//controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
+			lemlib::Pose pose = dt->lem_chassis.getPose();
+			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
 		}
 
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
