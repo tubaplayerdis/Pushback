@@ -7,9 +7,12 @@
 #include "../../include/pros/imu.hpp"
 #include "../../include/pros/imu.h"
 #include "../../include/controller.hpp"
+#include "../../include/lemlib/pose.hpp"
 #include <memory>
 #include <chrono>
 #include <cstring>
+
+#include "../../include/subsystems/drivetrain.hpp"
 
 
 std::unique_ptr<localization> odometry_instance;
@@ -23,11 +26,13 @@ static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_
 localization::localization() :
 inertial(INERTIAL),
 rotation_vertical(ROTATION_VERTICAL),
-gps_sensor(GPS),
 tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
 odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
-estimated_position(0,0,0)
+estimated_position(0,0,0),
+rear_loc(9, REAR),
+left_loc(5.5, LEFT),
+right_loc(5.5, RIGHT)
 {
     time_at_last_call = std::chrono::high_resolution_clock::now();
 }
@@ -66,6 +71,11 @@ void localization::tick_implementation() {
     */
 }
 
+bool w_range(double val, double other, double range)
+{
+    return val <= other + range && val >= other - range;
+}
+
 localization* localization::get()
 {
     if (!odometry_instance) odometry_instance = std::unique_ptr<localization>(new localization() );
@@ -78,4 +88,49 @@ vector localization::get_estimated_velocity() {
 
 vector localization::get_estimated_position() {
     return estimated_position;
+}
+
+void localization::distance_sensor_reset()
+{
+    const double err_reading = 9999;
+
+    double rear_dist = rear_loc.distance.get_distance() * 0.0393701 + rear_loc.offset;
+    double left_dist = left_loc.distance.get_distance() * 0.0393701 + left_loc.offset;
+    double right_dist = right_loc.distance.get_distance() * 0.0393701 + right_loc.offset;
+
+    lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
+    double heading = curPose.theta;
+
+    // Robot facing intake towards field is 0 degrees
+
+    if (w_range(heading, 180, 3))
+    {
+        //Robot is against wall near driver
+        if (left_dist == err_reading)
+        {
+            right_dist = 72 - right_dist;
+            drivetrain::get()->lem_chassis.setPose(right_dist, rear_dist, heading);
+            return;
+        }
+
+        if (rear_dist == err_reading)
+        {
+            left_dist = -72 + left_dist;
+            drivetrain::get()->lem_chassis.setPose(left_dist, rear_dist, heading);
+            return;
+        }
+
+    } else if (w_range(heading, 90, 3))
+    {
+        //Robot is in the starting position
+        rear_dist = -72 + rear_dist;
+        right_dist = -72 + right_dist;
+        drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
+
+    } else if (w_range(heading, 0, 3))
+    {
+        //Robot is against wall on other side of driver
+    }
+
+
 }

@@ -8,6 +8,7 @@
 #include <memory>
 #include "../cls/subsystem.hpp"
 #include "../pros/rotation.hpp"
+#include "../pros/distance.hpp"
 #include "../pros/gps.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 
@@ -33,27 +34,40 @@ struct vector
     }
 };
 
+struct localization_sensor
+{
+    double offset;
+    pros::Distance distance;
+
+    localization_sensor(double off, int port) : offset(off), distance(port) {}
+};
+
 class localization final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
     friend class std::unique_ptr<localization>;
 
 public:
-
     /// Inertial sensor responsible for things like velocity and rotation
     pros::Imu inertial;
 
     /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;
 
-    // GPS sensor used during skills for localization
-    pros::Gps gps_sensor;
-
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
 
     /// LemLib "localization" object for autons
     lemlib::OdomSensors odom_sensors;
+
+    /// Rear localization sensor
+    localization_sensor rear_loc;
+
+    /// Left localization sensor
+    localization_sensor left_loc;
+
+    /// Right localization sensor
+    localization_sensor right_loc;
 
 private:
 
@@ -78,6 +92,8 @@ public:
 
     /// Accessor for estimated position that keeps passes by pure value copy
     vector get_estimated_position();
+
+    void distance_sensor_reset();
 
     /// public accessor method for singleton.
     static localization* get();

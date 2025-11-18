@@ -70,7 +70,9 @@ namespace ports
     {
         constexpr auto INERTIAL = 14;
         constexpr auto ROTATION_VERTICAL = 10;
-        constexpr auto GPS = 0;
+        constexpr auto REAR = 1;
+        constexpr auto LEFT = 2;
+        constexpr auto RIGHT = 9;
 
         namespace settings
         {

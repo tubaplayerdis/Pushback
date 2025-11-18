@@ -99,7 +99,8 @@ void opcontrol() {
 	ts::selector* sel = ts::selector::get();
 
 	//FOR SKILLS ONLY
-	dt->lem_chassis.setPose(9.5, 17, 90);
+	dt->lem_chassis.setPose(0, 0, 90);
+	odom->distance_sensor_reset();
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {

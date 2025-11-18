@@ -14,7 +14,7 @@ namespace coords
 {
     namespace quad_uno
     {
-        pos match_loader_prime(-24, 18, 180);
+        pos match_loader_prime(-47.5, -43, 180);
     }
 }
 
@@ -40,10 +40,11 @@ void skills_routine()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    chassis->setPose(9.5, 17, 90);
+    chassis->setPose(0, 0, 90);
+    localization::get()->distance_sensor_reset();
 
     {   //Move to match loader priming position with 2 position movement
-        chassis->moveToPoint(MPOS(match_loader_prime), 3000, {}, false);
+        chassis->moveToPoint(MPOS(match_loader_prime), 3000, { .forwards = false}, false);
         chassis->turnToHeading(TPOS(match_loader_prime), 500, {}, false);
     }
 
@@ -53,9 +54,16 @@ void skills_routine()
     }
 
     {
-        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
-        pros::Task::delay(1000);
-        chassis->tank(NO_POWER,NO_POWER, true);
+        //chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
+        //pros::Task::delay(1000);
+        //chassis->tank(NO_POWER,NO_POWER, true);
+    }
+
+    while (true)
+    {
+        lemlib::Pose pose = chassis->getPose();
+        controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+        pros::Task::delay(50);
     }
 }
 
