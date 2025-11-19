@@ -116,12 +116,6 @@ public:
 
 private:
 
-    /// Velocity based off inertial sensor acceleration readings.
-    vector estimated_velocity;
-
-    /// Position based off inertial sensor acceleration readings.
-    vector estimated_position;
-
     /// Private constructor to enforce usage of get()
     localization();
 
