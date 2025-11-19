@@ -70,14 +70,23 @@ namespace ports
     {
         constexpr auto INERTIAL = 14;
         constexpr auto ROTATION_VERTICAL = 10;
-        constexpr auto REAR = 1;
-        constexpr auto LEFT = 2;
-        constexpr auto RIGHT = 9;
+        constexpr auto FRONT_LOC = -1;
+        constexpr auto REAR_LOC = 1;
+        constexpr auto LEFT_LOC = 2;
+        constexpr auto RIGHT_LOC = 9;
 
         namespace settings
         {
             constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = 0; //The horizontal offset of the tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_WHEEL_SIZE = lemlib::Omniwheel::NEW_2;
+        }
+
+        namespace offsets
+        {
+            constexpr auto FRONT = 1;
+            constexpr auto REAR = 9;
+            constexpr auto LEFT = 5.5;
+            constexpr auto RIGHT = 5.5;
         }
     }
 }

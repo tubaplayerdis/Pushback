@@ -36,10 +36,52 @@ struct vector
 
 struct localization_sensor
 {
-    double offset;
-    pros::Distance distance;
+    static constexpr double mm_inch_conversion_factor = 0.0393701;
 
-    localization_sensor(double off, int port) : offset(off), distance(port) {}
+    /// Offset of the distance sensor in inches
+    const double offset;
+
+    /// Pros distance sensor object
+    pros::Distance sensor;
+
+    /// Constructor
+    localization_sensor(double off, int port) : offset(off), sensor(port) {}
+
+    /// Returns distance with offset added to the sensor reading in INCHES.
+    double distance()
+    {
+        return (double)sensor.get_distance() * mm_inch_conversion_factor + offset;
+    }
+};
+
+/// Passed the distance sensor reset to inform it how to process data.
+/// All localization locations are based in quadrants which are defined like you are looking at 4 quadrants on the field from the driver position. They are as follows:
+/// Top Right (+,+)
+/// Top Left (-,+)
+/// Bottom Left (-,-)
+/// Bottom Right (+,-)
+enum localization_update
+{
+    /// Initial starting location of skills, 90 degrees turned with the match loader facing the wall to the right
+    SKILLS_INITIAL,
+
+    /// Initial starting location of left side autons with the aligner facing towards the wall
+    AUTON_INITIAL_LEFT,
+
+    /// Initial starting location of right side autons with the aligner facing towards the wall
+    AUTON_INITIAL_RIGHT,
+
+    /// Match loader top right of driver location. ++ quadrant
+    MATCH_LOADER_1,
+
+    /// Match loader top left of driver location. -+ quadrant
+    MATCH_LOADER_2,
+
+    /// Match loader bottom left of driver location. -- quadrant
+    MATCH_LOADER_3,
+
+    /// Match loader bottom right of driver location, closest to driver. +- quadrant
+    MATCH_LOADER_4,
 };
 
 class localization final : public subsystem
@@ -60,13 +102,16 @@ public:
     /// LemLib "localization" object for autons
     lemlib::OdomSensors odom_sensors;
 
-    /// Rear localization sensor
+    /// Front localization sensor. Located near aligner
+    localization_sensor front_loc;
+
+    /// Rear localization sensor. Located near match loader mount.
     localization_sensor rear_loc;
 
-    /// Left localization sensor
+    /// Left localization sensor. Located on the side of the brain.
     localization_sensor left_loc;
 
-    /// Right localization sensor
+    /// Right localization sensor. Located on the opposite side of the brain.
     localization_sensor right_loc;
 
 private:
@@ -87,13 +132,9 @@ protected:
 
 public:
 
-    /// Accessor for estimated velocity that keeps passes by pure value copy
-    vector get_estimated_velocity();
-
-    /// Accessor for estimated position that keeps passes by pure value copy
-    vector get_estimated_position();
-
-    void distance_sensor_reset();
+    /// Resets the pose of the lemlib chassis object during skills or before autons.
+    /// @note Set the heading of the robot beforehand. An example is for skills where the robot needs to be told it is 90 degrees turned.
+    void distance_sensor_reset(localization_update update_type);
 
     /// public accessor method for singleton.
     static localization* get();

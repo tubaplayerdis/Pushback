@@ -100,7 +100,7 @@ void opcontrol() {
 
 	//FOR SKILLS ONLY
 	dt->lem_chassis.setPose(0, 0, 90);
-	odom->distance_sensor_reset();
+	odom->distance_sensor_reset(SKILLS_INITIAL);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {

@@ -41,7 +41,7 @@ void skills_routine()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     chassis->setPose(0, 0, 90);
-    localization::get()->distance_sensor_reset();
+    localization::get()->distance_sensor_reset(SKILLS_INITIAL);
 
     {   //Move to match loader priming position with 2 position movement
         chassis->moveToPoint(MPOS(match_loader_prime), 3000, { .forwards = false}, false);

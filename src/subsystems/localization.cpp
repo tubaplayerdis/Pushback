@@ -19,9 +19,7 @@ std::unique_ptr<localization> odometry_instance;
 
 using namespace ports::localization;
 using namespace ports::localization::settings;
-
-/// timepoint value representing the last time the tick function was ran and updated this variable
-static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_call;
+using namespace ports::localization::offsets;
 
 localization::localization() :
 inertial(INERTIAL),
@@ -30,50 +28,15 @@ tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CE
 odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
 estimated_velocity(0,0,0),
 estimated_position(0,0,0),
-rear_loc(9, REAR),
-left_loc(5.5, LEFT),
-right_loc(5.5, RIGHT)
+rear_loc(REAR, REAR_LOC),
+left_loc(LEFT, LEFT_LOC),
+right_loc(RIGHT, RIGHT_LOC),
+front_loc(FRONT, FRONT_LOC)
+{}
+
+void localization::tick_implementation()
 {
-    time_at_last_call = std::chrono::high_resolution_clock::now();
-}
-
-void localization::tick_implementation() {
-    /*
-     * Position estimation system.
-     * This system is an experiment on whether the inertial sensor can provide accurate values to estimate position and velocity.
-     * The system is based on kinematics fundamentals which states that position can be found given time and acceleration, both of which can be retrieved from either the robot or the inertial sensor.
-     * The accuracy of this system is untested but the last time I implemented it I got erroneous values due to the time estimation being wrong.
-     */
-
-    //Return early for now.
-    return;
-
-    // Acceleration vector. Acquire before calculations.
-    /*
-    pros::imu_raw_s accel = inertial.get_accel();
-
-    auto now = std::chrono::high_resolution_clock::now();
-    auto duration = now - time_at_last_call;
-    long long duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-    long long duration_s = duration_ms / 1000;
-    time_at_last_call = now;
-
-    //Vf = Vo + A * T
-    estimated_velocity.x = estimated_velocity.x + accel.x * duration_s;
-    estimated_velocity.y = estimated_velocity.y + accel.y * duration_s;
-    estimated_velocity.z = estimated_velocity.z + accel.z * duration_s;
-
-    // Delta X = Vo * T + 1/2 * A * T^2
-    // X = X + Delta X
-    estimated_position.x += estimated_velocity.x * duration_s + 0.5 * accel.x * (duration_s * duration_s);
-    estimated_position.y += estimated_velocity.y * duration_s + 0.5 * accel.y * (duration_s * duration_s);
-    estimated_position.z += estimated_velocity.z * duration_s + 0.5 * accel.z * (duration_s * duration_s);
-    */
-}
-
-bool w_range(double val, double other, double range)
-{
-    return val <= other + range && val >= other - range;
+    //If anything is ever used that requires an update on the sensor readings like mcl, implement it here
 }
 
 localization* localization::get()
@@ -82,55 +45,78 @@ localization* localization::get()
     return odometry_instance.get();
 }
 
-vector localization::get_estimated_velocity() {
-    return estimated_velocity;
-}
-
-vector localization::get_estimated_position() {
-    return estimated_position;
-}
-
-void localization::distance_sensor_reset()
+void localization::distance_sensor_reset(localization_update update_type)
 {
-    const double err_reading = 9999;
+    //Value returned when the distance sensor cannot read a distance
+    static constexpr double err_reading = 9999;
 
-    double rear_dist = rear_loc.distance.get_distance() * 0.0393701 + rear_loc.offset;
-    double left_dist = left_loc.distance.get_distance() * 0.0393701 + left_loc.offset;
-    double right_dist = right_loc.distance.get_distance() * 0.0393701 + right_loc.offset;
+    //Since the field is 12ft x 12ft, each quadrant is 72in x 72in. This is used as a global offset to the distance sensor readings to accurately map where the robot is.
+    static constexpr double wall_coord = 72;
+
+    double front_dist = front_loc.distance();
+    double rear_dist = rear_loc.distance();
+    double left_dist = left_loc.distance();
+    double right_dist = right_loc.distance();
 
     lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
     double heading = curPose.theta;
 
-    // Robot facing intake towards field is 0 degrees
+    switch (update_type) {
 
-    if (w_range(heading, 180, 3))
-    {
-        //Robot is against wall near driver
-        if (left_dist == err_reading)
+        case SKILLS_INITIAL:
         {
-            right_dist = 72 - right_dist;
+            rear_dist = -wall_coord + rear_dist;
+            right_dist = wall_coord - right_dist;
+            drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
+            break;
+        }
+
+        case AUTON_INITIAL_LEFT:
+        {
+            front_dist = -wall_coord + front_dist;
+            right_dist = wall_coord - right_dist;
+            drivetrain::get()->lem_chassis.setPose(right_dist, front_dist, heading);
+            break;
+        }
+
+        case AUTON_INITIAL_RIGHT:
+        {
+            front_dist = -wall_coord + front_dist;
+            left_dist = -wall_coord + left_dist;
+            drivetrain::get()->lem_chassis.setPose(left_dist, front_dist, heading);
+            break;
+        }
+
+        case MATCH_LOADER_1:
+        {
+            rear_dist = wall_coord - rear_dist;
+            right_dist = wall_coord - right_dist;
             drivetrain::get()->lem_chassis.setPose(right_dist, rear_dist, heading);
-            return;
+            break;
         }
 
-        if (rear_dist == err_reading)
+        case MATCH_LOADER_2:
         {
-            left_dist = -72 + left_dist;
+            rear_dist = wall_coord - rear_dist;
+            left_dist = -wall_coord + left_dist;
             drivetrain::get()->lem_chassis.setPose(left_dist, rear_dist, heading);
-            return;
+            break;
         }
 
-    } else if (w_range(heading, 90, 3))
-    {
-        //Robot is in the starting position
-        rear_dist = -72 + rear_dist;
-        right_dist = -72 + right_dist;
-        drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
+        case MATCH_LOADER_3:
+        {
+            rear_dist = -wall_coord + rear_dist;
+            right_dist = -wall_coord + right_dist;
+            drivetrain::get()->lem_chassis.setPose(right_dist, rear_dist, heading);
+            break;
+        }
 
-    } else if (w_range(heading, 0, 3))
-    {
-        //Robot is against wall on other side of driver
+        case MATCH_LOADER_4:
+        {
+            rear_dist = -wall_coord + rear_dist;
+            left_dist = wall_coord - left_dist;
+            drivetrain::get()->lem_chassis.setPose(left_dist, rear_dist, heading);
+            break;
+        }
     }
-
-
 }
