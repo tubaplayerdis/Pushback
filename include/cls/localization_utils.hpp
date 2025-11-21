@@ -136,4 +136,24 @@ enum localization_update
     MATCH_LOADER_4,
 };
 
+/*
+ * Structure used to store the data of the localization system.
+ */
+struct localization_data
+{
+    std::ranlux24_base random_gen;
+    QLength odom_change;
+    QLength last_odom;
+    Angle last_theta;
+    Eigen::Vector3f exponential_pose;
+
+    localization_data() :
+    random_gen(),
+    odom_change(0.0),
+    last_odom(0.0),
+    last_theta(0.0),
+    exponential_pose(Eigen::Vector3f::Zero())
+    {}
+};
+
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP

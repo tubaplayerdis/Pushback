@@ -60,18 +60,13 @@ private:
     /// Pros task that handles monte carlo localization.
     pros::Task* monte_task;
 
-    QLength odom_change;
+    localization_data data;
 
-    QLength last_odom;
-
-    Angle last_theta;
-
-    Eigen::Vector3f exponential_pose;
-
+    /// Helper used by do_localization()
     QLength get_odom_distance();
 
-    /// Do not call directly.
-    void do_localization();
+    /// Do not call directly. called in localization loop
+    bool do_localization(lemlib::Chassis* chassis);
 
     /// Private constructor to enforce usage of get()
     localization();
@@ -82,6 +77,10 @@ protected:
     void tick_implementation() override;
 
 public:
+
+    void start_localization_mcl();
+
+    void stop_localization_mcl();
 
     /// Resets the pose of the lemlib chassis object during skills or before autons.
     /// @note Set the heading of the robot beforehand. An example is for skills where the robot needs to be told it is 90 degrees turned.
