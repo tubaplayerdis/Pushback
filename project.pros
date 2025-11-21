@@ -632,28 +632,6 @@
                 "user_files": [],
                 "version": "9.2.0"
             },
-            "locolib": {
-                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\locolib@0.1.0",
-                "metadata": {
-                    "origin": "locolib"
-                },
-                "name": "locolib",
-                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
-                "supported_kernels": "^4.1.0",
-                "system_files": [
-                    "include/localization/distance.h",
-                    "include/localization/utils.h",
-                    "firmware/locolib.a",
-                    "include/localization/config.h",
-                    "include/localization/particleFilter.h",
-                    "include/localization/gps.h",
-                    "include/localization/sensorModel.h",
-                    "include/localization/line.h"
-                ],
-                "target": "v5",
-                "user_files": [],
-                "version": "0.1.0"
-            },
             "titanselect": {
                 "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\titanselect@1.0.0",
                 "metadata": {
