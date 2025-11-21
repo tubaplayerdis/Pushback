@@ -36,21 +36,24 @@ struct vector
 
 struct localization_sensor
 {
-    static constexpr double mm_inch_conversion_factor = 0.0393701;
+    static constexpr int err_reading_value = 9999;
+    static constexpr float mm_inch_conversion_factor = 0.0393701;
 
     /// Offset of the distance sensor in inches
-    const double offset;
+    const float offset;
 
     /// Pros distance sensor object
     pros::Distance sensor;
 
     /// Constructor
-    localization_sensor(double off, int port) : offset(off), sensor(port) {}
+    localization_sensor(float off, int port) : offset(off), sensor(port) {}
 
     /// Returns distance with offset added to the sensor reading in INCHES.
-    double distance()
+    std::optional<float> distance()
     {
-        return (double)sensor.get_distance() * mm_inch_conversion_factor + offset;
+        int sensor_reading = sensor.get_distance();
+        if (sensor_reading == err_reading_value) return std::nullopt;
+        return (double)sensor_reading * mm_inch_conversion_factor + offset;
     }
 };
 
@@ -71,19 +74,26 @@ enum localization_update
     /// Initial starting location of right side autons with the aligner facing towards the wall
     AUTON_INITIAL_RIGHT,
 
-    /// Match loader top right of driver location. ++ quadrant
+    /// Match loader top left of driver location. ++ quadrant
     MATCH_LOADER_1,
 
-    /// Match loader top left of driver location. -+ quadrant
+    /// Match loader bottom left of driver location. -+ quadrant
     MATCH_LOADER_2,
 
-    /// Match loader bottom left of driver location. -- quadrant
+    /// Match loader bottom right of driver location. -- quadrant
     MATCH_LOADER_3,
 
-    /// Match loader bottom right of driver location, closest to driver. +- quadrant
+    /// Match loader bottom left of driver location, closest to driver. +- quadrant
     MATCH_LOADER_4,
 };
 
+/*
+ * For the localization class, the robot's sides are approached unconventionally due to the odometry setup.
+ * The front of the robot is side with the exhaust and aligner.
+ * The rear/back is the side with the match loader and intake.
+ * The left is the non-brain side.
+ * The right is the side with the brain.
+ */
 class localization final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
@@ -99,7 +109,7 @@ public:
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
 
-    /// LemLib "localization" object for autons
+    /// LemLib "odometry" object for autons
     lemlib::OdomSensors odom_sensors;
 
     /// Front localization sensor. Located near aligner
@@ -108,11 +118,11 @@ public:
     /// Rear localization sensor. Located near match loader mount.
     localization_sensor rear_loc;
 
-    /// Left localization sensor. Located on the side of the brain.
-    localization_sensor left_loc;
-
-    /// Right localization sensor. Located on the opposite side of the brain.
+    /// Right localization sensor. Located on the side of the brain.
     localization_sensor right_loc;
+
+    /// Left localization sensor. Located on the opposite side of the brain.
+    localization_sensor left_loc;
 
 private:
 
