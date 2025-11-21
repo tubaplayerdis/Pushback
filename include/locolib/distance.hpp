@@ -8,19 +8,22 @@
 #include "../eigen/Eigen"
 #include "../units/units.hpp"
 #include "../pros/distance.hpp"
+#include "config.hpp"
 
 namespace loco {
+    // CONVERSION NOTE: 1.78308 meters is approximately 70.2 inches.
+    // This represents the distance from the center (0,0) to the inner wall.
     const std::vector<std::pair<Eigen::Vector2f, Eigen::Vector2f> > WALLS = {
-            {{1.78308, 1.78308}, {1.78308, -1.78308}},
-            {{1.78308, -1.78308}, {-1.78308, -1.78308}},
-            {{-1.78308, -1.78308}, {-1.78308, 1.78308}},
-            {{-1.78308, 1.78308}, {1.78308, 1.78308}},
+            {{70.2, 70.2}, {70.2, -70.2}},   // East Wall
+            {{70.2, -70.2}, {-70.2, -70.2}}, // South Wall
+            {{-70.2, -70.2}, {-70.2, 70.2}}, // West Wall
+            {{-70.2, 70.2}, {70.2, 70.2}},   // North Wall
     };
 
-    constexpr float WALL_0_X = 1.78308;
-    constexpr float WALL_1_Y = 1.78308;
-    constexpr float WALL_2_X = -1.78308;
-    constexpr float WALL_3_Y = -1.78308;
+    constexpr float WALL_0_X = 70.2;
+    constexpr float WALL_1_Y = 70.2;
+    constexpr float WALL_2_X = -70.2;
+    constexpr float WALL_3_Y = -70.2;
 
     /**
      * @brief Sensor model representation of distance sensors pointed directly at the walls on a specified position on the robot.
@@ -54,10 +57,16 @@ namespace loco {
         void update() override {
             const auto measuredMM = distance.get();
 
+            // VEX Distance Sensor max range is ~2000mm+ but reliable range is lower.
+            // Standard filter for bad data (9999 is error code).
             exit = measuredMM == 9999 || distance.get_object_size() < 70;
 
-            measured = measuredMM * millimetre;
+            // CONVERSION: Convert raw millimeters to inches (mm / 25.4)
+            // Assuming QLength can be constructed from a float, or your units.hpp has an 'inch' literal.
+            // If QLength requires a unit literal, use: (measuredMM / 25.4) * inch;
+            measured = (measuredMM / 25.4);
 
+            // Standard deviation model: 20% of the measured distance
             std = 0.20 * measured / (distance.get_confidence() / 64.0);
         }
 
@@ -77,7 +86,8 @@ namespace loco {
 
             Eigen::Vector2f x = X.head<2>() + Eigen::Rotation2Df(X.z()) * sensorOffset.head<2>();
 
-            auto predicted = 50.0f;
+            // Update sentinel value to something larger than the field (144 inches)
+            auto predicted = 200.0f;
 
             if (const auto theta = abs(std::remainder(0.0f, angle)); theta < M_PI_2) {
                 predicted = std::min((WALL_0_X - x.x()) / cos(theta), predicted);

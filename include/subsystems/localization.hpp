@@ -11,6 +11,7 @@
 #include "../pros/distance.hpp"
 #include "../pros/gps.hpp"
 #include "../lemlib/chassis/chassis.hpp"
+#include "../locolib/distance.hpp"
 
 /// 3 dimensional vector structure
 struct vector
@@ -39,7 +40,7 @@ struct localization_sensor
     static constexpr int err_reading_value = 9999;
     static constexpr float mm_inch_conversion_factor = 0.0393701;
 
-    /// Offset of the distance sensor in inches
+    /// Offset of the distance sensor in inches from the center of the robot on the axis of sight direction. So if the sensor looked in the Y direction, the offset would be the offset in the Y direction and not the X direction.
     const float offset;
 
     /// Pros distance sensor object
@@ -54,6 +55,11 @@ struct localization_sensor
         int sensor_reading = sensor.get_distance();
         if (sensor_reading == err_reading_value) return std::nullopt;
         return (double)sensor_reading * mm_inch_conversion_factor + offset;
+    }
+
+    [[nodiscard]] loco::DistanceSensorModel as_sensor_model(float x_off, float y_off, float h_off) const
+    {
+        return {{x_off, y_off, h_off}, sensor};
     }
 };
 
@@ -125,6 +131,9 @@ public:
     localization_sensor left_loc;
 
 private:
+
+    /// Pros task that handles monte carlo localization.
+    pros::Task* monte_task;
 
     /// Private constructor to enforce usage of get()
     localization();

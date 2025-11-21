@@ -24,20 +24,8 @@ namespace loco {
 
         /**
          * @brief Weight for the distance sensor. Higher means it will have a larger impact on the particle filter, lower
-         * means a smaller impact.
+         * means a smaller impact. There were other equivalents that used other localization sensors, but were removed due to their ineffectiveness.
          */
         static constexpr float DISTANCE_WEIGHT = 1.0;
-
-        /**
-         * @brief Weight for the game positioning sensor. Higher means it will have a larger impact on the particle filter, lower
-         * means a smaller impact.
-         */
-        static constexpr float GPS_WEIGHT = 1.0;
-
-        /**
-         * @brief Weight for the line sensor. Higher means it will have a larger impact on the particle filter, lower
-         * means a smaller impact.
-         */
-        static constexpr float LINE_WEIGHT = 1.0;
     };
 }
