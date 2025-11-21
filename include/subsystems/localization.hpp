@@ -14,88 +14,7 @@
 #include "../locolib/distance.hpp"
 #include "../locolib/particleFilter.hpp"
 #include "../locolib/config.hpp"
-
-/// 3 dimensional vector structure
-struct vector
-{
-    double x;
-    double y;
-    double z;
-
-    vector()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-    }
-
-    vector(double X, double Y, double Z)
-    {
-        x = X;
-        y = Y;
-        z = Z;
-    }
-};
-
-struct localization_sensor
-{
-    static constexpr int err_reading_value = 9999;
-    static constexpr float mm_inch_conversion_factor = 0.0393701;
-
-    /// Offset of the distance sensor in inches from the center of the robot on the axis of sight direction. So if the sensor looked in the Y direction, the offset would be the offset in the Y direction and not the X direction.
-    const float offset;
-
-    /// Pros distance sensor object
-    pros::Distance sensor;
-
-    //Add sensor model as struct member and change accessor to return pointer to model
-
-    /// Constructor
-    localization_sensor(float off, int port) : offset(off), sensor(port) {}
-
-    /// Returns distance with offset added to the sensor reading in INCHES.
-    std::optional<float> distance()
-    {
-        int sensor_reading = sensor.get_distance();
-        if (sensor_reading == err_reading_value) return std::nullopt;
-        return (double)sensor_reading * mm_inch_conversion_factor + offset;
-    }
-
-    [[nodiscard]] loco::DistanceSensorModel as_sensor_model(float x_off, float y_off, float h_off) const
-    {
-        return {{x_off, y_off, h_off}, sensor};
-    }
-};
-
-/// Passed the distance sensor reset to inform it how to process data.
-/// All localization locations are based in quadrants which are defined like you are looking at 4 quadrants on the field from the driver position. They are as follows:
-/// Top Right (+,+)
-/// Top Left (-,+)
-/// Bottom Left (-,-)
-/// Bottom Right (+,-)
-enum localization_update
-{
-    /// Initial starting location of skills, 90 degrees turned with the match loader facing the wall to the right
-    SKILLS_INITIAL,
-
-    /// Initial starting location of left side autons with the aligner facing towards the wall
-    AUTON_INITIAL_LEFT,
-
-    /// Initial starting location of right side autons with the aligner facing towards the wall
-    AUTON_INITIAL_RIGHT,
-
-    /// Match loader top left of driver location. ++ quadrant
-    MATCH_LOADER_1,
-
-    /// Match loader bottom left of driver location. -+ quadrant
-    MATCH_LOADER_2,
-
-    /// Match loader bottom right of driver location. -- quadrant
-    MATCH_LOADER_3,
-
-    /// Match loader bottom left of driver location, closest to driver. +- quadrant
-    MATCH_LOADER_4,
-};
+#include "../cls/localization_utils.hpp"
 
 /*
  * For the localization class, the robot's sides are approached unconventionally due to the odometry setup.
@@ -140,6 +59,19 @@ private:
 
     /// Pros task that handles monte carlo localization.
     pros::Task* monte_task;
+
+    QLength odom_change;
+
+    QLength last_odom;
+
+    Angle last_theta;
+
+    Eigen::Vector3f exponential_pose;
+
+    QLength get_odom_distance();
+
+    /// Do not call directly.
+    void do_localization();
 
     /// Private constructor to enforce usage of get()
     localization();

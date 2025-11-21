@@ -10,6 +10,9 @@ namespace loco {
      */
     class LOCO_CONFIG {
     public:
+        static constexpr float DRIVE_NOISE = 0.05;
+        static constexpr Angle ANGLE_NOISE = 3_deg;
+
         static constexpr size_t NUM_PARTICLES = 250;
 
         /**
