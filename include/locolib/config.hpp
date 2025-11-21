@@ -10,6 +10,8 @@ namespace loco {
      */
     class LOCO_CONFIG {
     public:
+        static constexpr size_t NUM_PARTICLES = 250;
+
         /**
          * @brief Sensor threshold for determining if the line sensor is over a line. This is a good value at approximately
          * 7mm from the tiles, which we found was a good balance between packaging and sensor SNR.

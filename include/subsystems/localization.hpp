@@ -12,6 +12,8 @@
 #include "../pros/gps.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 #include "../locolib/distance.hpp"
+#include "../locolib/particleFilter.hpp"
+#include "../locolib/config.hpp"
 
 /// 3 dimensional vector structure
 struct vector
@@ -45,6 +47,8 @@ struct localization_sensor
 
     /// Pros distance sensor object
     pros::Distance sensor;
+
+    //Add sensor model as struct member and change accessor to return pointer to model
 
     /// Constructor
     localization_sensor(float off, int port) : offset(off), sensor(port) {}
@@ -131,6 +135,8 @@ public:
     localization_sensor left_loc;
 
 private:
+
+    loco::ParticleFilter<loco::LOCO_CONFIG::NUM_PARTICLES> particle_filter;
 
     /// Pros task that handles monte carlo localization.
     pros::Task* monte_task;

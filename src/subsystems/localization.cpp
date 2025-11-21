@@ -13,6 +13,7 @@
 #include <cstring>
 
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/units/units.hpp"
 
 
 std::unique_ptr<localization> odometry_instance;
@@ -29,8 +30,18 @@ localization::localization() :
         rear_loc(REAR, REAR_LOC),
         right_loc(LEFT, LEFT_LOC),
         left_loc(RIGHT, RIGHT_LOC),
-        front_loc(FRONT, FRONT_LOC)
-{}
+        front_loc(FRONT, FRONT_LOC),
+
+        //Function that allows the particle filter to interpret updates to the angle (heading) of the robot
+        particle_filter([this]() {
+            const Angle angle = -inertial.get_rotation() * degree;
+            return isfinite(angle.getValue()) ? angle : 0.0;
+        }),
+        monte_task(nullptr)
+{
+    //Add particle filter sensors
+    //particle_filter.addSensor()
+}
 
 void localization::tick_implementation()
 {
