@@ -46,6 +46,9 @@ struct vector
     }
 };
 
+/*
+ *
+ */
 struct localization_sensor
 {
     static constexpr int err_reading_value = 9999;
