@@ -14,14 +14,16 @@ namespace coords
 {
     namespace quad_uno
     {
-        pos match_loader_prime(-47.5, -43, 180);
+        pos match_loader_prime(-48.8, -49.3, 90);
+        pos quadrant_trans_a(-25, -36.80, 90);
+        pos quadrant_trans_b(33, -36.80, 90);
     }
 }
 
 namespace power_values
 {
     constexpr auto FULL_POWER = 127;
-    constexpr auto NO_POWER = 127;
+    constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -55;
     constexpr auto LONG_GOAL = 30;
 }
@@ -40,7 +42,7 @@ void skills_routine()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    chassis->setPose(0, 0, 90);
+    chassis->setPose(0, 0, 0);
     localization::get()->distance_sensor_reset(SKILLS_INITIAL);
 
     {   //Move to match loader priming position with 2 position movement
@@ -54,9 +56,18 @@ void skills_routine()
     }
 
     {
-        //chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
-        //pros::Task::delay(1000);
-        //chassis->tank(NO_POWER,NO_POWER, true);
+        conv->lift.toggle();
+        pros::Task::delay(500);
+        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
+        pros::Task::delay(3000);
+        chassis->tank(NO_POWER,NO_POWER, true);
+    }
+
+    {
+        chassis->moveToPose(POS(quadrant_trans_a), 3000, {.minSpeed = 30, .earlyExitRange = 0.2}, false);
+        conv->conveyor_intake.brake();
+        conv->exhaust.brake();
+        chassis->moveToPose(POS(quadrant_trans_b), 1500, {}, false);
     }
 
     while (true)

@@ -70,7 +70,7 @@ namespace ports
     {
         constexpr auto INERTIAL = 14;
         constexpr auto ROTATION_VERTICAL = 10;
-        constexpr auto FRONT_LOC = -1;
+        constexpr auto FRONT_LOC = 3;
         constexpr auto REAR_LOC = 1;
         constexpr auto LEFT_LOC = 2;
         constexpr auto RIGHT_LOC = 9;
@@ -84,9 +84,9 @@ namespace ports
         namespace offsets
         {
             constexpr auto FRONT = 1;
-            constexpr auto REAR = 9;
-            constexpr auto LEFT = 5.5;
-            constexpr auto RIGHT = 5.5;
+            constexpr auto REAR = 6.4;
+            constexpr auto LEFT = 6.45;
+            constexpr auto RIGHT = 6.45;
         }
     }
 }

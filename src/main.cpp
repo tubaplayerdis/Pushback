@@ -98,8 +98,10 @@ void opcontrol() {
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
+    //X = 17.5, Y = -48.3
+
 	//FOR SKILLS ONLY
-	dt->lem_chassis.setPose(0, 0, 90);
+	dt->lem_chassis.setPose(0, 0, 0);
 	odom->distance_sensor_reset(SKILLS_INITIAL);
 
 	std::string auton_name = sel->get_selected_auton_name();
@@ -120,6 +122,11 @@ void opcontrol() {
             sel->cycle_autons();
         	controller_master.rumble("..");
         	pros::delay(100);
+        }
+
+        if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+        {
+            odom->distance_sensor_reset(SKILLS_INITIAL);
         }
 
 		lv_timer_handler();

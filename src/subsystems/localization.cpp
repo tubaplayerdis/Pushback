@@ -64,8 +64,8 @@ void localization::distance_sensor_reset(localization_update update_type)
         case SKILLS_INITIAL:
         {
             rear_dist = -wall_coord + rear_dist;
-            right_dist = wall_coord - right_dist;
-            drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
+            right_dist = -wall_coord + right_dist;
+            drivetrain::get()->lem_chassis.setPose(right_dist, rear_dist, heading);
             break;
         }
 
