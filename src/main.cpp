@@ -3,6 +3,7 @@
 #include "../include/subsystems/conveyor.hpp"
 #include "../include/ports.hpp"
 #include "autons.hpp"//This is needed for autons to show up
+#include "lemlib/pose.hpp"
 #include "titanselect/titanselect.hpp"
 extern "C"
 {
@@ -99,10 +100,6 @@ void opcontrol() {
 	ts::selector* sel = ts::selector::get();
 
     //X = 17.5, Y = -48.3
-
-	//FOR SKILLS ONLY
-	dt->lem_chassis.setPose(0, 0, 0);
-	odom->distance_sensor_reset(SKILLS_INITIAL);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {

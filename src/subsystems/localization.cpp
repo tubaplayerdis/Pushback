@@ -99,11 +99,9 @@ void localization::distance_sensor_reset(localization_update update_type)
         rear_dist = rear_loc.distance().value();
         right_dist = right_loc.distance().value();
         left_dist = left_loc.distance().value();
-    } catch (std::bad_variant_access& err)
+    } catch (std::exception& err)
     {
         std::printf("Could not perform a distance sensor reset!");
-        controller_master.rumble(".-.-.");
-        pros::Task::delay(100);
         return;
     }
 
