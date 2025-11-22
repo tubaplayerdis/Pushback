@@ -2,6 +2,8 @@
 // Created by aaron on 11/21/2025.
 //
 
+// Utilities used by localization subsystem for distance sensor resets and monte carlo localization.
+
 #ifndef PUSHBACK_LOCALIZATION_UTILS_HPP
 #define PUSHBACK_LOCALIZATION_UTILS_HPP
 
@@ -9,6 +11,7 @@
 #include "../locolib/distance.hpp"
 #include "../locolib/particleFilter.hpp"
 #include "../locolib/config.hpp"
+#include "../pros/rtos.hpp"
 #include <optional>
 
 /*
@@ -17,8 +20,8 @@
  */
 struct vector
 {
-    /*
-     * Enum representing the axis of vector. Useful when describing an important axis of the vector
+    /**
+     * @brief Enum representing the axes of vector. Useful when describing an important axis of the vector
      */
     enum axis
     {
@@ -31,90 +34,79 @@ struct vector
     float y;
     float z;
 
-    vector()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-    }
+    /**
+     * @breif Default constructor for vector, initializes X, Y, and Z to zero.
+     */
+    vector();
 
-    vector(float X, float Y, float Z)
-    {
-        x = X;
-        y = Y;
-        z = Z;
-    }
+    /**
+     * @brief Standard constructor for vector, initializes values to input parameters
+     * @param X x value of vector
+     * @param Y y value of vector
+     * @param Z z or theta value of vector depending on plane interpreted
+     */
+    vector(float X, float Y, float Z);
 };
 
-/*
- *
+/**
+ * @brief Distance sensor wrapper class used for distance sensor resets and monte carlo localization.
  */
-struct localization_sensor
+class localization_sensor
 {
-    static constexpr int err_reading_value = 9999;
-    static constexpr float mm_inch_conversion_factor = 0.0393701;
-
-    /// Offset of the distance sensor in inches from the center of the robot on the axis of sight direction. So if the sensor looked in the Y direction, the offset would be the offset in the Y direction and not the X direction.
+    /**
+     * Offset vector of the localization sensor.
+     * X is front to back, Y is side to side, Z is theta of sensor.
+     */
     const vector offset;
+
+    /**
+     * Important axis of the localization sensor to be used when calculating distance.
+     */
     const vector::axis localization_axis;
 
-    /// Pros distance sensor object
+    /**
+     * Pros distance sensor object.
+     */
     pros::Distance sensor;
 
-    //Add sensor model as struct member and change accessor to return pointer to model
+    /**
+     * Locolib distance sensor model.
+     */
     loco::DistanceSensorModel sensor_model;
 
-    /// Constructor
-    localization_sensor(vector off, vector::axis axis, int port) :
-            offset(off),
-            localization_axis(axis),
-            sensor(port),
-            sensor_model({off.x, off.y, off.z}, sensor)
-    {
+    public:
 
-    }
+    /**
+     * @brief Constructor for localization sensor. Vector interpretation is 2D with the X axis being front to back, Y axis side to side, and Z the theta.
+     * @note Offsets should be done in inches.
+     * @param off Offset of the sensor on a 2D plane with Z representing the theta of the sensor.
+     * @param axis Important axis of the sensor, the direction it senses in. Used in distance sensor resets.
+     * @param port Port of the distance sensor.
+     */
+    localization_sensor(vector off, vector::axis axis, int port);
 
-    /// Returns distance with offset added to the sensor reading in INCHES.
-    std::optional<float> distance()
-    {
-        int sensor_reading = sensor.get_distance();
-        if (sensor_reading == err_reading_value) return std::nullopt;
+    /**
+     * @breif Distance read from the distance sensor along with the important axis's offset added.
+     * @note Data returned is in inches.
+     * @return nullopt or the distance reading and calculation.
+     */
+    std::optional<float> distance();
 
-        float offset_val = 0;
-
-        switch (localization_axis) {
-            case vector::X:
-            {
-                offset_val = offset.x;
-                break;
-            }
-            case vector::Y:
-            {
-                offset_val = offset.y;
-                break;
-            }
-            case vector::Z:
-            {
-                offset_val = offset.z;
-                break;
-            }
-        }
-
-        return (double)sensor_reading * mm_inch_conversion_factor + offset_val;
-    }
-
-    loco::DistanceSensorModel* get_sensor_model()
-    {
-        return &sensor_model;
-    }
+    /**
+     * Retrieve the locolib distance sensor model pointer created by the localization sensor.
+     * @return
+     */
+    loco::DistanceSensorModel* get_sensor_model();
 };
 
-/// Passed the distance sensor reset to inform it how to process data.
-/// All localization locations are based in quadrants which are defined like you are looking at 4 quadrants on the field from the driver position. They are as follows:
-/// Top Right (+,+)
-/// Top Left (-,+)
-/// Bottom Left (-,-)
-/// Bottom Right (+,-)
+/**
+ * @brief Enum used when performing a distance sensor reset. Defines predefined locations that can be used for distance sensor resets.
+ * All localization locations are based in quadrants which are defined like you are looking at 4 quadrants on the field from the driver position. They are as follows:
+ * Top Right (+,+)
+ * Top Left (-,+)
+ * Bottom Left (-,-)
+ * Bottom Right (+,-)
+ */
 enum localization_update
 {
     /// Initial starting location of skills, 90 degrees turned with the match loader facing the wall to the right
@@ -139,8 +131,8 @@ enum localization_update
     MATCH_LOADER_4,
 };
 
-/*
- * Structure used to store the data of the localization system.
+/**
+ * @brief Structure used to store the data of the localization system. Used by the monte carlo localization system
  */
 struct localization_data
 {
@@ -150,13 +142,7 @@ struct localization_data
     Angle last_theta;
     Eigen::Vector3f exponential_pose;
 
-    localization_data() :
-    random_gen(),
-    odom_change(0.0),
-    last_odom(0.0),
-    last_theta(0.0),
-    exponential_pose(Eigen::Vector3f::Zero())
-    {}
+    localization_data();
 };
 
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP
