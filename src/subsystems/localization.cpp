@@ -26,6 +26,15 @@ using namespace ports::localization;
 using namespace ports::localization::settings;
 
 
+/**
+ * @brief The distance to the wall from the center of the field.
+ *
+ * @details Initially it would seem as though the field is around 72 inches away as the field's center is described as 12ft x 12ft and therefore 144in x 144in,
+ * but the reality is that 4 inches are taken by the field walls and subsequently the wall is 70.208 inches away from the center.
+ */
+static constexpr float wall_coord = 70.208;
+
+
 /*
  * For offsets,
  * X axis is front to back
@@ -85,13 +94,10 @@ localization* localization::get()
 
 void localization::distance_sensor_reset(localization_update update_type)
 {
-    //Since the field is 12ft x 12ft, each quadrant is 72in x 72in. This is used as a global offset to the distance sensor readings to accurately map where the robot is.
-    static constexpr double wall_coord = 72;
-
-    double front_dist = 0;
-    double rear_dist = 0;
-    double right_dist = 0;
-    double left_dist = 0;
+    float front_dist = 0;
+    float rear_dist = 0;
+    float right_dist = 0;
+    float left_dist = 0;
 
     try
     {
@@ -106,7 +112,7 @@ void localization::distance_sensor_reset(localization_update update_type)
     }
 
     lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
-    double heading = curPose.theta;
+    float heading = curPose.theta;
 
     switch (update_type) {
 
@@ -186,7 +192,8 @@ bool localization::do_localization(lemlib::Chassis* chassis)
     QLength current_odom_change = odomReading - data.last_odom;
     Angle dif_theta = particle_filter.getAngle() - data.last_theta;
 
-    if (abs(current_odom_change.getValue()) < 0.05 && abs(dif_theta.getValue()) < 0.5) {
+    if (abs(current_odom_change.getValue()) < 0.05 && abs(dif_theta.getValue()) < 0.5)
+    {
         return false;
     }
 
@@ -236,7 +243,7 @@ void localization::start_localization_mcl()
             // Runs Prediction (Odometry + Noise) and Correction (Sensor Updates)
             bool did_localization = this->do_localization(chassis);
 
-            if(!did_localization)
+            if(did_localization == false)
             {
                 pros::Task::delay(20);
                 continue;
@@ -267,7 +274,7 @@ void localization::start_localization_mcl()
 
 void localization::stop_localization_mcl()
 {
-    if(monte_task == nullptr) return
+    if(monte_task == nullptr) return;
     monte_task->suspend();
     delete monte_task;
     monte_task = nullptr;

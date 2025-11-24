@@ -86,7 +86,7 @@ class localization_sensor
     localization_sensor(vector off, vector::axis axis, int port);
 
     /**
-     * @breif Distance read from the distance sensor along with the important axis's offset added.
+     * @brief Distance read from the distance sensor along with the important axis's offset added.
      * @note Data returned is in inches.
      * @return nullopt or the distance reading and calculation.
      */
