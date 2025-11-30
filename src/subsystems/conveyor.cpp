@@ -164,21 +164,6 @@ void conveyor::tick_implementation() {
         // Toggle the ears (wings) that can fit into the long goals.
         (void)wings.toggle();
     }
-
-    if (controller_master.get_digital_new_press(OVERRIDE_RAMP_UP))
-    {
-        (void)ramp.extend();
-    }
-
-    if (controller_master.get_digital_new_press(OVERRIDE_RAMP_DOWN))
-    {
-        (void)ramp.retract();
-    }
-
-    if (controller_master.get_digital_new_press(TOGGLE_COLOR_SORT))
-    {
-        toggle_color_sort();
-    }
 }
 
 conveyor *conveyor::get()

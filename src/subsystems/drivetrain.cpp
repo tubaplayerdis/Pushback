@@ -60,12 +60,23 @@ lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_se
 
 void drivetrain::tick_implementation()
 {
+    constexpr auto FULL_POWER = 127;
+
     //Acquire throttle and turning values
     int32_t throttle = -1 * controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
     int32_t turn = controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
     //Apply inputs.
     lem_chassis.arcade(throttle, turn);
+
+    if (controller_master.get_digital(controls::SWING_LEFT))
+    {
+        lem_chassis.tank(FULL_POWER, 0, true);
+    }
+    else if (controller_master.get_digital(controls::SWING_RIGHT))
+    {
+        lem_chassis.tank(0, FULL_POWER, true);
+    }
 }
 
 drivetrain* drivetrain::get()
