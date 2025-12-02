@@ -6,6 +6,8 @@
 #include "../../include/pros/rtos.hpp"
 #include <optional>
 
+#include "../../include/subsystems/drivetrain.hpp"
+
 static constexpr int err_reading_value = 9999;
 static constexpr float mm_inch_conversion_factor = 0.0393701;
 
@@ -56,6 +58,14 @@ std::optional<float> localization_sensor::distance()
 
     return (double)sensor_reading * mm_inch_conversion_factor + offset_val;
 }
+
+float localization_sensor::distance_raw()
+{
+    std::optional<float> dis = distance();
+    if (dis) return dis.value();
+    return 9999;
+}
+
 
 loco::DistanceSensorModel* localization_sensor::get_sensor_model()
 {

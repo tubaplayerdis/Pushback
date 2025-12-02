@@ -14,9 +14,9 @@ namespace coords
 {
     namespace quad_uno
     {
-        pos match_loader_prime(-48.8, -49.3, 90);
-        pos quadrant_trans_a(-25, -36.80, 90);
-        pos quadrant_trans_b(33, -36.80, 90);
+        pos match_loader_prime(-54.8, -50.0, 90);
+        pos quadrant_trans_a(-24, -33.0, 90);
+        pos quadrant_trans_b(33, -33.0, 90);
     }
 }
 
@@ -39,16 +39,14 @@ void skills_routine()
     //Get conveyor object
     conveyor* conv = conveyor::get();
 
+    localization* lc = localization::get();
+
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     chassis->setPose(0, 0, 0);
-    localization::get()->distance_sensor_reset(SKILLS_INITIAL);
 
-    {   //Move to match loader priming position with 2 position movement
-        chassis->moveToPoint(MPOS(match_loader_prime), 3000, { .forwards = false}, false);
-        chassis->turnToHeading(TPOS(match_loader_prime), 500, {}, false);
-    }
+    lc->distance_sensor_reset(SKILLS_INITIAL);
 
     {   //Setup conveyor and exhaust to handle 7 blocks
         conv->conveyor_intake.move(FULL_POWER);
@@ -57,18 +55,26 @@ void skills_routine()
 
     {
         conv->lift.toggle();
-        pros::Task::delay(500);
-        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
-        pros::Task::delay(3000);
-        chassis->tank(NO_POWER,NO_POWER, true);
+        chassis->moveToPose(POS(match_loader_prime), 4000, { .forwards = false, .lead = 0.6}, false);
     }
 
     {
-        chassis->moveToPose(POS(quadrant_trans_a), 3000, {.minSpeed = 30, .earlyExitRange = 0.2}, false);
+        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
+        pros::Task::delay(2000);
+    }
+
+    {
+        lc->distance_sensor_reset(MATCH_LOADER_3);
+    }
+
+
+    {
+        chassis->moveToPose(POS(quadrant_trans_a), 3000, {.minSpeed = 25, .earlyExitRange = 0.2}, false);
         conv->conveyor_intake.brake();
         conv->exhaust.brake();
         chassis->moveToPose(POS(quadrant_trans_b), 1500, {}, false);
     }
+
 
     while (true)
     {

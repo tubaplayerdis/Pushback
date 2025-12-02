@@ -121,8 +121,9 @@ void opcontrol() {
         	pros::delay(100);
         }
 
-        if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+        if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
         {
+        	//dt->lem_chassis.setPose(0,0,90);
             odom->distance_sensor_reset(SKILLS_INITIAL);
         }
 

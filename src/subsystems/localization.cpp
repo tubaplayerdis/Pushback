@@ -18,6 +18,10 @@
 #include <cstring>
 #include <optional>
 #include <random>
+#include <math.h>
+
+#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/math.h"
+#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/math.h"
 
 
 std::unique_ptr<localization> odometry_instance;
@@ -42,17 +46,17 @@ static constexpr float wall_coord = 70.208;
  */
 namespace loc_offsets
 {
-    const vector front(1,0,0);
-    constexpr vector::axis front_axis = vector::axis::X;
+    const vector front(5.75,5.75,0);
+    constexpr vector::axis front_axis = vector::axis::Y;
 
-    const vector left(6.45,0,90);
-    constexpr vector::axis left_axis = vector::axis::Y;
+    const vector left(5,4.25,90);
+    constexpr vector::axis left_axis = vector::axis::X;
 
-    const vector rear(6.4,0,180);
-    constexpr vector::axis rear_axis = vector::axis::X;
+    const vector rear(5.75,5,180);
+    constexpr vector::axis rear_axis = vector::axis::Y;
 
-    const vector right(6.45,0,270);
-    constexpr vector::axis right_axis = vector::axis::Y;
+    const vector right(5,4.25,270);
+    constexpr vector::axis right_axis = vector::axis::X;
 }
 
 localization::localization() :
@@ -94,24 +98,14 @@ localization* localization::get()
 
 void localization::distance_sensor_reset(localization_update update_type)
 {
-    float front_dist = 0;
-    float rear_dist = 0;
-    float right_dist = 0;
-    float left_dist = 0;
-
-    try
-    {
-        front_dist = front_loc.distance().value();
-        rear_dist = rear_loc.distance().value();
-        right_dist = right_loc.distance().value();
-        left_dist = left_loc.distance().value();
-    } catch (std::exception& err)
-    {
-        std::printf("Could not perform a distance sensor reset!");
-        return;
-    }
+    float front_dist = front_loc.distance_raw();
+    float rear_dist = rear_loc.distance_raw();
+    float right_dist = right_loc.distance_raw();
+    float left_dist = left_loc.distance_raw();
 
     lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
+
+    //In degrees
     float heading = curPose.theta;
 
     switch (update_type) {
@@ -158,6 +152,14 @@ void localization::distance_sensor_reset(localization_update update_type)
 
         case MATCH_LOADER_3:
         {
+            if (heading != 90)
+            {
+                //Angle of error in radians
+                float angle = abs(90-heading) * (M_PI / 180);
+                rear_dist = cos(angle) * rear_dist;
+                right_dist = cos(angle) * right_dist;
+            }
+
             rear_dist = -wall_coord + rear_dist;
             right_dist = -wall_coord + right_dist;
             drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
@@ -232,7 +234,13 @@ bool localization::do_localization(lemlib::Chassis* chassis)
 
 void localization::start_localization_mcl()
 {
-    if(monte_task != nullptr) return;
+    if(monte_task != nullptr)
+    {
+        stop_localization_mcl();
+        return;
+    }
+
+    distance_sensor_reset(SKILLS_INITIAL);
 
     monte_task = new pros::Task([this]() -> void
     {

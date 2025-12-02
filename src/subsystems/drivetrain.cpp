@@ -21,9 +21,9 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(0.95,  // kP — reduce a bit (was 1.6)
+    controller_settings_angular(1.11,  // kP — reduce a bit (was 1.6)
                                 0.0,  // kI — keep off
-                                3.01,  // kD — increase slightly for more damping
+                                3.13,  // kD — increase slightly for more damping
                                 3,    // anti-windup
                                 1.0,  // small error range
                                 300,  // small error timeout

@@ -93,6 +93,11 @@ class localization_sensor
     std::optional<float> distance();
 
     /**
+     *@brief Returns the distance of the sensor with the offset or 9999;
+     */
+    float distance_raw();
+
+    /**
      * Retrieve the locolib distance sensor model pointer created by the localization sensor.
      * @return
      */
