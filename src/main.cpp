@@ -5,6 +5,8 @@
 #include "autons.hpp"//This is needed for autons to show up
 #include "lemlib/pose.hpp"
 #include "titanselect/titanselect.hpp"
+#include <fstream>
+
 extern "C"
 {
 	#include "titanselect/titanselect.h"
@@ -79,6 +81,90 @@ void autonomous()
 	ts_run_selected_auton();
 }
 
+void pid_tune_mode()
+{
+	pros::c::controller_clear(pros::controller_id_e_t::E_CONTROLLER_MASTER);
+	pros::delay(100);
+
+	bool is_lateral = false;//Angular mode is 0, lateral mode is 1.
+
+	lemlib::PID* activePID = &dt->lem_chassis.angularPID;
+	lemlib::Chassis* chassis = &dt->lem_chassis;
+
+	while (true)
+	{
+		lemlib::Pose pose = chassis->getPose();
+
+		controller_master.print(0, 0, "PID MODE: %d", is_lateral);
+		controller_master.print(1, 0, "KP:%.2f, KD:%.2f", activePID->kP, activePID->kD);
+		controller_master.print(2, 0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+
+		if (controller_master.get_digital_new_press(ports::tune::SWAP_MODES))
+		{
+			if (is_lateral == false)
+			{
+				is_lateral = true;
+				activePID = &dt->lem_chassis.lateralPID;
+			}
+			else
+			{
+				is_lateral = false;
+				activePID = &dt->lem_chassis.angularPID;
+			}
+		}
+
+		if (controller_master.get_digital(ports::tune::KP_UP))
+		{
+			activePID->kP += 0.01f;
+		}
+
+		if (controller_master.get_digital(ports::tune::KP_DOWN))
+		{
+			activePID->kP -= 0.01f;
+		}
+
+		if (controller_master.get_digital(ports::tune::KD_UP))
+		{
+			activePID->kD += 0.01f;
+		}
+
+		if (controller_master.get_digital(ports::tune::KD_DOWN))
+		{
+			activePID->kD -= 0.01f;
+		}
+
+		if (controller_master.get_digital_new_press(ports::tune::TEST_ANGULAR))
+		{
+			chassis->setPose(0,0,0);
+			chassis->turnToHeading(90, 3000);
+		}
+
+		if (controller_master.get_digital_new_press(ports::tune::TEST_LATERAL))
+		{
+			chassis->setPose(0,0,0);
+			chassis->moveToPoint(10, 0, 3000);
+		}
+
+		if (controller_master.get_digital_new_press(ports::tune::SWAP_MODES))
+		{
+			std::ofstream output("pid_values.txt");
+
+			output << "Angular:" << std::endl;
+			output << "KP: " << chassis->angularPID.kP << " KI: " << chassis->angularPID.kI << "KD: " << chassis->angularPID.kD << std::endl;
+			output << "Lateral:" << std::endl;
+			output << "KP: " << chassis->lateralPID.kP << " KI: " << chassis->lateralPID.kI << "KD: " << chassis->lateralPID.kD << std::endl;
+
+			output.close();
+
+			break;
+		}
+
+		pros::delay(100);
+	}
+}
+
+
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -93,13 +179,15 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
     odom = localization::get();
     dt = drivetrain::get();
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
-    //X = 17.5, Y = -48.3
+	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
+	{
+		pid_tune_mode();
+	}
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {

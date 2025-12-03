@@ -15,6 +15,19 @@ namespace ports
 {
     constexpr auto CYCLE_AUTONS = pros::E_CONTROLLER_DIGITAL_DOWN;
 
+    namespace tune
+    {
+        constexpr auto PID_TUNE_MODE = pros::E_CONTROLLER_DIGITAL_A;
+        constexpr auto SWAP_MODES = pros::E_CONTROLLER_DIGITAL_B;
+        constexpr auto KP_UP = pros::E_CONTROLLER_DIGITAL_UP;
+        constexpr auto KP_DOWN = pros::E_CONTROLLER_DIGITAL_DOWN;
+        constexpr auto KD_UP = pros::E_CONTROLLER_DIGITAL_RIGHT;
+        constexpr auto KD_DOWN = pros::E_CONTROLLER_DIGITAL_LEFT;
+        constexpr auto TEST_ANGULAR = pros::E_CONTROLLER_DIGITAL_Y;
+        constexpr auto TEST_LATERAL = pros::E_CONTROLLER_DIGITAL_X;
+    }
+
+
     namespace drivetrain
     {
         constexpr auto LEFT_A = -16;

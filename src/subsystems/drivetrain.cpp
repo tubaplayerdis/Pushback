@@ -71,11 +71,11 @@ void drivetrain::tick_implementation()
 
     if (controller_master.get_digital(controls::SWING_LEFT))
     {
-        lem_chassis.tank(FULL_POWER, 0, true);
+        lem_chassis.tank(-FULL_POWER, 0, true);
     }
     else if (controller_master.get_digital(controls::SWING_RIGHT))
     {
-        lem_chassis.tank(0, FULL_POWER, true);
+        lem_chassis.tank(0, -FULL_POWER, true);
     }
 }
 
