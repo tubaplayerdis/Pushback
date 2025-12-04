@@ -59,11 +59,16 @@ namespace loc_offsets
     constexpr vector::axis right_axis = vector::axis::X;
 }
 
+/// timepoint value representing the last time the tick function was ran and updated this variable
+static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_call;
+
 localization::localization() :
         inertial(INERTIAL),
         rotation_vertical(ROTATION_VERTICAL),
         tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
         odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
+        estimated_velocity(0,0,0),
+        estimated_position(0,0,0),
         rear_loc(loc_offsets::rear, loc_offsets::front_axis, REAR_LOC),
         right_loc(loc_offsets::right, loc_offsets::right_axis, LEFT_LOC),
         left_loc(loc_offsets::left, loc_offsets::left_axis, RIGHT_LOC),
@@ -83,11 +88,35 @@ localization::localization() :
     particle_filter.addSensor(rear_loc.get_sensor_model());
     particle_filter.addSensor(left_loc.get_sensor_model());
     data.last_odom = get_odom_distance();
+
+    time_at_last_call = std::chrono::high_resolution_clock::now();
 }
 
 void localization::tick_implementation()
 {
-    //If anything is ever used that requires an update on the sensor readings like mcl, implement it here
+    // Acceleration vector. Acquire before calculations.
+    pros::imu_raw_s accel_raw = inertial.get_gyro_rate();
+    pros::imu_raw_s accel = pros::imu_raw_s();
+    accel.x = accel_raw.x * 0.980665f;
+    accel.y = accel_raw.y * 0.980665f;
+    accel.x = 0;
+
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = now - time_at_last_call;
+    long long duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    long long duration_s = duration_ms / 1000;
+    time_at_last_call = now;
+
+    //Vf = Vo + A * T
+    estimated_velocity.x = estimated_velocity.x + accel.x * duration_s;
+    estimated_velocity.y = estimated_velocity.y + accel.y * duration_s;
+    estimated_velocity.z = estimated_velocity.z + accel.z * duration_s;
+
+    // Delta X = Vo * T + 1/2 * A * T^2
+    // X = X + Delta X
+    estimated_position.x += estimated_velocity.x * duration_s + 0.5 * accel.x * (duration_s * duration_s);
+    estimated_position.y += estimated_velocity.y * duration_s + 0.5 * accel.y * (duration_s * duration_s);
+    estimated_position.z += estimated_velocity.z * duration_s + 0.5 * accel.z * (duration_s * duration_s);
 }
 
 localization* localization::get()

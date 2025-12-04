@@ -11,6 +11,8 @@
 #include "../pros/distance.hpp"
 #include "../pros/gps.hpp"
 #include "../lemlib/chassis/chassis.hpp"
+#include "../lemlib/chassis/trackingWheel.hpp"
+#include "../pros/imu.hpp"
 #include "../locolib/distance.hpp"
 #include "../locolib/particleFilter.hpp"
 #include "../locolib/config.hpp"
@@ -52,6 +54,19 @@ public:
 
     /// Left localization sensor. Located on the opposite side of the brain.
     localization_sensor left_loc;
+
+public:
+
+    void set_estimated_position(vector position)
+    {
+        estimated_position = position;
+    }
+
+    /// Velocity based off inertial sensor acceleration readings.
+    vector estimated_velocity;
+
+    /// Position based off inertial sensor acceleration readings.
+    vector estimated_position;
 
 private:
 

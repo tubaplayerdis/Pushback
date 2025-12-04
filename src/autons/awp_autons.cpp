@@ -28,8 +28,8 @@ namespace coords
         const pos block_duo(35.5, -42.0, -57.88);
         const pos primer_score(23.25, -14.00, 0);
         //long goal and match loader undershoot currently on the x axis due to a odometry wheel issue where driving to fast would cause it to slip. A max speed has been set on the match loader movement and theses need to have higher X-values.
-        const pos long_goal_prime(40.0, -24.30, -180.0);
-        const pos match_loader_prime(40.9, 2.00, -180.0);
+        const pos long_goal_prime(43.0, -24.30, -180.0);
+        const pos match_loader_prime(43.9, 2.00, -180.0);
         const pos high_goal(4.52, -41.12, -135.918);
     }
 

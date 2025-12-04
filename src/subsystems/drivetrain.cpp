@@ -27,8 +27,8 @@ namespace pid
                                 0.55,    // anti-windup
                                 1,  // small error range
                                 100,  // small error timeout
-                                0,  // large error range
-                                0,  // large error timeout
+                                2,  // large error range
+                                500,  // large error timeout
                                 0     // slew rate
     );
 }
