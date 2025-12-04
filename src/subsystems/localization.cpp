@@ -13,6 +13,7 @@
 #include "../../include/cls/localization_utils.hpp"
 #include "../../include/locolib/config.hpp"
 #include "../../include/eigen/Eigen"
+#include "../../include/pros/rtos.hpp"
 #include <memory>
 #include <chrono>
 #include <cstring>
@@ -60,7 +61,7 @@ namespace loc_offsets
 }
 
 /// timepoint value representing the last time the tick function was ran and updated this variable
-static std::chrono::time_point<std::chrono::high_resolution_clock> time_at_last_call;
+static std::uint32_t time_at_last_call;
 
 localization::localization() :
         inertial(INERTIAL),
@@ -89,7 +90,7 @@ localization::localization() :
     particle_filter.addSensor(left_loc.get_sensor_model());
     data.last_odom = get_odom_distance();
 
-    time_at_last_call = std::chrono::high_resolution_clock::now();
+    time_at_last_call = pros::millis();
 }
 
 void localization::tick_implementation()
@@ -101,10 +102,9 @@ void localization::tick_implementation()
     accel.y = accel_raw.y * 0.980665f;
     accel.x = 0;
 
-    auto now = std::chrono::high_resolution_clock::now();
+    auto now = pros::millis();
     auto duration = now - time_at_last_call;
-    long long duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-    long long duration_s = duration_ms / 1000;
+    long long duration_s = duration / 1000;
     time_at_last_call = now;
 
     //Vf = Vo + A * T
