@@ -83,21 +83,34 @@ void autonomous()
 
 void pid_tune_mode()
 {
-	pros::c::controller_clear(pros::controller_id_e_t::E_CONTROLLER_MASTER);
-	pros::delay(100);
+	controller_master.clear();
+	pros::delay(50);
 
 	bool is_lateral = false;//Angular mode is 0, lateral mode is 1.
+	bool first_run = true;
 
 	lemlib::PID* activePID = &dt->lem_chassis.angularPID;
 	lemlib::Chassis* chassis = &dt->lem_chassis;
 
 	while (true)
 	{
+		if (first_run)
+		{
+			controller_master.clear();
+			pros::delay(50);
+			first_run = false;
+			continue;
+		}
+
+
 		lemlib::Pose pose = chassis->getPose();
 
 		controller_master.print(0, 0, "PID MODE: %d", is_lateral);
+		pros::delay(50);
 		controller_master.print(1, 0, "KP:%.2f, KD:%.2f", activePID->kP, activePID->kD);
+		pros::delay(50);
 		controller_master.print(2, 0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+		pros::delay(50);
 
 		if (controller_master.get_digital_new_press(ports::tune::SWAP_MODES))
 		{
@@ -142,10 +155,10 @@ void pid_tune_mode()
 		if (controller_master.get_digital_new_press(ports::tune::TEST_LATERAL))
 		{
 			chassis->setPose(0,0,0);
-			chassis->moveToPoint(10, 0, 3000);
+			chassis->moveToPoint(0, 10, 4000);
 		}
 
-		if (controller_master.get_digital_new_press(ports::tune::SWAP_MODES))
+		if (false)
 		{
 			std::ofstream output("pid_values.txt");
 
@@ -159,7 +172,7 @@ void pid_tune_mode()
 			break;
 		}
 
-		pros::delay(100);
+		pros::delay(50);
 	}
 }
 

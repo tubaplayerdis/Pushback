@@ -24,12 +24,12 @@ namespace coords
 
     namespace high
     {
-        const pos block_trio(14.30, -25.26, -45.10);
-        const pos block_duo(36.47, -42.0, -57.88);
+        const pos block_trio(14.30, -25.26, -47.50);
+        const pos block_duo(35.5, -42.0, -57.88);
         const pos primer_score(23.25, -14.00, 0);
-        const pos long_goal_prime(44.00, -24.30, -180.0);
-        const pos match_loader_prime_prime(40.40, -3.00, -130.0);
-        const pos match_loader_prime(45.4, 2.00, -180.0);
+        //long goal and match loader undershoot currently on the x axis due to a odometry wheel issue where driving to fast would cause it to slip. A max speed has been set on the match loader movement and theses need to have higher X-values.
+        const pos long_goal_prime(40.0, -24.30, -180.0);
+        const pos match_loader_prime(40.9, 2.00, -180.0);
         const pos high_goal(4.52, -41.12, -135.918);
     }
 
@@ -46,7 +46,7 @@ namespace coords
         const pos block_duo(-35.96, -43.93, 51.88);
         const pos primer_score(-28.00, -13.00, 0);
         const pos long_goal_prime(-43.71, -24.50, 180.0);
-        const pos match_loader_prime(-42.50, 4.00, 180.0);
+        const pos match_loader_prime(-40.50, 4.00, 180.0);
         const pos low_goal(-7.91, -38.67, -46.58);
     }
 }
@@ -105,8 +105,7 @@ void nine_awp_high_auton()
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks
-        chassis->moveToPose(POS(match_loader_prime_prime), 1500, {.forwards = false, .minSpeed = 00}, false);
-        chassis->moveToPose(POS(match_loader_prime), 800, {.forwards = false, .minSpeed = 00}, false);
+        chassis->moveToPose(POS(match_loader_prime), 2000, {.forwards = false, .lead = 0.3, .maxSpeed = 100}, false);
     }
 
     {   //Set element manipulators to move to pick up blocks from match loader and allow in-taking for 1 second
@@ -116,7 +115,7 @@ void nine_awp_high_auton()
 
     {   //Move to match loader
         chassis->tank(-40,-40, true);
-        pros::Task::delay(1000);
+        pros::Task::delay(1300);
     }
 
     {
