@@ -14,22 +14,30 @@
 #include "../pros/rtos.hpp"
 #include <optional>
 
+#include "../pros/imu.hpp"
+
+/*
+ * Single axis probability type definition. Pair of float (the value) and unsigned char (the probability 0-255)
+ */
+typedef std::pair<float, unsigned char> probability;
+
+/*
+ * Quadrant enumeration.
+ */
+enum quadrant
+{
+    POS_POS,
+    NEG_POS,
+    NEG_NEG,
+    POS_NEG,
+};
+
 /*
  * 3D/2D data structure.
  * When used in localization, Z is representative of the theta (angle) of the object this refers to.
  */
 struct vector
 {
-    /**
-     * @brief Enum representing the axes of vector. Useful when describing an important axis of the vector
-     */
-    enum axis
-    {
-        X,
-        Y,
-        Z
-    };
-
     float x;
     float y;
     float z;
@@ -57,22 +65,12 @@ class localization_sensor
      * Offset vector of the localization sensor.
      * X is front to back, Y is side to side, Z is theta of sensor.
      */
-    const vector offset;
-
-    /**
-     * Important axis of the localization sensor to be used when calculating distance.
-     */
-    const vector::axis localization_axis;
+    const float offset;
 
     /**
      * Pros distance sensor object.
      */
     pros::Distance sensor;
-
-    /**
-     * Locolib distance sensor model.
-     */
-    loco::DistanceSensorModel sensor_model;
 
     public:
 
@@ -80,28 +78,43 @@ class localization_sensor
      * @brief Constructor for localization sensor. Vector interpretation is 2D with the X axis being front to back, Y axis side to side, and Z the theta.
      * @note Offsets should be done in inches.
      * @param off Offset of the sensor on a 2D plane with Z representing the theta of the sensor.
-     * @param axis Important axis of the sensor, the direction it senses in. Used in distance sensor resets.
      * @param port Port of the distance sensor.
      */
-    localization_sensor(vector off, vector::axis axis, int port);
+    localization_sensor(float off, int port);
 
     /**
-     * @brief Distance read from the distance sensor along with the important axis's offset added.
+     * @brief Distance read from the distance sensor as an optional.
+     * @note Data returned is in inches.
+     * @return nullopt or the distance reading.
+     */
+    std::optional<float> distance();
+
+    /**
+     * @brief Distance read from the distance sensor as an optional with angle of robot factored in and offset.
      * @note Data returned is in inches.
      * @return nullopt or the distance reading and calculation.
      */
-    std::optional<float> distance();
+    std::optional<float> distance(float heading);
 
     /**
      *@brief Returns the distance of the sensor with the offset or 9999;
      */
     float distance_raw();
+};
 
-    /**
-     * Retrieve the locolib distance sensor model pointer created by the localization sensor.
-     * @return
-     */
-    loco::DistanceSensorModel* get_sensor_model();
+class localization_chassis
+{
+    localization_sensor* north;
+    localization_sensor* east;
+    localization_sensor* south;
+    localization_sensor* west;
+    pros::Imu* imu;
+
+public:
+
+    localization_chassis(pros::Imu* inertial, std::array<localization_sensor*, 4> sensors);
+
+
 };
 
 /**
@@ -134,20 +147,6 @@ enum localization_update
 
     /// Match loader bottom left of driver location, closest to driver. +- quadrant
     MATCH_LOADER_4,
-};
-
-/**
- * @brief Structure used to store the data of the localization system. Used by the monte carlo localization system
- */
-struct localization_data
-{
-    std::ranlux24_base random_gen;
-    QLength odom_change;
-    QLength last_odom;
-    Angle last_theta;
-    Eigen::Vector3f exponential_pose;
-
-    localization_data();
 };
 
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP

@@ -70,18 +70,11 @@ public:
 
 private:
 
-    loco::ParticleFilter<loco::LOCO_CONFIG::NUM_PARTICLES> particle_filter;
-
     /// Pros task that handles monte carlo localization.
     pros::Task* monte_task;
 
-    localization_data data;
-
-    /// Helper used by do_localization()
-    QLength get_odom_distance();
-
     /// Do not call directly. called in localization loop
-    bool do_localization(lemlib::Chassis* chassis);
+    void do_localization(lemlib::Chassis* chassis);
 
     /// Private constructor to enforce usage of get()
     localization();
@@ -93,9 +86,9 @@ protected:
 
 public:
 
-    void start_localization_mcl();
+    void start_localization();
 
-    void stop_localization_mcl();
+    void stop_localization();
 
     /// Resets the pose of the lemlib chassis object during skills or before autons.
     /// @note Set the heading of the robot beforehand. An example is for skills where the robot needs to be told it is 90 degrees turned.

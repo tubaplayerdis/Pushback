@@ -6,10 +6,12 @@
 #include "../../include/pros/rtos.hpp"
 #include <optional>
 
+#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
 #include "../../include/subsystems/drivetrain.hpp"
 
 static constexpr int err_reading_value = 9999;
 static constexpr float mm_inch_conversion_factor = 0.0393701;
+static constexpr float deg_rad_conversion_factor = 0.0174532;
 
 vector::vector()
 {
@@ -25,38 +27,32 @@ vector::vector(float X, float Y, float Z)
     z = Z;
 }
 
-localization_sensor::localization_sensor(vector off, vector::axis axis, int port) :
+localization_sensor::localization_sensor(float off, int port) :
             offset(off),
-            localization_axis(axis),
-            sensor(port),
-            sensor_model({off.x, off.y, off.z}, sensor) {}
+            sensor(port)
+{}
 
 std::optional<float> localization_sensor::distance()
 {
     int sensor_reading = sensor.get_distance();
     if (sensor_reading == err_reading_value) return std::nullopt;
 
-    float offset_val = 0;
+    return (float)sensor_reading * mm_inch_conversion_factor;
+}
 
-    switch (localization_axis) {
-        case vector::X:
-        {
-            offset_val = offset.x;
-            break;
-        }
-        case vector::Y:
-        {
-            offset_val = offset.y;
-            break;
-        }
-        case vector::Z:
-        {
-            offset_val = offset.z;
-            break;
-        }
-    }
+std::optional<float> localization_sensor::distance(float heading)
+{
+    int sensor_reading = sensor.get_distance();
+    if (sensor_reading == err_reading_value) return std::nullopt;
 
-    return (double)sensor_reading * mm_inch_conversion_factor + offset_val;
+    auto reading = sensor_reading * mm_inch_conversion_factor;
+
+    float heading_err_rad = abs(heading - (90 * round(heading/90))) * deg_rad_conversion_factor;
+
+    float actual_reading = cos(heading_err_rad) * reading;
+    float actual_offset = cos(heading_err_rad) * offset;
+
+    return actual_reading + actual_offset;
 }
 
 float localization_sensor::distance_raw()
@@ -66,16 +62,12 @@ float localization_sensor::distance_raw()
     return 9999;
 }
 
-
-loco::DistanceSensorModel* localization_sensor::get_sensor_model()
+localization_chassis::localization_chassis(pros::Imu *inertial, std::array<localization_sensor *, 4> sensors)
 {
-    return &sensor_model;
+    north = sensors.at(0);
+    east = sensors.at(1);
+    south = sensors.at(2);
+    west = sensors.at(3);
+    imu = inertial;
 }
 
-localization_data::localization_data() :
-    random_gen(pros::millis()),
-    odom_change(0.0),
-    last_odom(0.0),
-    last_theta(0.0),
-    exponential_pose(Eigen::Vector3f::Zero())
-{}

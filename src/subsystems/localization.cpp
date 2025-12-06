@@ -74,22 +74,8 @@ localization::localization() :
         right_loc(loc_offsets::right, loc_offsets::right_axis, LEFT_LOC),
         left_loc(loc_offsets::left, loc_offsets::left_axis, RIGHT_LOC),
         front_loc(loc_offsets::front, loc_offsets::front_axis, FRONT_LOC),
-
-        //Function that allows the particle filter to interpret updates to the angle (heading) of the robot. passed as a lambda
-        particle_filter([this]() {
-            const Angle angle = -inertial.get_rotation() * degree;
-            return isfinite(angle.getValue()) ? angle : 0.0;
-        }),
-        data(),
         monte_task(nullptr)
 {
-    //Add particle filter sensors
-    particle_filter.addSensor(front_loc.get_sensor_model());
-    particle_filter.addSensor(right_loc.get_sensor_model());
-    particle_filter.addSensor(rear_loc.get_sensor_model());
-    particle_filter.addSensor(left_loc.get_sensor_model());
-    data.last_odom = get_odom_distance();
-
     time_at_last_call = pros::millis();
 }
 
@@ -205,67 +191,16 @@ void localization::distance_sensor_reset(localization_update update_type)
     }
 }
 
-QLength localization::get_odom_distance()
+void localization::do_localization(lemlib::Chassis* chassis)
 {
-    auto distance = tracking_vertical.getOffset();
-    return distance;
+    return ;
 }
 
-bool localization::do_localization(lemlib::Chassis* chassis)
-{
-    const QLength odomReading = get_odom_distance();
-
-    data.odom_change = odomReading - data.last_odom;
-
-    data.last_odom = odomReading;
-
-    // Calculate the change
-    QLength current_odom_change = odomReading - data.last_odom;
-    Angle dif_theta = particle_filter.getAngle() - data.last_theta;
-
-    if (abs(current_odom_change.getValue()) < 0.05 && abs(dif_theta.getValue()) < 0.5)
-    {
-        return false;
-    }
-
-    std::uniform_real_distribution<> avgDistribution(data.odom_change.getValue() - loco::LOCO_CONFIG::DRIVE_NOISE * data.odom_change.getValue(), data.odom_change.getValue() + loco::LOCO_CONFIG::DRIVE_NOISE * data.odom_change.getValue());
-    std::uniform_real_distribution<> angleDistribution( particle_filter.getAngle().getValue() - loco::LOCO_CONFIG::ANGLE_NOISE.getValue(), particle_filter.getAngle().getValue() + loco::LOCO_CONFIG::ANGLE_NOISE.getValue());
-
-    // Exponential Pose Tracking
-    const Angle dTheta = particle_filter.getAngle() - data.last_theta;
-
-    const auto localMeasurement = Eigen::Vector2f({data.odom_change.getValue(), 0});
-    const auto displacementMatrix =
-            Eigen::Matrix2d({
-                                    {1.0 - pow(dTheta.getValue(), 2), -dTheta.getValue() / 2.0},
-                                    {dTheta.getValue() / 2.0, 1.0 - pow(dTheta.getValue(), 2)}
-                            })
-                    .cast<float>();
-
-    auto time = pros::micros();
-
-    particle_filter.update([this, angleDistribution, avgDistribution, displacementMatrix]() mutable {
-        const auto noisy = avgDistribution(data.random_gen);
-        const auto angle = angleDistribution(data.random_gen);
-
-        return Eigen::Rotation2Df(angle) * Eigen::Vector2f({noisy, 0.0});
-    });
-
-    const Eigen::Vector2f localDisplacement = displacementMatrix * localMeasurement;
-    const Eigen::Vector2f globalDisplacement = Eigen::Rotation2Df(particle_filter.getAngle().Convert(radian)) * localDisplacement;
-
-    data.exponential_pose += Eigen::Vector3f(globalDisplacement.x(), globalDisplacement.y(), dTheta.Convert(radian));
-
-    data.last_theta = particle_filter.getAngle();
-
-    return true;
-}
-
-void localization::start_localization_mcl()
+void localization::start_localization()
 {
     if(monte_task != nullptr)
     {
-        stop_localization_mcl();
+        stop_localization();
         return;
     }
 
@@ -276,40 +211,13 @@ void localization::start_localization_mcl()
         lemlib::Chassis* chassis = &drivetrain::get()->lem_chassis;
 
         while (true) {
-            // --- STEP 1: UPDATE PARTICLE FILTER ---
-            // Runs Prediction (Odometry + Noise) and Correction (Sensor Updates)
-            bool did_localization = this->do_localization(chassis);
-
-            if(did_localization == false)
-            {
-                pros::Task::delay(20);
-                continue;
-            }
-
-            // --- STEP 2: SYNC BACK TO LEMLIB ---
-            // Get the best guess from the MCL filter
-            Eigen::Vector3f mclPose = this->particle_filter.getPrediction();
-
-            // Check confidence or validity if your filter supports it
-            // (Echo's impl usually trusts the filter implicitly if tuned correctly)
-
-            // Update LemLib's odometry with the corrected position
-            // IMPORTANT: Only update X and Y.
-            // Usually, we trust the IMU for Theta more than the particle filter,
-            // unless your MCL is specifically designed to correct heading drift.
-            // Echo typically syncs all three.
-            lemlib::Pose old_pose = chassis->getPose();
-
-            chassis->setPose(mclPose.x(), mclPose.y(), old_pose.theta);
-
-            // --- STEP 3: LOOP TIMING ---
-            // Run at 50Hz (20ms) or 100Hz (10ms)
+            this->do_localization(chassis);
             pros::Task::delay(20);
         }
     });
 }
 
-void localization::stop_localization_mcl()
+void localization::stop_localization()
 {
     if(monte_task == nullptr) return;
     monte_task->suspend();
