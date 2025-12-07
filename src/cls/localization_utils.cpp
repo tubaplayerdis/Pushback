@@ -3,6 +3,9 @@
 //
 
 #include "../../include/cls/localization_utils.hpp"
+
+#include <array>
+
 #include "../../include/pros/rtos.hpp"
 #include <optional>
 
@@ -32,18 +35,20 @@ localization_sensor::localization_sensor(float off, int port) :
             sensor(port)
 {}
 
-std::optional<float> localization_sensor::distance()
+probability localization_sensor::distance()
 {
     int sensor_reading = sensor.get_distance();
-    if (sensor_reading == err_reading_value) return std::nullopt;
+    unsigned char sensor_confidence = static_cast<unsigned char>(static_cast<float>(sensor.get_confidence()) / 400.0f * 255.0f);
+    if (sensor_reading == err_reading_value) return probability(err_reading_value, 0);
 
-    return (float)sensor_reading * mm_inch_conversion_factor;
+    return probability(sensor_reading * mm_inch_conversion_factor, sensor_confidence);
 }
 
-std::optional<float> localization_sensor::distance(float heading)
+probability localization_sensor::distance(float heading)
 {
     int sensor_reading = sensor.get_distance();
-    if (sensor_reading == err_reading_value) return std::nullopt;
+    unsigned char sensor_confidence = static_cast<unsigned char>(static_cast<float>(sensor.get_confidence()) / 400.0f * 255.0f);
+    if (sensor_reading == err_reading_value) return probability(err_reading_value, 0);
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
 
@@ -52,22 +57,24 @@ std::optional<float> localization_sensor::distance(float heading)
     float actual_reading = cos(heading_err_rad) * reading;
     float actual_offset = cos(heading_err_rad) * offset;
 
-    return actual_reading + actual_offset;
+    return probability(actual_reading + actual_offset, sensor_confidence);
 }
 
-float localization_sensor::distance_raw()
-{
-    std::optional<float> dis = distance();
-    if (dis) return dis.value();
-    return 9999;
-}
-
-localization_chassis::localization_chassis(pros::Imu *inertial, std::array<localization_sensor *, 4> sensors)
+localization_chassis::localization_chassis(pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors)
 {
     north = sensors.at(0);
     east = sensors.at(1);
     south = sensors.at(2);
     west = sensors.at(3);
     imu = inertial;
+    chassis = chas;
+
+    last_call_time = pros::millis();
 }
+
+bool localization_chassis::reset_location(bool ignore_probability, int sensors)
+{
+    return false;
+}
+
 

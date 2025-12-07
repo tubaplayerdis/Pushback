@@ -14,6 +14,7 @@
 #include "../pros/rtos.hpp"
 #include <optional>
 
+#include "../lemlib/chassis/chassis.hpp"
 #include "../pros/imu.hpp"
 
 /*
@@ -30,6 +31,14 @@ enum quadrant
     NEG_POS,
     NEG_NEG,
     POS_NEG,
+};
+
+enum sensor_options
+{
+    NORTH = 1 << 0,
+    EAST = 1 << 2,
+    SOUTH = 1 << 3,
+    WEST = 1 << 4,
 };
 
 /*
@@ -85,36 +94,59 @@ class localization_sensor
     /**
      * @brief Distance read from the distance sensor as an optional.
      * @note Data returned is in inches.
-     * @return nullopt or the distance reading.
+     * @return confidence and the distance reading.
      */
-    std::optional<float> distance();
+    probability distance();
 
     /**
      * @brief Distance read from the distance sensor as an optional with angle of robot factored in and offset.
      * @note Data returned is in inches.
-     * @return nullopt or the distance reading and calculation.
+     * @return confidence and the distance reading and calculation.
      */
-    std::optional<float> distance(float heading);
-
-    /**
-     *@brief Returns the distance of the sensor with the offset or 9999;
-     */
-    float distance_raw();
+    probability distance(float heading);
 };
 
 class localization_chassis
 {
+
+    /*
+     * Sensors
+     */
     localization_sensor* north;
     localization_sensor* east;
     localization_sensor* south;
     localization_sensor* west;
     pros::Imu* imu;
 
+    /*
+     * LemLib reference
+     */
+    lemlib::Chassis* chassis;
+
+
+    int32_t last_call_time;
+
 public:
 
-    localization_chassis(pros::Imu* inertial, std::array<localization_sensor*, 4> sensors);
+    /**
+     * Initialize the localization chassis
+     */
+    localization_chassis(pros::Imu* inertial, lemlib::Chassis* base, std::array<localization_sensor*,4> sensors);
 
-
+    /**
+     * @brief Performs a distance sensor reset using the sensors specified.
+     *
+     * Uses the LemLib chassis position along with the probability readings from the sensors to determine if the
+     * location generated from the sensors is accurate. If the reading is determined to be accurate, the function will
+     * return true and set the location of the LemLib chassis to that of the readings specified, with the function just
+     * returning false otherwise and not setting the LemLib chassis's location. Do not use while the robot is in motion as
+     * it will cause jerky and or unpredictable movements. Use when stationary and the robot is in an adequate place to gather readings.
+     *
+     *
+     * @param ignore_probability ignores the probability statistic. Use when the robot does not know its location (ex: at starting location)
+     * @param sensors flags specifying which sensors to use in the distance sensor reset.
+     */
+    bool reset_location(bool ignore_probability, int sensors);
 };
 
 /**
