@@ -8,13 +8,16 @@
 
 #include "../../include/pros/rtos.hpp"
 #include <optional>
+#include <vector>
 
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/lemlib/pose.hpp"
 
 static constexpr int err_reading_value = 9999;
 static constexpr float mm_inch_conversion_factor = 0.0393701;
 static constexpr float deg_rad_conversion_factor = 0.0174532;
+static constexpr float wall_coord = 70.208;
 
 vector::vector()
 {
@@ -35,20 +38,20 @@ localization_sensor::localization_sensor(float off, int port) :
             sensor(port)
 {}
 
-probability localization_sensor::distance()
+conf_pair<float> localization_sensor::distance()
 {
     int sensor_reading = sensor.get_distance();
-    unsigned char sensor_confidence = static_cast<unsigned char>(static_cast<float>(sensor.get_confidence()) / 400.0f * 255.0f);
-    if (sensor_reading == err_reading_value) return probability(err_reading_value, 0);
+    float sensor_confidence = (sensor.get_confidence() / 400.0f);
+    if (sensor_reading == err_reading_value) return conf_pair<float>(err_reading_value, 0.0f);
 
-    return probability(sensor_reading * mm_inch_conversion_factor, sensor_confidence);
+    return conf_pair<float>(sensor_reading * mm_inch_conversion_factor, sensor_confidence);
 }
 
-probability localization_sensor::distance(float heading)
+conf_pair<float> localization_sensor::distance(float heading)
 {
     int sensor_reading = sensor.get_distance();
-    unsigned char sensor_confidence = static_cast<unsigned char>(static_cast<float>(sensor.get_confidence()) / 400.0f * 255.0f);
-    if (sensor_reading == err_reading_value) return probability(err_reading_value, 0);
+    float sensor_confidence = (sensor.get_confidence() / 400.0f);
+    if (sensor_reading == err_reading_value) return conf_pair<float>(err_reading_value, 0.0f);
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
 
@@ -57,10 +60,10 @@ probability localization_sensor::distance(float heading)
     float actual_reading = cos(heading_err_rad) * reading;
     float actual_offset = cos(heading_err_rad) * offset;
 
-    return probability(actual_reading + actual_offset, sensor_confidence);
+    return conf_pair<float>(actual_reading + actual_offset, sensor_confidence);
 }
 
-localization_chassis::localization_chassis(pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors)
+localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -72,9 +75,104 @@ localization_chassis::localization_chassis(pros::Imu *inertial, lemlib::Chassis*
     last_call_time = pros::millis();
 }
 
-bool localization_chassis::reset_location(bool ignore_probability, int sensors)
+quadrant sensor_relevancy(float heading)
+{
+    if ((heading > 0 && heading <= 45) || (heading <= 360 && heading > 315))
+    {
+        return POS_POS;
+    }
+
+    if (heading > 45 && heading <= 135)
+    {
+        return NEG_POS;
+    }
+
+    if (heading > 135 && heading <= 225)
+    {
+        return NEG_NEG;
+    }
+
+    if (heading > 225 && heading <= 315)
+    {
+        return POS_NEG;
+    }
+
+    return NEG_NEG;
+}
+
+bool value_check(localization_options options, conf_pair<float> one, conf_pair<float> two)
+{
+    return one.get_confidence() >= options.sensor_trust && two.get_confidence() >= options.sensor_trust;
+}
+
+bool localization_chassis::reset_location()
 {
     return false;
+}
+
+bool localization_chassis::reset_location_force(quadrant quad)
+{
+
+    lemlib::Pose pose = chassis->getPose();
+
+    float normal_heading = pose.theta;
+
+
+    quadrant theta_quad = sensor_relevancy(normal_heading);
+
+    bool value_pass = false;
+
+    conf_pair<float> n_dist = north->distance();
+    conf_pair<float> e_dist = east->distance();
+    conf_pair<float> s_dist = south->distance();
+    conf_pair<float> w_dist = west->distance();
+
+    float x = 0;
+    float y = 0;
+
+    if (quad == POS_POS)
+    {
+        switch (theta_quad)
+        {
+            case POS_POS:
+            {
+                value_pass = value_check(options, e_dist, n_dist);
+                x = wall_coord - e_dist.get_value();
+                y = wall_coord - n_dist.get_value();
+            }
+
+            case NEG_POS:
+            {
+                value_pass = value_check(options, n_dist, w_dist);
+                x = wall_coord - n_dist.get_value();
+                y = wall_coord - w_dist.get_value();
+            }
+
+            case NEG_NEG:
+            {
+                value_pass = value_check(options, w_dist, s_dist);
+                x = wall_coord - w_dist.get_value();
+                y = wall_coord - s_dist.get_value();
+            }
+
+            case POS_NEG:
+            {
+                value_pass = value_check(options, s_dist, e_dist);
+                x = wall_coord - s_dist.get_value();
+                y = wall_coord - e_dist.get_value();
+            }
+        }
+
+        if (!value_pass) return false;
+
+    }
+
+    pose.x = x;
+    pose.y = y;
+
+    chassis->setPose(pose);
+
+    return true;
 }
 
 

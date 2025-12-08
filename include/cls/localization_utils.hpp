@@ -17,10 +17,92 @@
 #include "../lemlib/chassis/chassis.hpp"
 #include "../pros/imu.hpp"
 
-/*
- * Single axis probability type definition. Pair of float (the value) and unsigned char (the probability 0-255)
+/**
+ * Confidence Pair
+ *
+ * Templated pair abstraction with the confidence value as an unsigned char for memory usage optimization
  */
-typedef std::pair<float, unsigned char> probability;
+template<typename T>
+class conf_pair
+{
+public:
+    /**
+     * Standard probability type definition
+     */
+    typedef unsigned char t_probability;
+
+private:
+    /**
+     * Internal pair value
+     */
+    std::pair<T, t_probability>value;
+
+public:
+
+    /**
+     * @brief confidence pair default constructor
+     */
+    conf_pair()
+    {
+        value = std::pair<T, t_probability>(-1, 0);
+    }
+
+    /**
+     * @brief confidence pair passing the confidence as an unsigned char
+     *
+     * @param principal value of the pair
+     * @param confidence confidence as a unsigned char
+     */
+    conf_pair(T principal, t_probability confidence)
+    {
+        value = std::pair<T, t_probability>(principal, confidence);
+    }
+
+    /**
+     * @brief confidence pair passing the confidence as a float from 0-1
+     *
+     * @param principal value of the pair
+     * @param confidence confidence as a float from 0-1
+     */
+    conf_pair(T principal, const float confidence)
+    {
+        t_probability input = static_cast<t_probability>(confidence * 255.0f);
+        value = std::pair<T, t_probability>(principal, input);
+    }
+
+    bool is_default()
+    {
+        return value.first == -1;
+    }
+
+    /**
+     * @brief Gets the value of the confidence pair as T
+     * @return first value of the internal pair as T
+     */
+    T get_value()
+    {
+        return value.first;
+    }
+
+    /**
+     * @brief Gets the confidence of the confidence pair as an unsigned char
+     * @return confidence of the internal pair as an unsigned char
+     */
+    t_probability get_confidence()
+    {
+        return value.second;
+    }
+
+    /**
+     * @brief Gets the confidence of the confidence pair as a float
+     * @return confidence of the internal pair as a float
+     */
+    float get_confidence_f()
+    {
+        return static_cast<float>(value.second) / 255.0f;
+    }
+};
+
 
 /*
  * Quadrant enumeration.
@@ -33,6 +115,9 @@ enum quadrant
     POS_NEG,
 };
 
+/**
+ * Sensor flag options when passing parameters to relevant functions
+ */
 enum sensor_options
 {
     NORTH = 1 << 0,
@@ -65,6 +150,24 @@ struct vector
     vector(float X, float Y, float Z);
 };
 
+struct localization_options
+{
+    /**
+     * Trust in the distance sensors around the robot.
+     */
+    const unsigned char sensor_trust = 155;
+
+    /**
+     * Trust in the odometry system of the robot.
+     */
+    const unsigned char odometry_trust = 240;
+
+    /**
+     * Percentage at which the sensor values correct odometry as to smooth out correction
+     */
+    const float sensor_correction_gain = 0.25;
+};
+
 /**
  * @brief Distance sensor wrapper class used for distance sensor resets and monte carlo localization.
  */
@@ -83,32 +186,33 @@ class localization_sensor
 
     public:
 
+    typedef conf_pair<float> t_distance;
+
     /**
-     * @brief Constructor for localization sensor. Vector interpretation is 2D with the X axis being front to back, Y axis side to side, and Z the theta.
+     * @brief Constructor for localization sensor.
      * @note Offsets should be done in inches.
-     * @param off Offset of the sensor on a 2D plane with Z representing the theta of the sensor.
+     * @param off Offset of the sensor from the origin in the direction the sensor is facing
      * @param port Port of the distance sensor.
      */
     localization_sensor(float off, int port);
 
     /**
-     * @brief Distance read from the distance sensor as an optional.
+     * @brief Distance read from the distance sensor as a confidence pair.
      * @note Data returned is in inches.
      * @return confidence and the distance reading.
      */
-    probability distance();
+    t_distance distance();
 
     /**
-     * @brief Distance read from the distance sensor as an optional with angle of robot factored in and offset.
+     * @brief Distance read from the distance sensor as a confidence pair with angle of robot factored in and offset.
      * @note Data returned is in inches.
      * @return confidence and the distance reading and calculation.
      */
-    probability distance(float heading);
+    t_distance distance(float heading);
 };
 
 class localization_chassis
 {
-
     /*
      * Sensors
      */
@@ -123,30 +227,41 @@ class localization_chassis
      */
     lemlib::Chassis* chassis;
 
-
+    /**
+     * Last call time of filtering
+     */
     int32_t last_call_time;
+
+    /**
+     * Provided options
+     */
+    localization_options options;
 
 public:
 
     /**
      * Initialize the localization chassis
      */
-    localization_chassis(pros::Imu* inertial, lemlib::Chassis* base, std::array<localization_sensor*,4> sensors);
+    localization_chassis(localization_options settings, pros::Imu* inertial, lemlib::Chassis* base, std::array<localization_sensor*,4> sensors);
 
     /**
-     * @brief Performs a distance sensor reset using the sensors specified.
+     * @brief Performs a distance sensor reset using the sensors on the robot given the robot already knows where it is.
      *
      * Uses the LemLib chassis position along with the probability readings from the sensors to determine if the
-     * location generated from the sensors is accurate. If the reading is determined to be accurate, the function will
+     * location generated from the sensors is accurate. If the readings are determined to be accurate, the function will
      * return true and set the location of the LemLib chassis to that of the readings specified, with the function just
      * returning false otherwise and not setting the LemLib chassis's location. Do not use while the robot is in motion as
      * it will cause jerky and or unpredictable movements. Use when stationary and the robot is in an adequate place to gather readings.
-     *
-     *
-     * @param ignore_probability ignores the probability statistic. Use when the robot does not know its location (ex: at starting location)
-     * @param sensors flags specifying which sensors to use in the distance sensor reset.
      */
-    bool reset_location(bool ignore_probability, int sensors);
+    bool reset_location();
+
+    /**
+     * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know where it is and the sensors are fully trusted.
+     *
+     * @param quad The quadrant the robot is currently in.
+     * @return Whether the function was successfully in reset the location of the robot.
+     */
+    bool reset_location_force(quadrant quad);
 };
 
 /**
