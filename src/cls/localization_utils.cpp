@@ -75,8 +75,10 @@ localization_chassis::localization_chassis(localization_options settings, pros::
     last_call_time = pros::millis();
 }
 
-quadrant sensor_relevancy(float heading)
+quadrant localization_chassis::sensor_relevancy()
 {
+    float heading = imu->get_heading();//TODO: Fix this to normalize the heading to the 0-360 domain
+
     if ((heading > 0 && heading <= 45) || (heading <= 360 && heading > 315))
     {
         return POS_POS;
@@ -100,9 +102,164 @@ quadrant sensor_relevancy(float heading)
     return NEG_NEG;
 }
 
-bool value_check(localization_options options, conf_pair<float> one, conf_pair<float> two)
+conf_pair<std::pair<float, float>> localization_chassis::get_position_calculation(quadrant quad)
 {
-    return one.get_confidence() >= options.sensor_trust && two.get_confidence() >= options.sensor_trust;
+    float normal_heading = imu->get_heading();//TODO: Fix this to normalize the heading to the 0-360 domain
+    quadrant theta_quad = sensor_relevancy();
+
+    conf_pair<float> n_dist = north->distance(normal_heading);
+    conf_pair<float> e_dist = east->distance(normal_heading);
+    conf_pair<float> s_dist = south->distance(normal_heading);
+    conf_pair<float> w_dist = west->distance(normal_heading);
+
+    conf_pair<std::pair<float, float>> ret = conf_pair<std::pair<float, float>>();
+
+    float x = 0;
+    float y = 0;
+
+    if (quad == POS_POS)
+    {
+        switch (theta_quad)
+        {
+            case POS_POS:
+            {
+                ret.set_confidence(conf_avg(e_dist, n_dist));
+                x = wall_coord - e_dist.get_value();
+                y = wall_coord - n_dist.get_value();
+            }
+
+            case NEG_POS:
+            {
+                ret.set_confidence(conf_avg(n_dist, w_dist));
+                x = wall_coord - n_dist.get_value();
+                y = wall_coord - w_dist.get_value();
+            }
+
+            case NEG_NEG:
+            {
+                ret.set_confidence(conf_avg(w_dist, s_dist));
+                x = wall_coord - w_dist.get_value();
+                y = wall_coord - s_dist.get_value();
+            }
+
+            case POS_NEG:
+            {
+                ret.set_confidence(conf_avg(s_dist, e_dist));
+                x = wall_coord - s_dist.get_value();
+                y = wall_coord - e_dist.get_value();
+            }
+        }
+    } else if (quad == NEG_POS)
+    {
+        switch (theta_quad)
+        {
+            case POS_POS:
+            {
+                ret.set_confidence(conf_avg(n_dist, w_dist));
+                x = -wall_coord + w_dist.get_value();
+                y = wall_coord - n_dist.get_value();
+            }
+
+            case NEG_POS:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + s_dist.get_value();
+                y = wall_coord - w_dist.get_value();
+            }
+
+            case NEG_NEG:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + w_dist.get_value();
+                y = wall_coord - s_dist.get_value();
+            }
+
+            case POS_NEG:
+            {
+                ret.set_confidence(conf_avg(e_dist, n_dist));
+                x = -wall_coord + n_dist.get_value();
+                y = wall_coord - e_dist.get_value();
+            }
+        }
+    } else if (quad == NEG_NEG)
+    {
+        switch (theta_quad)
+        {
+            case POS_POS:
+            {
+                ret.set_confidence(conf_avg(n_dist, w_dist));
+                x = -wall_coord + w_dist.get_value();
+                y = -wall_coord + s_dist.get_value();
+            }
+
+            case NEG_POS:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + s_dist.get_value();
+                y = -wall_coord + e_dist.get_value();
+            }
+
+            case NEG_NEG:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + e_dist.get_value();
+                y = -wall_coord + n_dist.get_value();
+            }
+
+            case POS_NEG:
+            {
+                ret.set_confidence(conf_avg(e_dist, n_dist));
+                x = -wall_coord + n_dist.get_value();
+                y = -wall_coord + w_dist.get_value();
+            }
+        }
+    } else if (quad == POS_NEG)
+    {
+        switch (theta_quad)
+        {
+            case POS_POS:
+            {
+                ret.set_confidence(conf_avg(n_dist, w_dist));
+                x = -wall_coord + e_dist.get_value();
+                y = -wall_coord + s_dist.get_value();
+            }
+
+            case NEG_POS:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + n_dist.get_value();
+                y = -wall_coord + e_dist.get_value();
+            }
+
+            case NEG_NEG:
+            {
+                ret.set_confidence(conf_avg(s_dist, w_dist));
+                x = -wall_coord + w_dist.get_value();
+                y = -wall_coord + n_dist.get_value();
+            }
+
+            case POS_NEG:
+            {
+                ret.set_confidence(conf_avg(e_dist, n_dist));
+                x = -wall_coord + s_dist.get_value();
+                y = -wall_coord + w_dist.get_value();
+            }
+        }
+    } else
+    {
+        x = 0;
+        y = 0;
+        ret.set_confidence(0);
+    }
+
+    ret.set_value(std::pair<float, float>(x, y));
+
+    return ret;
+}
+
+unsigned char localization_chassis::conf_avg(conf_pair<float> one, conf_pair<float> two)
+{
+    return static_cast<unsigned char>((static_cast<int>(one.get_confidence()) + static_cast<int>(two.get_confidence())) / 2);
 }
 
 bool localization_chassis::reset_location()
@@ -122,10 +279,10 @@ bool localization_chassis::reset_location_force(quadrant quad)
 
     bool value_pass = false;
 
-    conf_pair<float> n_dist = north->distance();
-    conf_pair<float> e_dist = east->distance();
-    conf_pair<float> s_dist = south->distance();
-    conf_pair<float> w_dist = west->distance();
+    conf_pair<float> n_dist = north->distance(normal_heading);
+    conf_pair<float> e_dist = east->distance(normal_heading);
+    conf_pair<float> s_dist = south->distance(normal_heading);
+    conf_pair<float> w_dist = west->distance(normal_heading);
 
     float x = 0;
     float y = 0;

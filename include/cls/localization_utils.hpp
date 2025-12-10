@@ -44,7 +44,7 @@ public:
      */
     conf_pair()
     {
-        value = std::pair<T, t_probability>(-1, 0);
+        value = std::pair<T, t_probability>(T(), 0);
     }
 
     /**
@@ -70,10 +70,24 @@ public:
         value = std::pair<T, t_probability>(principal, input);
     }
 
-    bool is_default()
+    /**
+     * @brief Sets the confidence of the confidence pair
+     * @param confidence new confidence to set
+     */
+    void set_confidence(t_probability confidence)
     {
-        return value.first == -1;
+        value.second = confidence;
     }
+
+    /**
+     * @breif Sets the value of the confidence pair
+     * @param principal new value to set
+     */
+    void set_value(T principal)
+    {
+        value.first = principal;
+    }
+
 
     /**
      * @brief Gets the value of the confidence pair as T
@@ -213,6 +227,33 @@ class localization_sensor
 
 class localization_chassis
 {
+    /**
+     * @brief Returns the relevant sensors based on the heading of the robot.
+     *
+     * Requires normalized heading 0-360 degrees.
+     *
+     * For 315 - 45 degrees: ++
+     * For 45 - 135 degrees: -+
+     * For 135 - 225 degrees: --
+     * For 225 - 315 degrees: +-
+     */
+    quadrant sensor_relevancy();
+
+    /**
+     * @brief Average confidence of value pair
+     * @param one first confidence pair
+     * @param two second confidence pair
+     * @return Average confidence of value pair
+     */
+    static unsigned char conf_avg(conf_pair<float> one, conf_pair<float> two);
+
+    /**
+     * @brief Returns the confidence pair of a coordinate pair representing the robots location gathered from the sensors.
+     * @param quad Current quadrant of the robot
+     * @return Confidence pair of a coordinate pair representing the robots location gathered from the sensors.
+     */
+    conf_pair<std::pair<float, float>> get_position_calculation(quadrant quad);
+
     /*
      * Sensors
      */
