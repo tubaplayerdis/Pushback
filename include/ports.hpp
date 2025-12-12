@@ -48,7 +48,7 @@ namespace ports
 
         namespace settings
         {
-            constexpr auto DRIVETRAIN_TRACK_WIDTH = 11;
+            constexpr auto DRIVETRAIN_TRACK_WIDTH = 10.5;
             constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
             constexpr auto DRIVETRAIN_RPM = 450;
             constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 8;
@@ -58,8 +58,7 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto INTAKE = -10;
-        constexpr auto EXHAUST = 5;
+        constexpr auto EXHAUST = 1;
         constexpr auto CONVEYOR = -10;
         constexpr auto LIFT = 'C';
         constexpr auto WINGS = 'A';

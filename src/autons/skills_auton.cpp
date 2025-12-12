@@ -46,7 +46,7 @@ void skills_routine()
 
     chassis->setPose(0, 0, 0);
 
-    lc->distance_sensor_reset(SKILLS_INITIAL);
+    //lc->distance_sensor_reset(SKILLS_INITIAL);
 
     {   //Setup conveyor and exhaust to handle 7 blocks
         conv->conveyor_intake.move(FULL_POWER);
@@ -64,7 +64,7 @@ void skills_routine()
     }
 
     {
-        lc->distance_sensor_reset(MATCH_LOADER_3);
+        //lc->distance_sensor_reset(MATCH_LOADER_3);
     }
 
 

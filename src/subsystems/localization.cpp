@@ -45,13 +45,13 @@ static constexpr float wall_coord = 70.208;
  */
 namespace loc_offsets
 {
-    const vector front(5.75,5.75,0);
+    const vector3 front(5.75,5.75,0);
 
-    const vector left(5,4.25,90);
+    const vector3 left(5,4.25,90);
 
-    const vector rear(5.75,5,180);
+    const vector3 rear(5.75,5,180);
 
-    const vector right(5,4.25,270);
+    const vector3 right(5,4.25,270);
 }
 
 /// timepoint value representing the last time the tick function was ran and updated this variable
@@ -105,7 +105,7 @@ localization* localization::get()
     return odometry_instance.get();
 }
 
-void localization::distance_sensor_reset(localization_update update_type)
+void localization::distance_sensor_reset()
 {
     float front_dist = 0;//front_loc.distance_raw();
     float rear_dist = 0;//rear_loc.distance_raw();
@@ -117,72 +117,7 @@ void localization::distance_sensor_reset(localization_update update_type)
     //In degrees
     float heading = curPose.theta;
 
-    switch (update_type) {
 
-        case SKILLS_INITIAL:
-        {
-            rear_dist = -wall_coord + rear_dist;
-            left_dist = -wall_coord + left_dist;
-            drivetrain::get()->lem_chassis.setPose(left_dist, rear_dist, heading);
-            break;
-        }
-
-        case AUTON_INITIAL_LEFT:
-        {
-            front_dist = -wall_coord + front_dist;
-            right_dist = wall_coord - right_dist;
-            drivetrain::get()->lem_chassis.setPose(front_dist, right_dist, heading);
-            break;
-        }
-
-        case AUTON_INITIAL_RIGHT:
-        {
-            front_dist = -wall_coord + front_dist;
-            left_dist = -wall_coord + left_dist;
-            drivetrain::get()->lem_chassis.setPose(front_dist, left_dist, heading);
-            break;
-        }
-
-        case MATCH_LOADER_1:
-        {
-            rear_dist = wall_coord - rear_dist;
-            right_dist = wall_coord - right_dist;
-            drivetrain::get()->lem_chassis.setPose(left_dist, rear_dist, heading);
-            break;
-        }
-
-        case MATCH_LOADER_2:
-        {
-            rear_dist = -wall_coord + rear_dist;
-            left_dist = wall_coord - left_dist;
-            drivetrain::get()->lem_chassis.setPose(rear_dist, left_dist, heading);
-            break;
-        }
-
-        case MATCH_LOADER_3:
-        {
-            if (heading != 90)
-            {
-                //Angle of error in radians
-                float angle = abs(90-heading) * (M_PI / 180);
-                rear_dist = cos(angle) * rear_dist;
-                right_dist = cos(angle) * right_dist;
-            }
-
-            rear_dist = -wall_coord + rear_dist;
-            right_dist = -wall_coord + right_dist;
-            drivetrain::get()->lem_chassis.setPose(rear_dist, right_dist, heading);
-            break;
-        }
-
-        case MATCH_LOADER_4:
-        {
-            rear_dist = wall_coord - rear_dist;
-            left_dist = -wall_coord + left_dist;
-            drivetrain::get()->lem_chassis.setPose(rear_dist, left_dist, heading);
-            break;
-        }
-    }
 }
 
 void localization::do_localization(lemlib::Chassis* chassis)
@@ -198,7 +133,7 @@ void localization::start_localization()
         return;
     }
 
-    distance_sensor_reset(SKILLS_INITIAL);
+    //distance_sensor_reset(SKILLS_INITIAL);
 
     monte_task = new pros::Task([this]() -> void
     {

@@ -13,26 +13,34 @@
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
 #include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/lemlib/pose.hpp"
+#include "../../include/pros/imu.h"
+#include "../../include/pros/imu.hpp"
 #include <cmath>
 
+/**
+ * Erroneous reading value when the V5 Distance Sensor cannot read a distance
+ */
 static constexpr int err_reading_value = 9999;
+
+/**
+ * MM to IN conversion factor.
+ */
 static constexpr float mm_inch_conversion_factor = 0.0393701;
+
+/**
+ * Degree to Radian conversion factor
+ */
 static constexpr float deg_rad_conversion_factor = 0.0174532;
+
+/**
+ * Distance to vex wall from origin in inches
+ */
 static constexpr float wall_coord = 70.208;
 
-vector::vector()
-{
-    x = 0;
-    y = 0;
-    z = 0;
-}
-
-vector::vector(float X, float Y, float Z)
-{
-    x = X;
-    y = Y;
-    z = Z;
-}
+/**
+ * Domain of the confidence readings from the V5 Distance Sensor
+ */
+static constexpr float confidence_domain = 63.0f;
 
 localization_sensor::localization_sensor(float off, int port) :
             offset(off),
@@ -42,7 +50,7 @@ localization_sensor::localization_sensor(float off, int port) :
 conf_pair<float> localization_sensor::distance()
 {
     int sensor_reading = sensor.get_distance();
-    float sensor_confidence = (sensor.get_confidence() / 400.0f);
+    float sensor_confidence = (sensor.get_confidence() / confidence_domain);
     if (sensor_reading == err_reading_value) return conf_pair<float>(err_reading_value, 0.0f);
 
     return conf_pair<float>(sensor_reading * mm_inch_conversion_factor, sensor_confidence);
@@ -51,7 +59,7 @@ conf_pair<float> localization_sensor::distance()
 conf_pair<float> localization_sensor::distance(float heading)
 {
     int sensor_reading = sensor.get_distance();
-    float sensor_confidence = (sensor.get_confidence() / 63.0f);
+    float sensor_confidence = (sensor.get_confidence() / confidence_domain);
     if (sensor_reading == err_reading_value) return conf_pair<float>(err_reading_value, 0.0f);
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
@@ -66,17 +74,21 @@ conf_pair<float> localization_sensor::distance(float heading)
 
 float localization_chassis::normalize_heading(float heading)
 {
-    if (heading <= 360)
+    if (heading < 0.0f)
     {
-        return 0;
-        //Base case
+        return normalize_heading(heading + 360.0f);
     }
 
-    return 0;
-    //Use recursion to adapt domain to 0-360 and invert.
+    if (heading > 360.0f)
+    {
+        return normalize_heading(heading - 360.0f);
+    }
+
+    return heading;
 }
 
-localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings)
+localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(
+    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0), 0)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -85,12 +97,20 @@ localization_chassis::localization_chassis(localization_options settings, pros::
     imu = inertial;
     chassis = chas;
 
-    last_call_time = pros::millis();
+    auto pose = chassis->getPose();
+
+    pros::imu_accel_s_t accel = imu->get_accel();
+    float heading = imu->get_heading();
+
+    localization_data current = {
+        pros::millis(), vector2(accel.x, accel.y), vector2(0, heading), pose, chassis->distTraveled
+    };
+    data = current;
 }
 
 quadrant localization_chassis::sensor_relevancy()
 {
-    float heading = imu->get_heading();//TODO: Fix this to normalize the heading to the 0-360 domain
+    float heading = normalize_heading(imu->get_heading());
 
     if ((heading > 0 && heading <= 45) || (heading <= 360 && heading > 315))
     {
@@ -115,9 +135,14 @@ quadrant localization_chassis::sensor_relevancy()
     return NEG_NEG;
 }
 
+quadrant localization_chassis::get_quadrant()
+{
+    return POS_POS;
+}
+
 conf_pair<std::pair<float, float>> localization_chassis::get_position_calculation(quadrant quad)
 {
-    float normal_heading = imu->get_heading();//TODO: Fix this to normalize the heading to the 0-360 domain
+    float normal_heading = normalize_heading(imu->get_heading());
     quadrant theta_quad = sensor_relevancy();
 
     conf_pair<float> n_dist = north->distance(normal_heading);

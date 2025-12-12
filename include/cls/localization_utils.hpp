@@ -12,6 +12,7 @@
 #include <optional>
 
 #include "../lemlib/chassis/chassis.hpp"
+#include "../lemlib/pose.hpp"
 #include "../pros/imu.hpp"
 
 /**
@@ -22,7 +23,7 @@ typedef float t_probability;
 /**
  * Confidence Pair
  *
- * Templated pair abstraction with the confidence value as an unsigned char for memory usage optimization
+ * Templated pair abstraction with the confidence value.
  */
 template<typename T>
 class conf_pair
@@ -44,10 +45,10 @@ public:
     }
 
     /**
-     * @brief confidence pair passing the confidence as an unsigned char
+     * @brief confidence pair passing the confidence as a float
      *
      * @param principal value of the pair
-     * @param confidence confidence as a unsigned char
+     * @param confidence confidence as a float
      */
     conf_pair(T principal, t_probability confidence)
     {
@@ -115,10 +116,9 @@ enum quadrant
 };
 
 /*
- * 3D/2D data structure.
- * When used in localization, Z is representative of the theta (angle) of the object this refers to.
+ * 3D vector data structure. Z might be expressed a Theta in some use cases
  */
-struct vector
+struct vector3
 {
     float x;
     float y;
@@ -127,7 +127,12 @@ struct vector
     /**
      * @breif Default constructor for vector, initializes X, Y, and Z to zero.
      */
-    vector();
+    vector3()
+    {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
 
     /**
      * @brief Standard constructor for vector, initializes values to input parameters
@@ -135,7 +140,66 @@ struct vector
      * @param Y y value of vector
      * @param Z z or theta value of vector depending on plane interpreted
      */
-    vector(float X, float Y, float Z);
+    vector3(float X, float Y, float Z)
+    {
+        x = X;
+        y = Y;
+        z = Z;
+    }
+};
+
+struct vector2
+{
+    float x;
+    float y;
+
+    vector2()
+    {
+        x = 0.0f;
+        y = 0.0f;
+    }
+
+    vector2(float X, float Y)
+    {
+        x = X;
+        y = Y;
+    }
+};
+
+struct localization_data
+{
+    /**
+     * Time of data point in MS
+     */
+    int32_t call_time;
+
+    /**
+     * X and Y independent acceleration
+     */
+    vector2 last_acceleration;
+
+    /**
+     * Magnitude and direction, not a movie quote
+     */
+    vector2 last_velocity;
+
+    /**
+     * Last position
+     */
+    lemlib::Pose last_position;
+
+    /**
+     * Last distance traveled
+     */
+    float last_distance;
+
+    localization_data(int32_t ct, vector2 la, vector2 lv, lemlib::Pose lp, float ld) : last_position(lp)
+    {
+        call_time = ct;
+        last_acceleration = la;
+        last_velocity = lv;
+        last_distance = ld;
+    }
 };
 
 struct localization_options
@@ -199,6 +263,9 @@ class localization_sensor
 
 class localization_chassis
 {
+
+public:
+
     /**
      * @brief Normalizes heading to the domain of 0-360.
      * @param heading heading to normalize.
@@ -219,6 +286,12 @@ class localization_chassis
     quadrant sensor_relevancy();
 
     /**
+     * @breif Gets the robots quadrant based on its coordinates
+     * @return The quadrant of the robot
+     */
+    quadrant get_quadrant();
+
+    /**
      * @brief Average confidence of value pair
      * @param one first confidence pair
      * @param two second confidence pair
@@ -232,6 +305,8 @@ class localization_chassis
      * @return Confidence pair of a coordinate pair representing the robots location gathered from the sensors.
      */
     conf_pair<std::pair<float, float>> get_position_calculation(quadrant quad);
+
+private:
 
     /*
      * Sensors
@@ -248,19 +323,25 @@ class localization_chassis
     lemlib::Chassis* chassis;
 
     /**
-     * Last call time of filtering
-     */
-    int32_t last_call_time;
-
-    /**
      * Provided options
      */
     localization_options options;
 
+    /**
+     * Last given localization data
+     */
+    localization_data data;
+
 public:
 
     /**
-     * Initialize the localization chassis
+     * @breif Initialize the localization chassis
+     * @note ONLY INITIALIZE THIS WHEN YOUR ROBOT IS NOT MOVING!
+     *
+     * @param settings customizable trust and gain options for the localization algorithm
+     * @param inertial pointer to the inertial sensor on the robot
+     * @param base pointer to the lemlib chassis of the robot
+     * @param sensors array of pointers to the localization sensors of the robot
      */
     localization_chassis(localization_options settings, pros::Imu* inertial, lemlib::Chassis* base, std::array<localization_sensor*,4> sensors);
 
@@ -282,38 +363,6 @@ public:
      * @return Whether the function was successfully in reset the location of the robot.
      */
     bool reset_location_force(quadrant quad);
-};
-
-/**
- * @brief Enum used when performing a distance sensor reset. Defines predefined locations that can be used for distance sensor resets.
- * All localization locations are based in quadrants which are defined like you are looking at 4 quadrants on the field from the driver position. They are as follows:
- * Top Right (+,+)
- * Top Left (-,+)
- * Bottom Left (-,-)
- * Bottom Right (+,-)
- */
-enum localization_update
-{
-    /// Initial starting location of skills, 90 degrees turned with the match loader facing the wall to the right
-    SKILLS_INITIAL,
-
-    /// Initial starting location of left side autons with the aligner facing towards the wall
-    AUTON_INITIAL_LEFT,
-
-    /// Initial starting location of right side autons with the aligner facing towards the wall
-    AUTON_INITIAL_RIGHT,
-
-    /// Match loader top left of driver location. ++ quadrant
-    MATCH_LOADER_1,
-
-    /// Match loader bottom left of driver location. -+ quadrant
-    MATCH_LOADER_2,
-
-    /// Match loader bottom right of driver location. -- quadrant
-    MATCH_LOADER_3,
-
-    /// Match loader bottom left of driver location, closest to driver. +- quadrant
-    MATCH_LOADER_4,
 };
 
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP

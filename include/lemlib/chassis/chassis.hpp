@@ -9,6 +9,11 @@
 #include "lemlib/exitcondition.hpp"
 #include "lemlib/driveCurve.hpp"
 
+namespace pros::v5
+{
+    class MotorGroup;
+}
+
 namespace lemlib {
 
 /**

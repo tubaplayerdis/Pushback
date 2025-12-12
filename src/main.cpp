@@ -7,6 +7,8 @@
 #include "titanselect/titanselect.hpp"
 #include <fstream>
 
+#include "lemlib/pid.hpp"
+
 extern "C"
 {
 	#include "titanselect/titanselect.h"
@@ -226,7 +228,7 @@ void opcontrol() {
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
         {
         	//dt->lem_chassis.setPose(0,0,90);
-            odom->distance_sensor_reset(SKILLS_INITIAL);
+            odom->distance_sensor_reset();
         }
 
 		lv_timer_handler();

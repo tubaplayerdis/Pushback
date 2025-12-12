@@ -54,16 +54,16 @@ public:
 
 public:
 
-    void set_estimated_position(vector position)
+    void set_estimated_position(vector3 position)
     {
         estimated_position = position;
     }
 
     /// Velocity based off inertial sensor acceleration readings.
-    vector estimated_velocity;
+    vector3 estimated_velocity;
 
     /// Position based off inertial sensor acceleration readings.
-    vector estimated_position;
+    vector3 estimated_position;
 
 private:
 
@@ -89,7 +89,7 @@ public:
 
     /// Resets the pose of the lemlib chassis object during skills or before autons.
     /// @note Set the heading of the robot beforehand. An example is for skills where the robot needs to be told it is 90 degrees turned.
-    void distance_sensor_reset(localization_update update_type);
+    void distance_sensor_reset();
 
     /// public accessor method for singleton.
     static localization* get();
