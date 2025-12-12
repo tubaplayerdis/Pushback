@@ -15,6 +15,11 @@
 #include "../pros/imu.hpp"
 
 /**
+ * Standard probability type definition
+ */
+typedef float t_probability;
+
+/**
  * Confidence Pair
  *
  * Templated pair abstraction with the confidence value as an unsigned char for memory usage optimization
@@ -22,12 +27,6 @@
 template<typename T>
 class conf_pair
 {
-public:
-    /**
-     * Standard probability type definition
-     */
-    typedef unsigned char t_probability;
-
 private:
     /**
      * Internal pair value
@@ -53,18 +52,6 @@ public:
     conf_pair(T principal, t_probability confidence)
     {
         value = std::pair<T, t_probability>(principal, confidence);
-    }
-
-    /**
-     * @brief confidence pair passing the confidence as a float from 0-1
-     *
-     * @param principal value of the pair
-     * @param confidence confidence as a float from 0-1
-     */
-    conf_pair(T principal, const float confidence)
-    {
-        t_probability input = static_cast<t_probability>(confidence * 255.0f);
-        value = std::pair<T, t_probability>(principal, input);
     }
 
     /**
@@ -96,23 +83,24 @@ public:
     }
 
     /**
-     * @brief Gets the confidence of the confidence pair as an unsigned char
-     * @return confidence of the internal pair as an unsigned char
+     * @brief Gets the confidence of the confidence pair as a float
+     * @return confidence of the internal pair as a float
      */
     t_probability get_confidence()
     {
         return value.second;
     }
-
-    /**
-     * @brief Gets the confidence of the confidence pair as a float
-     * @return confidence of the internal pair as a float
-     */
-    float get_confidence_f()
-    {
-        return static_cast<float>(value.second) / 255.0f;
-    }
 };
+
+/**
+ * Standard distance confidence pair definition
+ */
+typedef conf_pair<float> t_distance;
+
+/**
+ * Standard particle confidence pair definition.
+ */
+typedef conf_pair<std::pair<float, float>> t_particle;
 
 
 /*
@@ -169,7 +157,7 @@ struct localization_options
 };
 
 /**
- * @brief Distance sensor wrapper class used for distance sensor resets and monte carlo localization.
+ * @brief Distance sensor wrapper class used for distance sensor resets and localization.
  */
 class localization_sensor
 {
@@ -185,8 +173,6 @@ class localization_sensor
     pros::Distance sensor;
 
     public:
-
-    typedef conf_pair<float> t_distance;
 
     /**
      * @brief Constructor for localization sensor.
@@ -238,7 +224,7 @@ class localization_chassis
      * @param two second confidence pair
      * @return Average confidence of value pair
      */
-    static unsigned char conf_avg(conf_pair<float> one, conf_pair<float> two);
+    static float conf_avg(conf_pair<float> one, conf_pair<float> two);
 
     /**
      * @brief Returns the confidence pair of a coordinate pair representing the robots location gathered from the sensors.

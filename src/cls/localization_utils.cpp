@@ -51,7 +51,7 @@ conf_pair<float> localization_sensor::distance()
 conf_pair<float> localization_sensor::distance(float heading)
 {
     int sensor_reading = sensor.get_distance();
-    float sensor_confidence = (sensor.get_confidence() / 400.0f);
+    float sensor_confidence = (sensor.get_confidence() / 63.0f);
     if (sensor_reading == err_reading_value) return conf_pair<float>(err_reading_value, 0.0f);
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
@@ -270,9 +270,9 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
     return ret;
 }
 
-unsigned char localization_chassis::conf_avg(conf_pair<float> one, conf_pair<float> two)
+float localization_chassis::conf_avg(conf_pair<float> one, conf_pair<float> two)
 {
-    return static_cast<unsigned char>((static_cast<int>(one.get_confidence()) + static_cast<int>(two.get_confidence())) / 2);
+    return (one.get_confidence() + two.get_confidence()) / 2.0f;
 }
 
 bool localization_chassis::reset_location()
