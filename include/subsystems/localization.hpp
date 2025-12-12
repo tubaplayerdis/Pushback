@@ -13,9 +13,6 @@
 #include "../lemlib/chassis/chassis.hpp"
 #include "../lemlib/chassis/trackingWheel.hpp"
 #include "../pros/imu.hpp"
-#include "../locolib/distance.hpp"
-#include "../locolib/particleFilter.hpp"
-#include "../locolib/config.hpp"
 #include "../cls/localization_utils.hpp"
 
 /*

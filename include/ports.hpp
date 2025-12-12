@@ -8,6 +8,7 @@
 #include "pros/misc.hpp"
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "pros/abstract_motor.hpp"
 
 /// All ports and constants are defined in this file for simplicity.
 
@@ -30,9 +31,9 @@ namespace ports
 
     namespace drivetrain
     {
-        constexpr auto LEFT_A = -16;
-        constexpr auto LEFT_B = -17;
-        constexpr auto LEFT_C = -18;
+        constexpr auto LEFT_A = -18;
+        constexpr auto LEFT_B = -19;
+        constexpr auto LEFT_C = -20;
         constexpr auto RIGHT_A = 11;
         constexpr auto RIGHT_B = 12;
         constexpr auto RIGHT_C = 13;
@@ -57,13 +58,13 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto INTAKE = -8;
+        constexpr auto INTAKE = -10;
         constexpr auto EXHAUST = 5;
-        constexpr auto CONVEYOR = 8;
+        constexpr auto CONVEYOR = -10;
         constexpr auto LIFT = 'C';
         constexpr auto WINGS = 'A';
         constexpr auto RAMP = 'B';
-        constexpr auto SPLITTER_OPTICAL = 19;
+        constexpr auto SPLITTER_OPTICAL = 0;
         constexpr auto SPLITTER_BRIGHTNESS = 0;
 
         namespace controls

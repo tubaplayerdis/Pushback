@@ -13,6 +13,7 @@
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
 #include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/lemlib/pose.hpp"
+#include <cmath>
 
 static constexpr int err_reading_value = 9999;
 static constexpr float mm_inch_conversion_factor = 0.0393701;
@@ -55,12 +56,24 @@ conf_pair<float> localization_sensor::distance(float heading)
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
 
-    float heading_err_rad = abs(heading - (90 * round(heading/90))) * deg_rad_conversion_factor;
+    float heading_err_rad = std::abs(heading - (90 * round(heading/90))) * deg_rad_conversion_factor;
 
     float actual_reading = cos(heading_err_rad) * reading;
     float actual_offset = cos(heading_err_rad) * offset;
 
     return conf_pair<float>(actual_reading + actual_offset, sensor_confidence);
+}
+
+float localization_chassis::normalize_heading(float heading)
+{
+    if (heading <= 360)
+    {
+        return 0;
+        //Base case
+    }
+
+    return 0;
+    //Use recursion to adapt domain to 0-360 and invert.
 }
 
 localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings)
@@ -271,62 +284,12 @@ bool localization_chassis::reset_location_force(quadrant quad)
 {
 
     lemlib::Pose pose = chassis->getPose();
+    conf_pair<std::pair<float, float>> coords = get_position_calculation(quad);
 
-    float normal_heading = pose.theta;
+    if (coords.get_confidence() < options.sensor_trust) return false;
 
-
-    quadrant theta_quad = sensor_relevancy(normal_heading);
-
-    bool value_pass = false;
-
-    conf_pair<float> n_dist = north->distance(normal_heading);
-    conf_pair<float> e_dist = east->distance(normal_heading);
-    conf_pair<float> s_dist = south->distance(normal_heading);
-    conf_pair<float> w_dist = west->distance(normal_heading);
-
-    float x = 0;
-    float y = 0;
-
-    if (quad == POS_POS)
-    {
-        switch (theta_quad)
-        {
-            case POS_POS:
-            {
-                value_pass = value_check(options, e_dist, n_dist);
-                x = wall_coord - e_dist.get_value();
-                y = wall_coord - n_dist.get_value();
-            }
-
-            case NEG_POS:
-            {
-                value_pass = value_check(options, n_dist, w_dist);
-                x = wall_coord - n_dist.get_value();
-                y = wall_coord - w_dist.get_value();
-            }
-
-            case NEG_NEG:
-            {
-                value_pass = value_check(options, w_dist, s_dist);
-                x = wall_coord - w_dist.get_value();
-                y = wall_coord - s_dist.get_value();
-            }
-
-            case POS_NEG:
-            {
-                value_pass = value_check(options, s_dist, e_dist);
-                x = wall_coord - s_dist.get_value();
-                y = wall_coord - e_dist.get_value();
-            }
-        }
-
-        if (!value_pass) return false;
-
-    }
-
-    pose.x = x;
-    pose.y = y;
-
+    pose.x = coords.get_value().first;
+    pose.y = coords.get_value().second;
     chassis->setPose(pose);
 
     return true;

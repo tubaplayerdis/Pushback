@@ -8,9 +8,6 @@
 #define PUSHBACK_LOCALIZATION_UTILS_HPP
 
 #include "../pros/distance.hpp"
-#include "../locolib/distance.hpp"
-#include "../locolib/particleFilter.hpp"
-#include "../locolib/config.hpp"
 #include "../pros/rtos.hpp"
 #include <optional>
 
@@ -129,17 +126,6 @@ enum quadrant
     POS_NEG,
 };
 
-/**
- * Sensor flag options when passing parameters to relevant functions
- */
-enum sensor_options
-{
-    NORTH = 1 << 0,
-    EAST = 1 << 2,
-    SOUTH = 1 << 3,
-    WEST = 1 << 4,
-};
-
 /*
  * 3D/2D data structure.
  * When used in localization, Z is representative of the theta (angle) of the object this refers to.
@@ -227,6 +213,13 @@ class localization_sensor
 
 class localization_chassis
 {
+    /**
+     * @brief Normalizes heading to the domain of 0-360.
+     * @param heading heading to normalize.
+     * @return Normalized heading
+     */
+    float normalize_heading(float heading);
+
     /**
      * @brief Returns the relevant sensors based on the heading of the robot.
      *

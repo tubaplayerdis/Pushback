@@ -11,8 +11,6 @@
 #include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/units/units.hpp"
 #include "../../include/cls/localization_utils.hpp"
-#include "../../include/locolib/config.hpp"
-#include "../../include/eigen/Eigen"
 #include "../../include/pros/rtos.hpp"
 #include <memory>
 #include <chrono>
@@ -48,16 +46,12 @@ static constexpr float wall_coord = 70.208;
 namespace loc_offsets
 {
     const vector front(5.75,5.75,0);
-    constexpr vector::axis front_axis = vector::axis::Y;
 
     const vector left(5,4.25,90);
-    constexpr vector::axis left_axis = vector::axis::X;
 
     const vector rear(5.75,5,180);
-    constexpr vector::axis rear_axis = vector::axis::Y;
 
     const vector right(5,4.25,270);
-    constexpr vector::axis right_axis = vector::axis::X;
 }
 
 /// timepoint value representing the last time the tick function was ran and updated this variable
@@ -70,10 +64,10 @@ localization::localization() :
         odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
         estimated_velocity(0,0,0),
         estimated_position(0,0,0),
-        rear_loc(loc_offsets::rear, loc_offsets::front_axis, REAR_LOC),
-        right_loc(loc_offsets::right, loc_offsets::right_axis, LEFT_LOC),
-        left_loc(loc_offsets::left, loc_offsets::left_axis, RIGHT_LOC),
-        front_loc(loc_offsets::front, loc_offsets::front_axis, FRONT_LOC),
+        rear_loc(loc_offsets::rear.x, REAR_LOC),
+        right_loc(loc_offsets::right.x, LEFT_LOC),
+        left_loc(loc_offsets::left.x, RIGHT_LOC),
+        front_loc(loc_offsets::front.x, FRONT_LOC),
         monte_task(nullptr)
 {
     time_at_last_call = pros::millis();
@@ -113,10 +107,10 @@ localization* localization::get()
 
 void localization::distance_sensor_reset(localization_update update_type)
 {
-    float front_dist = front_loc.distance_raw();
-    float rear_dist = rear_loc.distance_raw();
-    float right_dist = right_loc.distance_raw();
-    float left_dist = left_loc.distance_raw();
+    float front_dist = 0;//front_loc.distance_raw();
+    float rear_dist = 0;//rear_loc.distance_raw();
+    float right_dist = 0;//right_loc.distance_raw();
+    float left_dist = 0;//left_loc.distance_raw();
 
     lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
 
