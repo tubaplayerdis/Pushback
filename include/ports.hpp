@@ -60,9 +60,9 @@ namespace ports
     {
         constexpr auto EXHAUST = 1;
         constexpr auto CONVEYOR = -10;
-        constexpr auto LIFT = 'C';
+        constexpr auto LIFT = 'B';
         constexpr auto WINGS = 'A';
-        constexpr auto RAMP = 'B';
+        constexpr auto RAMP = 'C';
         constexpr auto SPLITTER_OPTICAL = 0;
         constexpr auto SPLITTER_BRIGHTNESS = 0;
 
@@ -79,8 +79,8 @@ namespace ports
 
     namespace localization
     {
-        constexpr auto INERTIAL = 14;
-        constexpr auto ROTATION_VERTICAL = 10;
+        constexpr auto INERTIAL = 8;
+        constexpr auto ROTATION_VERTICAL = -9;
         constexpr auto FRONT_LOC = 3;
         constexpr auto REAR_LOC = 1;
         constexpr auto LEFT_LOC = 2;
