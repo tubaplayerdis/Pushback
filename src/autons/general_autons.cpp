@@ -21,7 +21,7 @@ void testing_auton()
     turnParams.direction = lemlib::AngularDirection::AUTO;
     turnParams.earlyExitRange = 0;
 
-    drivetrain* dt = drivetrain::get();
+    localization* dt = localization::get();
     conveyor* conv = conveyor::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
@@ -39,7 +39,7 @@ void testing_auton()
 
 void old_skills_auton()
 {
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
     conveyor* conv = conveyor::get();
     lemlib::Chassis* chassis = &dt->lem_chassis;
     chassis->setPose(0, 0, 0);

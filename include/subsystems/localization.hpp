@@ -40,6 +40,12 @@ public:
     /// LemLib "odometry" object for autons
     lemlib::OdomSensors odom_sensors;
 
+    /// LemLib drivetrain object. Used in autons and the chassis object
+    lemlib::Drivetrain lem_drivetrain;
+
+    /// LemLib chassis object. Used in autons and for controller inputs
+    lemlib::Chassis lem_chassis;
+
     /// Front localization sensor. Located near aligner
     localization_sensor front_loc;
 
@@ -51,6 +57,8 @@ public:
 
     /// Left localization sensor. Located on the opposite side of the brain.
     localization_sensor left_loc;
+
+    localization_chassis l_chassis;
 
 public:
 

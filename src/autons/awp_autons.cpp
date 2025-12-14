@@ -64,7 +64,7 @@ void nine_awp_high_auton()
     //For the position marks.
     using namespace coords::high;
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();

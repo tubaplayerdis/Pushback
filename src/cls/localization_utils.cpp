@@ -88,7 +88,7 @@ float localization_chassis::normalize_heading(float heading)
 }
 
 localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(
-    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0), 0)
+    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0))
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -103,7 +103,7 @@ localization_chassis::localization_chassis(localization_options settings, pros::
     float heading = imu->get_heading();
 
     localization_data current = {
-        pros::millis(), vector2(accel.x, accel.y), vector2(0, heading), pose, chassis->distTraveled
+        pros::millis(), vector2(accel.x, accel.y), vector2(0, heading), pose
     };
     data = current;
 }
@@ -137,6 +137,28 @@ quadrant localization_chassis::sensor_relevancy()
 
 quadrant localization_chassis::get_quadrant()
 {
+    lemlib::Pose cur_pose = chassis->getPose();
+
+    if (cur_pose.x > 0 && cur_pose.y > 0)
+    {
+        return POS_POS;
+    }
+
+    if (cur_pose.x > 0 && cur_pose.y < 0)
+    {
+        return NEG_POS;
+    }
+
+    if (cur_pose.x < 0 && cur_pose.y < 0)
+    {
+        return NEG_NEG;
+    }
+
+    if (cur_pose.x > 0 && cur_pose.y < 0)
+    {
+        return POS_NEG;
+    }
+
     return POS_POS;
 }
 

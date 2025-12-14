@@ -62,7 +62,7 @@ void competition_initialize()
 	{
 		pros::delay(100);
 		controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
-		lemlib::Pose pose = dt->lem_chassis.getPose();
+		lemlib::Pose pose = odom->lem_chassis.getPose();
 		controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
 	}
 }
@@ -91,8 +91,8 @@ void pid_tune_mode()
 	bool is_lateral = false;//Angular mode is 0, lateral mode is 1.
 	bool first_run = true;
 
-	lemlib::PID* activePID = &dt->lem_chassis.angularPID;
-	lemlib::Chassis* chassis = &dt->lem_chassis;
+	lemlib::PID* activePID = &odom->lem_chassis.angularPID;
+	lemlib::Chassis* chassis = &odom->lem_chassis;
 
 	while (true)
 	{
@@ -119,12 +119,12 @@ void pid_tune_mode()
 			if (is_lateral == false)
 			{
 				is_lateral = true;
-				activePID = &dt->lem_chassis.lateralPID;
+				activePID = &odom->lem_chassis.lateralPID;
 			}
 			else
 			{
 				is_lateral = false;
-				activePID = &dt->lem_chassis.angularPID;
+				activePID = &odom->lem_chassis.angularPID;
 			}
 		}
 
@@ -213,7 +213,7 @@ void opcontrol() {
 		{
 			//auton_name = sel->get_selected_auton_name();
 			//controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
-			lemlib::Pose pose = dt->lem_chassis.getPose();
+			lemlib::Pose pose = odom->lem_chassis.getPose();
 			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
 			//controller_master.print(1, 0, "%.2f, %.2f, %.2f", odom->estimated_position.x, odom->estimated_position.y, pose.theta);
 		}

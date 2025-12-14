@@ -188,17 +188,11 @@ struct localization_data
      */
     lemlib::Pose last_position;
 
-    /**
-     * Last distance traveled
-     */
-    float last_distance;
-
-    localization_data(int32_t ct, vector2 la, vector2 lv, lemlib::Pose lp, float ld) : last_position(lp)
+    localization_data(int32_t ct, vector2 la, vector2 lv, lemlib::Pose lp) : last_position(lp)
     {
         call_time = ct;
         last_acceleration = la;
         last_velocity = lv;
-        last_distance = ld;
     }
 };
 
@@ -220,11 +214,15 @@ struct localization_options
     const float sensor_correction_gain = 0.25;
 };
 
+class localization_chassis;
+
 /**
  * @brief Distance sensor wrapper class used for distance sensor resets and localization.
  */
 class localization_sensor
 {
+    friend class localization_chassis;
+
     /**
      * Offset vector of the localization sensor.
      * X is front to back, Y is side to side, Z is theta of sensor.

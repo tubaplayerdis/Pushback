@@ -66,7 +66,7 @@ void nine_left_auton()
     //For the position marks.
     using namespace coords::left;
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();
@@ -159,7 +159,7 @@ void nine_right_auton()
     using namespace coords::right;
 
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();

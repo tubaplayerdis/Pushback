@@ -34,7 +34,7 @@ void skills_routine()
     using namespace power_values;
 
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();

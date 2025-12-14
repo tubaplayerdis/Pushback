@@ -81,10 +81,10 @@ namespace ports
     {
         constexpr auto INERTIAL = 8;
         constexpr auto ROTATION_VERTICAL = -9;
-        constexpr auto FRONT_LOC = 3;
-        constexpr auto REAR_LOC = 1;
-        constexpr auto LEFT_LOC = 2;
-        constexpr auto RIGHT_LOC = 9;
+        constexpr auto FRONT_LOC = 2; //North
+        constexpr auto REAR_LOC = 3; //South
+        constexpr auto LEFT_LOC = 4; //West
+        constexpr auto RIGHT_LOC = 5; //East
 
         namespace settings
         {
@@ -94,10 +94,10 @@ namespace ports
 
         namespace offsets
         {
-            constexpr auto FRONT = 1;
-            constexpr auto REAR = 6.4;
-            constexpr auto LEFT = 6.45;
-            constexpr auto RIGHT = 6.45;
+            constexpr auto FRONT = 5.5;
+            constexpr auto REAR = 5.85;
+            constexpr auto LEFT = 5;
+            constexpr auto RIGHT = 5.10;
         }
     }
 }

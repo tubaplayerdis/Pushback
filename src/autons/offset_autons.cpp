@@ -54,7 +54,7 @@ void nine_right_auton_offset()
     using namespace coords::right_offset;
 
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();
@@ -147,7 +147,7 @@ void nine_awp_high_auton_offset()
     //For the position marks.
     using namespace coords::high_offset;
     //Get drivetrain object
-    drivetrain* dt  = drivetrain::get();
+    localization* dt  = localization::get();
 
     //Get conveyor object
     conveyor* conv = conveyor::get();

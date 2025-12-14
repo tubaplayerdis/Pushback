@@ -3,6 +3,9 @@
 //
 
 #include "../../include/subsystems/localization.hpp"
+
+#include <array>
+
 #include "../../include/ports.hpp"
 #include "../../include/pros/imu.hpp"
 #include "../../include/pros/imu.h"
@@ -37,22 +40,36 @@ using namespace ports::localization::settings;
  */
 static constexpr float wall_coord = 70.208;
 
-
-/*
- * For offsets,
- * X axis is front to back
- * Y axis is side to side
- */
-namespace loc_offsets
+namespace pid
 {
-    const vector3 front(5.75,5.75,0);
+    // Linear/lateral movement settings
+    lemlib::ControllerSettings
+    controller_settings_lateral(20, // proportional gain (kP)
+                                              0.01, // integral gain (kI)
+                                              108, // derivative gain (kD)
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              2, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              110 // maximum acceleration (slew)
+    );
 
-    const vector3 left(5,4.25,90);
-
-    const vector3 rear(5.75,5,180);
-
-    const vector3 right(5,4.25,270);
+    // Angular/turning settings
+    lemlib::ControllerSettings
+    controller_settings_angular(2.02,  // kP — reduce a bit (was 1.6)
+                                0.02,  // kI — keep off
+                                11.25,  // kD — increase slightly for more damping
+                                0.55,    // anti-windup
+                                1,  // small error range
+                                100,  // small error timeout
+                                2,  // large error range
+                                500,  // large error timeout
+                                0     // slew rate
+    );
 }
+
+static const localization_options loc_options = {};
 
 /// timepoint value representing the last time the tick function was ran and updated this variable
 static std::uint32_t time_at_last_call;
@@ -62,41 +79,40 @@ localization::localization() :
         rotation_vertical(ROTATION_VERTICAL),
         tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
         odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
+        lem_drivetrain(&drivetrain::get()->motors_left, &drivetrain::get()->motors_right, ports::drivetrain::settings::DRIVETRAIN_TRACK_WIDTH, ports::drivetrain::settings::DRIVETRAIN_WHEEL_DIAMETER, ports::drivetrain::settings::DRIVETRAIN_RPM, ports::drivetrain::settings::DRIVETRAIN_HORIZONTAL_DRIFT),
+        lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
         estimated_velocity(0,0,0),
         estimated_position(0,0,0),
-        rear_loc(loc_offsets::rear.x, REAR_LOC),
-        right_loc(loc_offsets::right.x, LEFT_LOC),
-        left_loc(loc_offsets::left.x, RIGHT_LOC),
-        front_loc(loc_offsets::front.x, FRONT_LOC),
+        rear_loc(offsets::REAR, REAR_LOC),
+        right_loc(offsets::RIGHT, LEFT_LOC),
+        left_loc(offsets::LEFT, RIGHT_LOC),
+        front_loc(offsets::FRONT, FRONT_LOC),
+        l_chassis(loc_options, &inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc}),
         monte_task(nullptr)
 {
     time_at_last_call = pros::millis();
+    lem_chassis.calibrate(true);
 }
 
 void localization::tick_implementation()
 {
-    // Acceleration vector. Acquire before calculations.
-    pros::imu_raw_s accel_raw = inertial.get_gyro_rate();
-    pros::imu_raw_s accel = pros::imu_raw_s();
-    accel.x = accel_raw.x * 0.980665f;
-    accel.y = accel_raw.y * 0.980665f;
-    accel.x = 0;
+    constexpr auto FULL_POWER = 127;
 
-    auto now = pros::millis();
-    auto duration = now - time_at_last_call;
-    long long duration_s = duration / 1000;
-    time_at_last_call = now;
+    //Acquire throttle and turning values
+    int32_t throttle = -1 * controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
+    int32_t turn = controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
-    //Vf = Vo + A * T
-    estimated_velocity.x = estimated_velocity.x + accel.x * duration_s;
-    estimated_velocity.y = estimated_velocity.y + accel.y * duration_s;
-    estimated_velocity.z = estimated_velocity.z + accel.z * duration_s;
+    //Apply inputs.
+    lem_chassis.arcade(throttle, turn);
 
-    // Delta X = Vo * T + 1/2 * A * T^2
-    // X = X + Delta X
-    estimated_position.x += estimated_velocity.x * duration_s + 0.5 * accel.x * (duration_s * duration_s);
-    estimated_position.y += estimated_velocity.y * duration_s + 0.5 * accel.y * (duration_s * duration_s);
-    estimated_position.z += estimated_velocity.z * duration_s + 0.5 * accel.z * (duration_s * duration_s);
+    if (controller_master.get_digital(ports::drivetrain::controls::SWING_LEFT))
+    {
+        lem_chassis.arcade(0, -127);
+    }
+    else if (controller_master.get_digital(ports::drivetrain::controls::SWING_RIGHT))
+    {
+        lem_chassis.arcade(0, 127);
+    }
 }
 
 localization* localization::get()
@@ -107,17 +123,7 @@ localization* localization::get()
 
 void localization::distance_sensor_reset()
 {
-    float front_dist = 0;//front_loc.distance_raw();
-    float rear_dist = 0;//rear_loc.distance_raw();
-    float right_dist = 0;//right_loc.distance_raw();
-    float left_dist = 0;//left_loc.distance_raw();
-
-    lemlib::Pose curPose = drivetrain::get()->lem_chassis.getPose();
-
-    //In degrees
-    float heading = curPose.theta;
-
-
+    l_chassis.reset_location_force(NEG_NEG);
 }
 
 void localization::do_localization(lemlib::Chassis* chassis)
@@ -137,7 +143,7 @@ void localization::start_localization()
 
     monte_task = new pros::Task([this]() -> void
     {
-        lemlib::Chassis* chassis = &drivetrain::get()->lem_chassis;
+        lemlib::Chassis* chassis = &lem_chassis;
 
         while (true) {
             this->do_localization(chassis);

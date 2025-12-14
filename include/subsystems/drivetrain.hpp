@@ -28,12 +28,6 @@ public:
     /// Right motor group. Includes 3 motors, A, B, C
     pros::MotorGroup motors_right;
 
-    /// LemLib drivetrain object. Used in autons and the chassis object
-    lemlib::Drivetrain lem_drivetrain;
-
-    /// LemLib chassis object. Used in autons and for controller inputs
-    lemlib::Chassis lem_chassis;
-
 private:
 
     /// private constructor to enforce the usage of the get() function.
