@@ -166,6 +166,14 @@ struct vector2
     }
 };
 
+enum sensors
+{
+    NORTH = 1,
+    EAST = 2,
+    SOUTH = 4,
+    WEST = 8,
+};
+
 struct localization_data
 {
     /**
@@ -234,7 +242,7 @@ class localization_sensor
      */
     pros::Distance sensor;
 
-    public:
+public:
 
     /**
      * @brief Constructor for localization sensor.
@@ -261,6 +269,13 @@ class localization_sensor
 
 class localization_chassis
 {
+
+    /*
+    * Active sensors being used by the robot.
+    */
+    int active_sensors;
+
+    void set_active_sensors(int sensors);
 
 public:
 
@@ -305,13 +320,25 @@ public:
     conf_pair<std::pair<float, float>> get_position_calculation(quadrant quad);
 
     /**
+     * Initializes the debug screen.
      */
     void init_display();
 
     /**
-     * Renders the debug screen.
+     * Renders the debug screen. Use in a loop.
      */
     void display_debug();
+
+    /**
+     * @breif Uses flags to return whether a sensor is being used.
+     * @note Active sensors are set in the localization loop or by doing a distance sensor reset
+     * @param r_sensor sensor flags
+     * @return whether that sensor is being used.
+     */
+    bool is_sensor_used(int r_sensor) const
+    {
+        return active_sensors & r_sensor;
+    }
 
 private:
 

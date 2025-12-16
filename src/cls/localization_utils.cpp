@@ -90,8 +90,14 @@ float localization_chassis::normalize_heading(float heading)
     return heading;
 }
 
+void localization_chassis::set_active_sensors(int sensors)
+{
+    active_sensors = 0;
+    active_sensors = sensors;
+}
+
 localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(
-    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0))
+    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -189,6 +195,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(e_dist, n_dist));
                 x = wall_coord - e_dist.get_value();
                 y = wall_coord - n_dist.get_value();
+                set_active_sensors(NORTH | EAST);
             }
 
             case NEG_POS:
@@ -196,6 +203,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(n_dist, w_dist));
                 x = wall_coord - n_dist.get_value();
                 y = wall_coord - w_dist.get_value();
+                set_active_sensors(NORTH | WEST);
             }
 
             case NEG_NEG:
@@ -203,6 +211,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(w_dist, s_dist));
                 x = wall_coord - w_dist.get_value();
                 y = wall_coord - s_dist.get_value();
+                set_active_sensors(WEST | SOUTH);
             }
 
             case POS_NEG:
@@ -210,6 +219,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, e_dist));
                 x = wall_coord - s_dist.get_value();
                 y = wall_coord - e_dist.get_value();
+                set_active_sensors(SOUTH | EAST);
             }
         }
     } else if (quad == NEG_POS)
@@ -221,6 +231,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(n_dist, w_dist));
                 x = -wall_coord + w_dist.get_value();
                 y = wall_coord - n_dist.get_value();
+                set_active_sensors(WEST | NORTH);
             }
 
             case NEG_POS:
@@ -228,6 +239,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + s_dist.get_value();
                 y = wall_coord - w_dist.get_value();
+                set_active_sensors(SOUTH | WEST);
             }
 
             case NEG_NEG:
@@ -235,6 +247,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + w_dist.get_value();
                 y = wall_coord - s_dist.get_value();
+                set_active_sensors(WEST | SOUTH);
             }
 
             case POS_NEG:
@@ -242,6 +255,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(e_dist, n_dist));
                 x = -wall_coord + n_dist.get_value();
                 y = wall_coord - e_dist.get_value();
+                set_active_sensors(NORTH | EAST);
             }
         }
     } else if (quad == NEG_NEG)
@@ -253,6 +267,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(n_dist, w_dist));
                 x = -wall_coord + w_dist.get_value();
                 y = -wall_coord + s_dist.get_value();
+                set_active_sensors(WEST | SOUTH);
             }
 
             case NEG_POS:
@@ -260,6 +275,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + s_dist.get_value();
                 y = -wall_coord + e_dist.get_value();
+                set_active_sensors(SOUTH | EAST);
             }
 
             case NEG_NEG:
@@ -267,6 +283,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + e_dist.get_value();
                 y = -wall_coord + n_dist.get_value();
+                set_active_sensors(EAST | NORTH);
             }
 
             case POS_NEG:
@@ -274,6 +291,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(e_dist, n_dist));
                 x = -wall_coord + n_dist.get_value();
                 y = -wall_coord + w_dist.get_value();
+                set_active_sensors(NORTH | WEST);
             }
         }
     } else if (quad == POS_NEG)
@@ -285,6 +303,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(n_dist, w_dist));
                 x = -wall_coord + e_dist.get_value();
                 y = -wall_coord + s_dist.get_value();
+                set_active_sensors(EAST | SOUTH);
             }
 
             case NEG_POS:
@@ -292,6 +311,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + n_dist.get_value();
                 y = -wall_coord + e_dist.get_value();
+                set_active_sensors(NORTH | EAST);
             }
 
             case NEG_NEG:
@@ -299,6 +319,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(s_dist, w_dist));
                 x = -wall_coord + w_dist.get_value();
                 y = -wall_coord + n_dist.get_value();
+                set_active_sensors(WEST | NORTH);
             }
 
             case POS_NEG:
@@ -306,6 +327,7 @@ conf_pair<std::pair<float, float>> localization_chassis::get_position_calculatio
                 ret.set_confidence(conf_avg(e_dist, n_dist));
                 x = -wall_coord + s_dist.get_value();
                 y = -wall_coord + w_dist.get_value();
+                set_active_sensors(SOUTH | WEST);
             }
         }
     } else
@@ -327,7 +349,7 @@ float localization_chassis::conf_avg(conf_pair<float> one, conf_pair<float> two)
 
 bool localization_chassis::reset_location()
 {
-    return false;
+    return reset_location_force(get_quadrant());
 }
 
 bool localization_chassis::reset_location_force(quadrant quad)
@@ -352,6 +374,10 @@ void localization_chassis::init_display()
 {
     field_image = lv_image_create(lv_screen_active());
     lv_image_set_src(field_image, VexField240x240_map);
+}
+
+void localization_chassis::display_debug()
+{
 }
 
 
