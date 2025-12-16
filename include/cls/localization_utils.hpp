@@ -305,6 +305,10 @@ public:
     conf_pair<std::pair<float, float>> get_position_calculation(quadrant quad);
 
     /**
+     */
+    void init_display();
+
+    /**
      * Renders the debug screen.
      */
     void display_debug();

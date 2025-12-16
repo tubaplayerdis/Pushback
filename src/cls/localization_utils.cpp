@@ -12,10 +12,13 @@
 
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/liblvgl/lvgl.h"
 #include "../../include/lemlib/pose.hpp"
 #include "../../include/pros/imu.h"
 #include "../../include/pros/imu.hpp"
 #include <cmath>
+
+#include "../../include/images/images.hpp"
 
 /**
  * Erroneous reading value when the V5 Distance Sensor cannot read a distance
@@ -341,5 +344,15 @@ bool localization_chassis::reset_location_force(quadrant quad)
 
     return true;
 }
+
+
+static lv_obj_t* field_image = nullptr;
+
+void localization_chassis::init_display()
+{
+    field_image = lv_image_create(lv_screen_active());
+    lv_image_set_src(field_image, VexField240x240_map);
+}
+
 
 
