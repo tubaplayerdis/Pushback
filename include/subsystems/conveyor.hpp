@@ -21,13 +21,6 @@ enum object_color : uint8_t
     RED = 2
 };
 
-enum trough_detection : uint8_t
-{
-    NONE_TROUGH = 0,
-    HIGH_TROUGH = 1,
-    LOW_TROUGH = 2,
-};
-
 class conveyor final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
@@ -41,9 +34,6 @@ public:
     /// Motor that operates the conveyor and intake
     pros::Motor conveyor_intake;
 
-    /// Optical sensor that reads colors for the splitter
-    pros::Optical splitter_optical;
-
     /// Pneumatics for the piston that pulls the bands down to score on the middle trough.
     pros::adi::Pneumatics trapdoor;
 
@@ -53,26 +43,10 @@ public:
     /// Pneumatics for the "wing" mechanisms
     pros::adi::Pneumatics wings;
 
-    /// The current color colorsort is including.
-    object_color color_sort_color;
-
 private:
-
-    /// Color sorting function
-    void do_color_sort(bool* out_did_color_sort);
 
     /// Private constructor to enable use of get() method.
     conveyor();
-
-public:
-
-    /// Whether color sort is active.
-    /// @note Returns by value to prevent modification of the color_sort_active variable
-    bool is_color_sort_active();
-
-    /// Toggles color sort. Returns whether it was tuned on or off.
-    /// @note Returns by value to prevent modification of the color_sort_active variable
-    bool toggle_color_sort();
 
 protected:
 

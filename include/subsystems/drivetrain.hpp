@@ -11,7 +11,7 @@
 #include "../pros/motor_group.hpp"
 #include "../pros/distance.hpp"
 #include "../controller.hpp"
-#include "ports.hpp"
+#include "../ports.hpp"
 #include "localization.hpp"
 
 /// drivetrain class represents the physical drivetrain of the robot. inherits subsystem

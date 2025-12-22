@@ -18,6 +18,8 @@
 #include "../../include/pros/imu.hpp"
 #include <cmath>
 
+#include "../../include/pros/llemu.hpp"
+
 
 /**
  * Erroneous reading value when the V5 Distance Sensor cannot read a distance
@@ -393,14 +395,35 @@ bool localization_chassis::reset_location_force(quadrant quad)
     return true;
 }
 
-
 void localization_chassis::init_display()
 {
-
+    pros::lcd::initialize();
 }
 
-void localization_chassis::display_debug()
+void localization_chassis::update_display(localization_chassis* chassis)
 {
+    bool north = chassis->is_sensor_used(NORTH);
+    bool east = chassis->is_sensor_used(EAST);
+    bool south = chassis->is_sensor_used(SOUTH);
+    bool west = chassis->is_sensor_used(WEST);
+
+    float heading = chassis->imu->get_heading();
+
+    float confidence_n = chassis->north->distance(heading).get_confidence();
+    float confidence_e = chassis->east->distance(heading).get_confidence();
+    float confidence_s = chassis->south->distance(heading).get_confidence();
+    float confidence_w = chassis->west->distance(heading).get_confidence();
+
+    conf_pair<std::pair<float, float>> position = chassis->get_position_calculation(chassis->get_quadrant());
+
+    pros::lcd::print(0, "Sensors: N %i, E %i, S %i, W %i", north, east, south, west);
+    pros::lcd::print(1, "Confidence: N %.2f, E %.2f, S %.2f, W %.2f", confidence_n, confidence_e, confidence_s, confidence_w);
+    pros::lcd::print(2, "Pose: X: %.2f, Y: %.2f, H: %.2f, C: %.2f", position.get_value().first, position.get_value().second, heading, position.get_confidence());
+}
+
+void localization_chassis::shutdown_display()
+{
+    pros::lcd::shutdown();
 }
 
 

@@ -83,7 +83,7 @@ void nine_right_auton_offset()
 
     {   //Drive to primer location then drive to long goal prime position
         chassis->moveToPose(POS(primer_score), 1500, {.minSpeed = 30}, false);
-        conveyor::get()->lift.toggle();
+        conveyor::get()->match_loader.toggle();
         chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, true);
     }
 
@@ -196,7 +196,7 @@ void nine_awp_high_auton_offset()
     }
 
     {
-        conv->lift.toggle();
+        conv->match_loader.toggle();
     }
 
     {   //Move to match loader prime then tank into to match loader free blocks

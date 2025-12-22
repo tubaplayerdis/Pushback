@@ -95,7 +95,7 @@ void nine_left_auton()
 
     {   //Drive to primer location then drive to long goal prime position
         chassis->moveToPose(POS(primer_score), 1500, {.minSpeed = 30}, false);
-        conveyor::get()->lift.toggle();
+        conveyor::get()->match_loader.toggle();
         chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.4}, true);
     }
 
@@ -188,7 +188,7 @@ void nine_right_auton()
 
     {   //Drive to primer location then drive to long goal prime position
         chassis->moveToPose(POS(primer_score), 1500, {.minSpeed = 30}, false);
-        conveyor::get()->lift.toggle();
+        conveyor::get()->match_loader.toggle();
         chassis->moveToPose(POS(long_goal_prime), 1500, {.earlyExitRange = 0.5}, true);
     }
 

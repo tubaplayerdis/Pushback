@@ -54,7 +54,7 @@ void skills_routine()
     }
 
     {
-        conv->lift.toggle();
+        conv->match_loader.toggle();
         chassis->moveToPose(POS(match_loader_prime), 4000, { .forwards = false, .lead = 0.6}, false);
     }
 

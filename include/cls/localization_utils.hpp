@@ -333,12 +333,17 @@ public:
     /**
      * Initializes the debug screen.
      */
-    void init_display();
+    static void init_display();
 
     /**
      * Renders the debug screen. Use in a loop.
      */
-    void display_debug();
+    static void update_display(localization_chassis* chassis);
+
+    /**
+     * Shutdown the debug screen
+     */
+    static void shutdown_display();
 
     /**
      * @breif Uses flags to return whether a sensor is being used.

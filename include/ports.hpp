@@ -60,18 +60,16 @@ namespace ports
     {
         constexpr auto EXHAUST = 1;
         constexpr auto CONVEYOR = -10;
-        constexpr auto LIFT = 'B';
+        constexpr auto MATCH_LOADER = 'B';
         constexpr auto WINGS = 'A';
-        constexpr auto RAMP = 'C';
-        constexpr auto SPLITTER_OPTICAL = 0;
-        constexpr auto SPLITTER_BRIGHTNESS = 0;
+        constexpr auto TRAPDOOR = 'C';
 
         namespace controls
         {
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
-            constexpr auto TOGGLE_LIFT = pros::E_CONTROLLER_DIGITAL_X;
+            constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_UP;
             constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
         }
@@ -97,7 +95,7 @@ namespace ports
             constexpr auto FRONT = 5.5;
             constexpr auto REAR = 5.85;
             constexpr auto LEFT = 5;
-            constexpr auto RIGHT = 5.10;
+            constexpr auto RIGHT = 5;
         }
     }
 }

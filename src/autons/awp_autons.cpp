@@ -88,7 +88,7 @@ void nine_awp_high_auton()
     }
 
     {   //Deploy match loader for block rush and wait for deployment and to pick up blocks
-        conveyor::get()->lift.toggle();
+        conveyor::get()->match_loader.toggle();
         pros::Task::delay(500);
     }
 
@@ -98,9 +98,9 @@ void nine_awp_high_auton()
 
     {
         conv->exhaust.move(FULL_POWER);
-        conv->ramp.toggle();
+        conv->trapdoor.toggle();
         pros::Task::delay(600);
-        conv->ramp.toggle();
+        conv->trapdoor.toggle();
         conv->exhaust.move(-0.3 * FULL_POWER);
     }
 

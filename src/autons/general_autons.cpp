@@ -47,7 +47,7 @@ void old_skills_auton()
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
     }
-    conv->lift.toggle();
+    conv->match_loader.toggle();
     pros::Task::delay(700);
     chassis->tank(-100, -100, true);
     pros::Task::delay(650);
