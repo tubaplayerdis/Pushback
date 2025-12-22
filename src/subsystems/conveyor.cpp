@@ -8,15 +8,6 @@ constexpr auto FULL_POWER = 127;
 //Private Singleton
 std::unique_ptr<conveyor> conveyor_instance;
 
-constexpr auto RED_LOW = 0;
-constexpr auto RED_HIGH = 15;
-constexpr auto BLUE_LOW = 100;
-constexpr auto BLUE_HIGH = 250;
-constexpr auto HIGH_TROUGH_LOW = 100;
-constexpr auto HIGH_TROUGH_HIGH = 100;
-constexpr auto LOW_TROUGH_LOW = 100;
-constexpr auto LOW_TROUGH_HIGH = 100;
-
 using namespace ports::conveyor;
 using namespace ports::conveyor::controls;
 

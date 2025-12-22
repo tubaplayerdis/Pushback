@@ -167,6 +167,45 @@ struct vector2
     }
 };
 
+struct rectangle
+{
+    vector2 lower_bound;
+    vector2 upper_bound;
+
+    rectangle(const float lx, const float ly, const float ux, const float uy) : lower_bound(lx, ly), upper_bound(ux, uy) {}
+    rectangle(vector2 l, vector2 u) : lower_bound(l), upper_bound(u) {}
+
+    bool inside(float x, float y) const
+    {
+        return inside(vector2(x, y));
+    }
+
+    bool inside(vector2 pos) const
+    {
+        return (pos.x >= lower_bound.x && pos.x <= upper_bound.x) && (pos.y >= lower_bound.y && pos.y <= upper_bound.y);
+    }
+};
+
+struct circle
+{
+    vector2 center;
+    float radius;
+
+    circle(float x, float y, float r) : center(x, y), radius(r) {}
+    circle(vector2 c, float r) : center(c), radius(r) {}
+
+    bool inside(float x, float y)
+    {
+        return inside(vector2(x, y));
+    }
+
+    bool inside(vector2 pos) const
+    {
+        //distance formula
+        return sqrt(pow(pos.x - center.x,2) + pow(pos.y - center.y, 2)) <= radius;
+    }
+};
+
 enum sensors
 {
     NORTH = 1,
@@ -283,6 +322,7 @@ class localization_chassis
     void set_active_sensors(int sensors);
 
 public:
+
     /**
      * @brief Vectorizes acceleration from the inertial sensors, 3 axis accelerometer into a vector that only represents x and y acceleration
      * @param accel acceleration structure
@@ -296,6 +336,14 @@ public:
      * @return Normalized heading
      */
     static float normalize_heading(float heading);
+
+    /**
+     * @breif Compares the location against locations the robot physically cannot exist at such as inside the match loader or out of bounds.
+     *
+     * @param pose current location vector
+     * @returns whether the location can physically eist.
+     */
+    static bool can_position_exist(vector3 pose);
 
     /**
      * @brief Returns the relevant sensors based on the heading of the robot.
@@ -328,7 +376,7 @@ public:
      * @param quad Current quadrant of the robot
      * @return Confidence pair of a coordinate pair representing the robots location gathered from the sensors.
      */
-    conf_pair<std::pair<float, float>> get_position_calculation(quadrant quad);
+    conf_pair<vector3> get_position_calculation(quadrant quad);
 
     /**
      * Initializes the debug screen.
