@@ -44,11 +44,11 @@ public:
     /// Optical sensor that reads colors for the splitter
     pros::Optical splitter_optical;
 
-    /// Ramp pneumatics for the piston that pulls the bands down to score on the middle trough.
-    pros::adi::Pneumatics ramp;
+    /// Pneumatics for the piston that pulls the bands down to score on the middle trough.
+    pros::adi::Pneumatics trapdoor;
 
     /// Lift pneumatics for match loader "little will mech"
-    pros::adi::Pneumatics lift;
+    pros::adi::Pneumatics match_loader;
 
     /// Pneumatics for the "wing" mechanisms
     pros::adi::Pneumatics wings;

@@ -18,7 +18,6 @@
 #include "../../include/pros/imu.hpp"
 #include <cmath>
 
-#include "../../include/images/images.hpp"
 
 /**
  * Erroneous reading value when the V5 Distance Sensor cannot read a distance
@@ -34,6 +33,11 @@ static constexpr float mm_inch_conversion_factor = 0.0393701;
  * Degree to Radian conversion factor
  */
 static constexpr float deg_rad_conversion_factor = 0.0174532;
+
+/**
+ * Radian to Degree conversion factor
+ */
+static constexpr float rad_deg_conversion_factor = 57.2958;
 
 /**
  * Distance to vex wall from origin in inches
@@ -96,8 +100,30 @@ void localization_chassis::set_active_sensors(int sensors)
     active_sensors = sensors;
 }
 
+vector2 localization_chassis::vectorize(pros::imu_accel_s_t accel)
+{
+    float magnitude = abs(sqrt(accel.x * accel.x + accel.y * accel.y));
+    float angle = atan(abs(accel.x) / abs(accel.y)) * rad_deg_conversion_factor;
+
+    if (accel.x > 0 && accel.y > 0)
+    {
+        angle = 1 * angle;
+    } else if (accel.x < 0 && accel.y > 0)
+    {
+        angle = 180 - angle;
+    } else if (accel.x < 0 && accel.y < 0)
+    {
+        angle = 180 + angle;
+    } else if (accel.x > 0 && accel.y < 0)
+    {
+        angle = 360 - angle;
+    }
+
+    return vector2(magnitude,angle);
+}
+
 localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(
-    settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0)
+                                                                                                                                                                         settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0), b_display(false)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -368,12 +394,9 @@ bool localization_chassis::reset_location_force(quadrant quad)
 }
 
 
-static lv_obj_t* field_image = nullptr;
-
 void localization_chassis::init_display()
 {
-    field_image = lv_image_create(lv_screen_active());
-    lv_image_set_src(field_image, VexField240x240_map);
+
 }
 
 void localization_chassis::display_debug()

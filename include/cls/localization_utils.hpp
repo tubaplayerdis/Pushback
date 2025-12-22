@@ -9,6 +9,7 @@
 
 #include "../pros/distance.hpp"
 #include "../pros/rtos.hpp"
+#include "../pros/imu.h"
 #include <optional>
 
 #include "../lemlib/chassis/chassis.hpp"
@@ -182,12 +183,12 @@ struct localization_data
     int32_t call_time;
 
     /**
-     * X and Y independent acceleration
+     * Acceleration vector as direction and magnitude
      */
     vector2 last_acceleration;
 
     /**
-     * Magnitude and direction, not a movie quote
+     * Velocity vector as direction and magnitude
      */
     vector2 last_velocity;
 
@@ -269,6 +270,10 @@ public:
 
 class localization_chassis
 {
+    /**
+     * Whether the display is active and being displayed.
+     */
+    bool b_display;
 
     /*
     * Active sensors being used by the robot.
@@ -278,13 +283,19 @@ class localization_chassis
     void set_active_sensors(int sensors);
 
 public:
+    /**
+     * @brief Vectorizes acceleration from the inertial sensors, 3 axis accelerometer into a vector that only represents x and y acceleration
+     * @param accel acceleration structure
+     * @return acceleration vector
+     */
+    static vector2 vectorize(pros::imu_accel_s_t accel);
 
     /**
      * @brief Normalizes heading to the domain of 0-360.
      * @param heading heading to normalize.
      * @return Normalized heading
      */
-    float normalize_heading(float heading);
+    static float normalize_heading(float heading);
 
     /**
      * @brief Returns the relevant sensors based on the heading of the robot.

@@ -25,8 +25,8 @@ conveyor::conveyor() :
         exhaust(EXHAUST),
         conveyor_intake(CONVEYOR),
         splitter_optical(SPLITTER_OPTICAL),
-        ramp(RAMP, false),
-        lift(LIFT, false),
+        trapdoor(RAMP, false),
+        match_loader(LIFT, false),
         wings(WINGS, false),
         color_sort_color(object_color::NEUTRAL)
 {
@@ -61,18 +61,18 @@ void conveyor::do_color_sort(bool* out_did_color_sort)
     //If an object is not detected, keep the current piston configuration and continue the loop.
     if (splitter_optical.get_proximity() == 255)
     {
-        if (ramp.is_extended()) ramp.retract();
+        if (trapdoor.is_extended()) trapdoor.retract();
     }
 
     //If the detected color is blue and the chosen color is red, extend the piston
     if ((detect_color(&splitter_optical) == BLUE && color_sort_color == RED) || (detect_color(&splitter_optical) == RED && color_sort_color == BLUE))
     {
-        ramp.extend(); //Reversed due to setup IRL
+        trapdoor.extend(); //Reversed due to setup IRL
         *out_did_color_sort = true;
     }
     else if (detect_color(&splitter_optical) == color_sort_color) //If the detected color and chosen color match retract the piston.
     {
-        ramp.retract(); //Reversed due to setup IRL
+        trapdoor.retract(); //Reversed due to setup IRL
         *out_did_color_sort = true;
     }
 }
@@ -114,11 +114,20 @@ void conveyor::tick_implementation() {
     }
     //controller_master.print(1,0,"Excluding Color: %s", color_display_code);
 
-    if (controller_master.get_digital(RAMP_MACRO))
+    if (controller_master.get_digital_new_press(RAMP_MACRO))
     {
-        (void)exhaust.move(FULL_POWER);
-        (void)conveyor_intake.move(FULL_POWER);
-        (void)ramp.extend();
+        pros::Task macro_task([this]()
+        {
+            (void)conveyor_intake.move(-FULL_POWER);
+            pros::Task::delay(250);
+            while (controller_master.get_digital(RAMP_MACRO))
+            {
+                (void)exhaust.move(-FULL_POWER * 0.75);
+                (void)conveyor_intake.move(FULL_POWER * 0.5);
+                (void)trapdoor.extend();
+            }
+        });
+        (void)macro_task.get_priority();
     } else
     {
         bool did_color_sort = false;
@@ -137,12 +146,12 @@ void conveyor::tick_implementation() {
 
         if (controller_master.get_digital(CONVEYOR_IN))
         {
-            if (ramp.is_extended() && !did_color_sort) ramp.retract(); //Color sort will do this
+            if (trapdoor.is_extended() && !did_color_sort) trapdoor.retract(); //Color sort will do this
             (void)conveyor_intake.move(FULL_POWER);
             if (!did_exhaust) (void)exhaust.move(-0.1 * FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
-            if (ramp.is_extended()) ramp.retract();
+            if (trapdoor.is_extended()) trapdoor.retract();
             (void)exhaust.move(-FULL_POWER);
             (void)conveyor_intake.move(-FULL_POWER);
         } else
@@ -156,7 +165,7 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital_new_press(TOGGLE_LIFT))
     {
-        (void)lift.toggle();
+        (void)match_loader.toggle();
     }
 
     if (controller_master.get_digital_new_press(TOGGLE_WINGS))
