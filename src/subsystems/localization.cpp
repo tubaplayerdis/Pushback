@@ -44,27 +44,27 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(20, // proportional gain (kP)
-                                              0.01, // integral gain (kI)
-                                              108, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
+    controller_settings_lateral(14, // proportional gain (kP)
+                                              0.00, // integral gain (kI)
+                                              70, // derivative gain (kD)
+                                              0, // anti windup
+                                              0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
-                                              2, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              110 // maximum acceleration (slew)
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
     );
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.02,  // kP — reduce a bit (was 1.6)
-                                0.02,  // kI — keep off
-                                11.25,  // kD — increase slightly for more damping
-                                0.55,    // anti-windup
-                                1,  // small error range
+    controller_settings_angular(2.5,  // kP — reduce a bit (was 1.6)
+                                0.001,  // kI — keep off
+                                15.60,  // kD — increase slightly for more damping
+                                0.0,    // anti-windup
+                                0.5,  // small error range
                                 100,  // small error timeout
-                                2,  // large error range
-                                500,  // large error timeout
+                                0,  // large error range
+                                0,  // large error timeout
                                 0     // slew rate
     );
 }

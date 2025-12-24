@@ -79,9 +79,9 @@ namespace ports
     {
         constexpr auto INERTIAL = 8;
         constexpr auto ROTATION_VERTICAL = -9;
-        constexpr auto FRONT_LOC = 2; //North
+        constexpr auto FRONT_LOC = 4; //North
         constexpr auto REAR_LOC = 3; //South
-        constexpr auto LEFT_LOC = 4; //West
+        constexpr auto LEFT_LOC = 2; //West
         constexpr auto RIGHT_LOC = 5; //East
 
         namespace settings

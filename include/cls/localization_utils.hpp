@@ -11,6 +11,7 @@
 #include "../pros/rtos.hpp"
 #include "../pros/imu.h"
 #include <optional>
+#include <cmath>
 
 #include "../lemlib/chassis/chassis.hpp"
 #include "../lemlib/pose.hpp"
@@ -202,7 +203,7 @@ struct circle
     bool inside(vector2 pos) const
     {
         //distance formula
-        return sqrt(pow(pos.x - center.x,2) + pow(pos.y - center.y, 2)) <= radius;
+        return sqrt(std::pow(pos.x - center.x,2) + std::pow(pos.y - center.y, 2)) <= radius;
     }
 };
 
@@ -249,7 +250,7 @@ struct localization_options
     /**
      * Trust in the distance sensors around the robot.
      */
-    const unsigned char sensor_trust = 155;
+    const float sensor_trust = 0.0;
 
     /**
      * Trust in the odometry system of the robot.
@@ -345,6 +346,8 @@ public:
      */
     static bool can_position_exist(vector3 pose);
 
+    static std::string get_quadrant_string(quadrant quad);
+
     /**
      * @brief Returns the relevant sensors based on the heading of the robot.
      *
@@ -399,9 +402,9 @@ public:
      * @param r_sensor sensor flags
      * @return whether that sensor is being used.
      */
-    bool is_sensor_used(int r_sensor) const
+    bool is_sensor_used(int r_sensor)
     {
-        return active_sensors & r_sensor;
+        return active_sensors & (r_sensor);
     }
 
 private:

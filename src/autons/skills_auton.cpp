@@ -44,37 +44,48 @@ void skills_routine()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    chassis->setPose(0, 0, 0);
+    (void)dt->inertial.set_heading(270);
+    dt->lem_chassis.setPose(0,0,270);
+    dt->l_chassis.reset_location_force(NEG_POS);
 
-    //lc->distance_sensor_reset(SKILLS_INITIAL);
+    lemlib::Pose pose = chassis->getPose();
+    controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+    pros::Task::delay(50);
 
-    {   //Setup conveyor and exhaust to handle 7 blocks
+    {
+        conv->exhaust.brake();
         conv->conveyor_intake.move(FULL_POWER);
-        conv->exhaust.move(-0.3 * FULL_POWER);
+    }
+
+    {
+        chassis->moveToPoint(-32.63, 17.5, 800, {.forwards = false, .maxSpeed = 50}, false);
+        pros::Task::delay(200);
+        conv->conveyor_intake.brake();
+    }
+
+    {
+        chassis->turnToHeading(90, 1000, {.maxSpeed = 100}, false);
+        conv->conveyor_intake.move(FULL_POWER);
+    }
+    //-15.5, 14
+
+    {
+        chassis->moveToPose(-8.5, 8.5, 135, 1500, {}, false);
+        conv->exhaust.move(FULL_POWER * 0.4);
+        pros::Task::delay(500);
+        conv->exhaust.brake();
     }
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPose(POS(match_loader_prime), 4000, { .forwards = false, .lead = 0.6}, false);
+        conv->exhaust.move(-0.1 * FULL_POWER);
+        chassis->moveToPose(-54, 46.5, 90, 2000, {.forwards = false, .lead = 0.3, .maxSpeed = 100}, false);
     }
 
     {
-        chassis->tank(MATCH_LOADER,MATCH_LOADER, true);
-        pros::Task::delay(2000);
+        dt->l_chassis.sensor_relevancy();
+        dt->l_chassis.reset_location_force(NEG_POS);
     }
-
-    {
-        //lc->distance_sensor_reset(MATCH_LOADER_3);
-    }
-
-
-    {
-        chassis->moveToPose(POS(quadrant_trans_a), 3000, {.minSpeed = 25, .earlyExitRange = 0.2}, false);
-        conv->conveyor_intake.brake();
-        conv->exhaust.brake();
-        chassis->moveToPose(POS(quadrant_trans_b), 1500, {}, false);
-    }
-
 
     while (true)
     {

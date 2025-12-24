@@ -204,17 +204,35 @@ void opcontrol() {
 		pid_tune_mode();
 	}
 
+	sel->hide();
+	localization_chassis::init_display();
+
+	(void)odom->inertial.set_heading(270);
+
+	odom->l_chassis.reset_location_force(NEG_POS);
+
+	/*
+	pros::Task screen([]()
+	{
+		while (true)
+		{
+			localization_chassis::update_display(&odom->l_chassis);
+			pros::Task::delay(100);
+		}
+	});
+	*/
+
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
 		if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
 		{
-			controller_master.print(1, 0, "MOTORS HOT");
+			controller_master.print(1, 0, "DT MOTORS HOT");
 		} else
 		{
 			//auton_name = sel->get_selected_auton_name();
 			//controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
 			lemlib::Pose pose = odom->lem_chassis.getPose();
-			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
+			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
 			//controller_master.print(1, 0, "%.2f, %.2f, %.2f", odom->estimated_position.x, odom->estimated_position.y, pose.theta);
 		}
 
@@ -235,6 +253,7 @@ void opcontrol() {
         odom->tick();
         dt->tick();
         conv->tick();
+
 		pros::delay(20);                               // Run for 20 ms then update
 	}
 }
