@@ -69,14 +69,14 @@ float errorize_heading_domain(float heading)
 {
     if (static_cast<int>(heading) % 45 == 0) return 1;
 
-    if (heading < 0.0f)
+    if (heading < -45.0f)
     {
-        return errorize_heading_domain(heading + 45.0f);
+        return errorize_heading_domain(heading + 90.0f);
     }
 
     if (heading > 45.0f)
     {
-        return errorize_heading_domain(heading - 45.0f);
+        return errorize_heading_domain(heading - 90.0f);
     }
 
     return heading;
@@ -226,7 +226,7 @@ localization_chassis::localization_chassis(localization_options settings, pros::
 
 quadrant localization_chassis::sensor_relevancy()
 {
-    float heading = normalize_heading(imu->get_heading());
+    float heading = normalize_heading(chassis->getPose().theta);
 
     if ((heading >= 0 && heading <= 45) || (heading <= 360 && heading > 315))
     {
@@ -280,8 +280,15 @@ quadrant localization_chassis::get_quadrant()
 //n_p, n_p
 conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
 {
-    float normal_heading = normalize_heading(imu->get_heading());
     quadrant theta_quad = sensor_relevancy();
+
+    return get_position_calculation(quad, theta_quad);
+}
+
+conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad, quadrant quad1)
+{
+    float normal_heading = normalize_heading(chassis->getPose().theta);
+    quadrant theta_quad = quad1;
 
     conf_pair<float> n_dist = north->distance(normal_heading);
     conf_pair<float> e_dist = east->distance(normal_heading);
@@ -303,6 +310,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = wall_coord - e_dist.get_value();
                 y = wall_coord - n_dist.get_value();
                 set_active_sensors(NORTH | EAST);
+                break;
             }
 
             case NEG_POS:
@@ -311,6 +319,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = wall_coord - n_dist.get_value();
                 y = wall_coord - w_dist.get_value();
                 set_active_sensors(NORTH | WEST);
+                break;
             }
 
             case NEG_NEG:
@@ -319,6 +328,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = wall_coord - w_dist.get_value();
                 y = wall_coord - s_dist.get_value();
                 set_active_sensors(WEST | SOUTH);
+                break;
             }
 
             case POS_NEG:
@@ -327,6 +337,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = wall_coord - s_dist.get_value();
                 y = wall_coord - e_dist.get_value();
                 set_active_sensors(SOUTH | EAST);
+                break;
             }
         }
     } else if (quad == NEG_POS)
@@ -339,6 +350,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + w_dist.get_value();
                 y = wall_coord - n_dist.get_value();
                 set_active_sensors(WEST | NORTH);
+                break;
             }
 
             case NEG_POS:
@@ -347,6 +359,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + s_dist.get_value();
                 y = wall_coord - w_dist.get_value();
                 set_active_sensors(SOUTH | WEST);
+                break;
             }
 
             case NEG_NEG:
@@ -355,6 +368,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + e_dist.get_value();
                 y = wall_coord - s_dist.get_value();
                 set_active_sensors(WEST | SOUTH);
+                break;
             }
 
             case POS_NEG:
@@ -363,6 +377,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + n_dist.get_value();
                 y = wall_coord - e_dist.get_value();
                 set_active_sensors(NORTH | EAST);
+                break;
             }
         }
     } else if (quad == NEG_NEG)
@@ -375,6 +390,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + w_dist.get_value();
                 y = -wall_coord + s_dist.get_value();
                 set_active_sensors(WEST | SOUTH);
+                break;
             }
 
             case NEG_POS:
@@ -383,6 +399,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + s_dist.get_value();
                 y = -wall_coord + e_dist.get_value();
                 set_active_sensors(SOUTH | EAST);
+                break;
             }
 
             case NEG_NEG:
@@ -391,6 +408,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + e_dist.get_value();
                 y = -wall_coord + n_dist.get_value();
                 set_active_sensors(EAST | NORTH);
+                break;
             }
 
             case POS_NEG:
@@ -399,6 +417,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + n_dist.get_value();
                 y = -wall_coord + w_dist.get_value();
                 set_active_sensors(NORTH | WEST);
+                break;
             }
         }
     } else if (quad == POS_NEG)
@@ -411,6 +430,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + e_dist.get_value();
                 y = -wall_coord + s_dist.get_value();
                 set_active_sensors(EAST | SOUTH);
+                break;
             }
 
             case NEG_POS:
@@ -419,6 +439,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + n_dist.get_value();
                 y = -wall_coord + e_dist.get_value();
                 set_active_sensors(NORTH | EAST);
+                break;
             }
 
             case NEG_NEG:
@@ -427,6 +448,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + w_dist.get_value();
                 y = -wall_coord + n_dist.get_value();
                 set_active_sensors(WEST | NORTH);
+                break;
             }
 
             case POS_NEG:
@@ -435,6 +457,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
                 x = -wall_coord + s_dist.get_value();
                 y = -wall_coord + w_dist.get_value();
                 set_active_sensors(SOUTH | WEST);
+                break;
             }
         }
     } else
@@ -445,6 +468,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad)
     }
 
     ret.set_value(vector3(x, y, normal_heading));
+
     if (!can_position_exist(vector3(x, y, normal_heading))) ret.set_confidence(0);
 
     return ret;
@@ -475,6 +499,20 @@ bool localization_chassis::reset_location_force(quadrant quad)
     return true;
 }
 
+bool localization_chassis::reset_location_normal(quadrant quad0, quadrant quad2)
+{
+    lemlib::Pose pose = chassis->getPose();
+    conf_pair<vector3> coords = get_position_calculation(quad0, quad2);
+
+    if (coords.get_confidence() < options.sensor_trust) return false;
+
+    pose.x = coords.get_value().x;
+    pose.y = coords.get_value().y;
+    chassis->setPose(pose);
+
+    return true;
+}
+
 void localization_chassis::init_display()
 {
     pros::lcd::initialize();
@@ -487,7 +525,8 @@ void localization_chassis::update_display(localization_chassis* chassis)
     bool south = chassis->is_sensor_used(SOUTH);
     bool west = chassis->is_sensor_used(WEST);
 
-    float heading = normalize_heading(chassis->imu->get_heading());
+    /*
+    //float heading = normalize_heading(chassis->imu->get_heading());
 
     float confidence_n = chassis->north->distance(heading).get_confidence();
     float confidence_e = chassis->east->distance(heading).get_confidence();
@@ -498,20 +537,21 @@ void localization_chassis::update_display(localization_chassis* chassis)
     float dis_e = chassis->east->distance(heading).get_value();
     float dis_s = chassis->south->distance(heading).get_value();
     float dis_w = chassis->west->distance(heading).get_value();
+    */
 
-    bool use_pose = chassis->reset_location_force(NEG_POS);
-    conf_pair<vector3> position = chassis->get_position_calculation(NEG_POS);
-    std::string quads = chassis->get_quadrant_string(chassis->get_quadrant());
-    std::string squad = chassis->get_quadrant_string(chassis->sensor_relevancy());
+    //bool use_pose = chassis->reset_location_force(NEG_POS);
+    //conf_pair<vector3> position = chassis->get_position_calculation(NEG_POS);
+    //std::string quads = chassis->get_quadrant_string(chassis->get_quadrant());
+    //std::string squad = chassis->get_quadrant_string(chassis->sensor_relevancy());
 
     lemlib::Pose pose_lem = chassis->chassis->getPose();
 
-    pros::lcd::print(0, "SQ: %s, %s", quads.c_str(), squad.c_str());
+    //pros::lcd::print(0, "SQ: %s, %s", quads.c_str(), squad.c_str());
     pros::lcd::print(1, "SU: N %i, E %i, S %i, W %i", north, east, south, west);
-    pros::lcd::print(2, "SR: N %.2f, E %.2f, S %.2f, W %.2f", dis_n, dis_e, dis_s, dis_w);
-    pros::lcd::print(3, "SC: N %.2f, E %.2f, S %.2f, W %.2f", confidence_n, confidence_e, confidence_s, confidence_w);
-    pros::lcd::print(4, "PS: X: %.2f,Y: %.2f,H: %.2f,C: %.2f", position.get_value().x, position.get_value().y, heading, position.get_confidence());
-    pros::lcd::print(5, "LC: X: %.2f,Y: %.2f,H: %.2f,S: %i", pose_lem.x, pose_lem.y, pose_lem.theta, use_pose);
+    //pros::lcd::print(2, "SR: N %.2f, E %.2f, S %.2f, W %.2f", dis_n, dis_e, dis_s, dis_w);
+    //pros::lcd::print(3, "SC: N %.2f, E %.2f, S %.2f, W %.2f", confidence_n, confidence_e, confidence_s, confidence_w);
+    //pros::lcd::print(4, "PS: X: %.2f,Y: %.2f,H: %.2f,C: %.2f", position.get_value().x, position.get_value().y, heading, position.get_confidence());
+    //pros::lcd::print(5, "LC: X: %.2f,Y: %.2f,H: %.2f,S: %i", pose_lem.x, pose_lem.y, pose_lem.theta, use_pose);
 }
 
 void localization_chassis::shutdown_display()

@@ -209,9 +209,10 @@ void opcontrol() {
 
 	(void)odom->inertial.set_heading(270);
 
-	odom->l_chassis.reset_location_force(NEG_POS);
+	//odom->l_chassis.reset_location_force(NEG_POS);
 
-	/*
+
+
 	pros::Task screen([]()
 	{
 		while (true)
@@ -220,7 +221,8 @@ void opcontrol() {
 			pros::Task::delay(100);
 		}
 	});
-	*/
+
+
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -246,7 +248,7 @@ void opcontrol() {
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
         {
         	//dt->lem_chassis.setPose(0,0,90);
-            odom->distance_sensor_reset();
+            odom->l_chassis.reset_location_normal(NEG_POS, NEG_POS);
         }
 
 		lv_timer_handler();

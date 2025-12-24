@@ -83,13 +83,25 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.sensor_relevancy();
-        dt->l_chassis.reset_location_force(NEG_POS);
+        dt->l_chassis.reset_location_normal(NEG_POS, NEG_POS);
     }
+
+    {
+        pros::Task::delay(3000);
+        conv->conveyor_intake.brake();
+    }
+
+    {
+        chassis->moveToPose(-24, 59, 90, 1000, {.minSpeed = 40}, false);
+        chassis->moveToPoint(25, 59, 1000, {}, false);
+        chassis->moveToPose(26, 47, 0, 1000, {}, false);
+    }
+
 
     while (true)
     {
         lemlib::Pose pose = chassis->getPose();
+        //controller_master.print(1,0, "%s", sup.c_str());
         controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
         pros::Task::delay(50);
     }

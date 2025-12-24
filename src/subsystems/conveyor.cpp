@@ -24,20 +24,11 @@ conveyor::conveyor() :
 
 void conveyor::tick_implementation() {
 
-    if (controller_master.get_digital_new_press(RAMP_MACRO))
+    if (controller_master.get_digital(RAMP_MACRO))
     {
-        pros::Task macro_task([this]()
-        {
-            (void)conveyor_intake.move(-FULL_POWER);
-            pros::Task::delay(250);
-            while (controller_master.get_digital(RAMP_MACRO))
-            {
-                (void)exhaust.move(-FULL_POWER * 0.75);
-                (void)conveyor_intake.move(FULL_POWER * 0.5);
-                (void)trapdoor.extend();
-            }
-        });
-        (void)macro_task.get_priority();
+        (void)exhaust.move(-FULL_POWER * 0.75);
+        (void)conveyor_intake.move(FULL_POWER * 0.5);
+        (void)trapdoor.extend();
     } else
     {
         bool did_exhaust = false;

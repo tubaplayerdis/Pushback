@@ -381,6 +381,8 @@ public:
      */
     conf_pair<vector3> get_position_calculation(quadrant quad);
 
+    conf_pair<vector3> get_position_calculation(quadrant quad0, quadrant quad1);
+
     /**
      * Initializes the debug screen.
      */
@@ -464,6 +466,8 @@ public:
      * @return Whether the function was successfully in reset the location of the robot.
      */
     bool reset_location_force(quadrant quad);
+
+    bool reset_location_normal(quadrant quad0, quadrant quad2);
 };
 
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP
