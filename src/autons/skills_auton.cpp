@@ -10,16 +10,38 @@
 #include "../../include/pros/rtos.hpp"
 #include "../../include/pros/motors.hpp"
 
-//#define SECTION_1
+#define SECTION_1
 #define SECTION_2
+#define SECTION_3
 
 namespace coords
 {
-    namespace quad_uno
+    namespace segment_uno
     {
-        pos match_loader_prime(-54.8, -50.0, 90);
-        pos quadrant_trans_a(-24, -33.0, 90);
-        pos quadrant_trans_b(33, -33.0, 90);
+        pos red_block_blip_neg_pos(-32.63, 17.5, 220);
+        pos middle_goal_pos(-8.5, 8.5, 135);
+        pos match_loader_neg_pos(-54, 46, 90);
+        pos neg_pos_trans_pose(-24, 56, 90);
+        pos neg_pos_trans_point(33, 56.5, 90);
+        pos long_goal_pos_pos(25, 47, 270);
+        pos match_loader_pos_pos(59, 46.5, 270);
+    }
+
+    namespace segment_dos
+    {
+        pos parking_zone_blue(65, 10, 90);
+        pos red_block_blip_pos_neg(30, -15, 35);
+        pos middle_goal_neg(8.5, -8.5, 315);
+    }
+
+    namespace segment_tres
+    {
+        pos match_loader_pos_neg(59, -46.5, 270);
+        pos pos_neg_trans_pose(24, 56, 270);
+        pos pos_neg_trans_point(-33, 56.5, 270);
+        pos long_goal_neg_neg(-25, -47, 90);
+        pos match_loader_neg_neg(-59, -46.5, 90);
+        pos parking_zone_red(-65, -10, 180);
     }
 }
 
@@ -33,7 +55,7 @@ namespace power_values
 
 void skills_routine()
 {
-    using namespace coords::quad_uno;
+    using namespace coords::segment_uno;
     using namespace power_values;
 
     //Get drivetrain object
@@ -146,7 +168,7 @@ void skills_routine()
     {
         chassis->tank(-40, -40, true);
         pros::Task::delay(500);
-        chassis->tank(40, 40, true);0
+        chassis->tank(40, 40, true);
         pros::Task::delay(500);
         conv->match_loader.toggle();
     }
@@ -167,7 +189,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(65, 10, 90, 1400, {.forwards = false, .lead = 0.1, .minSpeed = 40, .earlyExitRange = 0.5}, false);
+        chassis->moveToPose(65, 10, 0, 1400, {.forwards = false, .lead = 0.1, .minSpeed = 40, .earlyExitRange = 0.5}, false);
         chassis->tank(-94, -90, true);
         pros::Task::delay(1100);
         conv->match_loader.toggle();
@@ -186,10 +208,19 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(33, -15, 35, 2000, {.forwards = false}, false);
+        chassis->moveToPose(30, -15, 35, 2000, {.forwards = false}, false);
     }
 
+    //section 2 still needs to have the goal scoring and positioning done
+
 #endif
+
+#ifdef SECTION_3
+
+    //Starts at the middle goal at approximately 8.5, -8.5
+
+#endif
+
     //29.61, 42.62
 
     while (true)
