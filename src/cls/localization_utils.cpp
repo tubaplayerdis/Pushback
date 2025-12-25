@@ -427,7 +427,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad,
             case POS_POS:
             {
                 ret.set_confidence(conf_avg(e_dist, s_dist));
-                x = -wall_coord + e_dist.get_value();
+                x = wall_coord - e_dist.get_value();
                 y = -wall_coord + s_dist.get_value();
                 set_active_sensors(EAST | SOUTH);
                 break;
@@ -436,7 +436,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad,
             case NEG_POS:
             {
                 ret.set_confidence(conf_avg(n_dist, e_dist));
-                x = -wall_coord + n_dist.get_value();
+                x = wall_coord - n_dist.get_value();
                 y = -wall_coord + e_dist.get_value();
                 set_active_sensors(NORTH | EAST);
                 break;
@@ -445,7 +445,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad,
             case NEG_NEG:
             {
                 ret.set_confidence(conf_avg(w_dist, n_dist));
-                x = -wall_coord + w_dist.get_value();
+                x = wall_coord - w_dist.get_value();
                 y = -wall_coord + n_dist.get_value();
                 set_active_sensors(WEST | NORTH);
                 break;
@@ -454,7 +454,7 @@ conf_pair<vector3> localization_chassis::get_position_calculation(quadrant quad,
             case POS_NEG:
             {
                 ret.set_confidence(conf_avg(s_dist, w_dist));
-                x = -wall_coord + s_dist.get_value();
+                x = wall_coord - s_dist.get_value();
                 y = -wall_coord + w_dist.get_value();
                 set_active_sensors(SOUTH | WEST);
                 break;

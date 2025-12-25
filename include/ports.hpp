@@ -94,8 +94,8 @@ namespace ports
         {
             constexpr auto FRONT = 5.5;
             constexpr auto REAR = 5.85;
-            constexpr auto LEFT = 5;
-            constexpr auto RIGHT = 5;
+            constexpr auto LEFT = 5.25;
+            constexpr auto RIGHT = 5.25;
         }
     }
 }

@@ -208,8 +208,8 @@ void opcontrol() {
 	localization_chassis::init_display();
 
 	(void)odom->inertial.set_heading(270);
-
-	//odom->l_chassis.reset_location_force(NEG_POS);
+	odom->lem_chassis.setPose(0,0,270);
+	odom->l_chassis.reset_location_normal(POS_POS, POS_NEG);
 
 
 
