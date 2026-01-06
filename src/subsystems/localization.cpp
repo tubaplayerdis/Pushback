@@ -46,7 +46,7 @@ namespace pid
     lemlib::ControllerSettings
     controller_settings_lateral(14, // proportional gain (kP)
                                               0.00, // integral gain (kI)
-                                              70, // derivative gain (kD)
+                                              75, // derivative gain (kD)
                                               0, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -59,7 +59,7 @@ namespace pid
     lemlib::ControllerSettings
     controller_settings_angular(2.5,  // kP — reduce a bit (was 1.6)
                                 0.001,  // kI — keep off
-                                15.60,  // kD — increase slightly for more damping
+                                16.0,  // kD — increase slightly for more damping
                                 0.0,    // anti-windup
                                 0.5,  // small error range
                                 100,  // small error timeout
