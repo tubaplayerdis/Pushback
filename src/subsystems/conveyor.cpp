@@ -42,7 +42,7 @@ void conveyor::tick_implementation() {
         {
             if (trapdoor.is_extended()) trapdoor.retract(); //Color sort will do this
             (void)conveyor_intake.move(FULL_POWER);
-            if (!did_exhaust) (void)exhaust.move(-0.3 * FULL_POWER);
+            if (!did_exhaust) (void)exhaust.move(-0.2 * FULL_POWER);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
