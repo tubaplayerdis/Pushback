@@ -142,7 +142,7 @@ void skills_routine()
     }
 
     {
-        chassis->tank(-80, -80, true);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(200);
         brake_motors(chassis);
         pros::Task::delay(1800);
@@ -164,17 +164,17 @@ void skills_routine()
     }
 
     {
-        chassis->tank(10, 10, true);
+        chassis->tank( LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(1500);
+        pros::Task::delay(2000);
     }
 
     {
         conv->match_loader.toggle();
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
         chassis->moveToPose(POS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false }, false);
-        chassis->tank(-80, -80, true);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(200);
         brake_motors(chassis);
         pros::Task::delay(1800);
@@ -189,10 +189,10 @@ void skills_routine()
     }
 
     {
-        chassis->tank(10, 10, true);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(1500);
+        pros::Task::delay(2000);
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
     }
 
@@ -216,7 +216,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 1400, {.forwards = false, .lead = 0.1, .minSpeed = 40, .earlyExitRange = 0.5}, false);
+        chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 1400, {.forwards = false, .lead = 0.1, .minSpeed = 75, .earlyExitRange = 0.5}, false);
         chassis->tank(-91, -86, true);
         pros::Task::delay(1100);
         conv->match_loader.toggle();
@@ -278,7 +278,7 @@ void skills_routine()
         chassis->moveToPose(POS(coords::segment_tres::match_loader_pos_neg), 2000, {.forwards = false, .lead = 0.50, .maxSpeed = 90}, false);
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         dt->l_chassis.reset_location_normal(POS_NEG, POS_NEG);
-        chassis->tank(-80, -80, true);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(200);
         brake_motors(chassis);
         pros::Task::delay(1800);
@@ -297,10 +297,10 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_tres::long_goal_neg_neg), 900, {}, false);
-        chassis->tank(10, 10, true);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(1500);
+        pros::Task::delay(2000);
         dt->l_chassis.reset_location_force(NEG_NEG);
     }
 
@@ -308,7 +308,7 @@ void skills_routine()
         conv->match_loader.toggle();
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false}, false);
-        chassis->tank(-80, -80, true);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(200);
         brake_motors(chassis);
         pros::Task::delay(1800);
@@ -317,10 +317,10 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_tres::long_goal_neg_neg), 1000, {}, false);
-        chassis->tank(10, 10, true);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(1500);
+        pros::Task::delay(2000);
         dt->l_chassis.reset_location_force(NEG_NEG);
     }
 
@@ -330,9 +330,9 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_tres::parking_zone_red), 1400, {.forwards = false, .lead = 0.1, .minSpeed = 40, .earlyExitRange = 0.5}, false);
-        chassis->tank(-127, -127, true);
+        chassis->tank(-FULL_POWER, -FULL_POWER, true);
         pros::Task::delay(600);
-        chassis->tank(0, 0, true);
+        chassis->tank(NO_POWER, NO_POWER, true);
     }
 
     stop_loop = true;
