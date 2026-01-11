@@ -31,10 +31,11 @@ namespace autons
     extern ts::auton nine_left;
     extern ts::auton nine_right;
     extern ts::auton nine_right_offset;
-    extern ts::auton nine_awp_low;
     extern ts::auton nine_awp_high;
     extern ts::auton nine_awp_high_offset;
     extern ts::auton skills;
+    extern ts::auton sawp_dsr;
+    extern ts::auton sawp_no_dsr;
 }
 
 

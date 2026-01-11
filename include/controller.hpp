@@ -21,7 +21,7 @@ namespace controller
     inline lemlib::ExpoDriveCurve
     expo_curve_steer(3,    // joystick deadband out of 127
                 10,   // minimum output where drivetrain will move out of 127
-                1.035 // expo curve gain
+                1.023 // expo curve gain
     );
 }
 

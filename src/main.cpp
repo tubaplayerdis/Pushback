@@ -209,7 +209,7 @@ void opcontrol() {
 
 	(void)odom->inertial.set_heading(270);
 	odom->lem_chassis.setPose(0,0,270);
-	odom->l_chassis.reset_location_normal(POS_POS, POS_NEG);
+	odom->l_chassis.reset_location_force(NEG_NEG);
 
 
 
