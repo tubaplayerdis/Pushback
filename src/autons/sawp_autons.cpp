@@ -16,10 +16,10 @@ namespace coords
     namespace sawp
     {
         pos starting_location(-48.5, -14.5, 180);
-        pos match_loader_neg_neg(-57, -47.5, 90);
+        pos match_loader_neg_neg(-57, -48.5, 90);
         pos block_blip_neg_neg(-25.5, -20.5, 125);
         pos long_goal_neg_neg(-29, -46.5, 90);
-        pos block_blip_neg_pos(-24, 17, 0);
+        pos block_blip_neg_pos(-22.5, 20, 0);
     }
 }
 
@@ -45,8 +45,8 @@ void sawp_auton(bool b_dsr)
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     //There are 2 sections and each starts at 270 degrees.
-    (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(0,0,270);
+    (void)dt->inertial.set_heading(0);
+    dt->lem_chassis.setPose(0,0,0);
 
     if (b_dsr)
     {
@@ -64,10 +64,9 @@ void sawp_auton(bool b_dsr)
     }
 
     {
-        chassis->moveToPoint(MPOS(coords::sawp::block_blip_neg_neg), 600, {.forwards = false, .earlyExitRange = 0.1}, false);
         conv->match_loader.toggle();
-        chassis->swingToHeading(45, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->moveToPose(POS(coords::sawp::match_loader_neg_neg), 1000, {.forwards = false}, false);
+        chassis->moveToPoint(-45, -41, 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 700, {}, false);
     }
 
     {
@@ -76,7 +75,7 @@ void sawp_auton(bool b_dsr)
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(1000);
+        pros::Task::delay(1100);
     }
 
     {
@@ -88,9 +87,39 @@ void sawp_auton(bool b_dsr)
 
     {
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->swingToHeading(350, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(coords::sawp::block_blip_neg_pos), 2000, {.forwards = false}, false);
+        chassis->swingToHeading(35, lemlib::DriveSide::LEFT, 720, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->moveToPoint(MPOS(coords::sawp::block_blip_neg_pos), 2000, {.forwards = false, .maxSpeed = 65}, false);
+        conv->match_loader.toggle();
+    }
+
+    {
+        chassis->turnToHeading(110, 400, {}, false);
+        chassis->moveToPose(-9, 12, 130, 600, {}, false);
+        (void)conv->exhaust.move(0.5 * FULL_POWER);
+        pros::Task::delay(300);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        chassis->moveToPoint(-45, 46, 1000, {.forwards = false, .minSpeed = 30}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        pros::Task::delay(1100);
+    }
+
+    {
+        chassis->moveToPoint(-29, 47, 1000, {.minSpeed = 30}, false);
+        chassis->tank(70, 70, true);
+        (void)conv->exhaust.move(FULL_POWER);
+        pros::Task::delay(1600);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        chassis->tank(-50,-50, true);
+        pros::Task::delay(400);
+        chassis->tank(80, 80, true);
     }
 }
 

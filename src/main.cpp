@@ -204,25 +204,9 @@ void opcontrol() {
 		pid_tune_mode();
 	}
 
-	sel->hide();
-	localization_chassis::init_display();
-
-	(void)odom->inertial.set_heading(270);
-	odom->lem_chassis.setPose(0,0,270);
+	(void)odom->inertial.set_heading(0);
+	odom->lem_chassis.setPose(0,0,0);
 	odom->l_chassis.reset_location_force(NEG_NEG);
-
-
-
-	pros::Task screen([]()
-	{
-		while (true)
-		{
-			localization_chassis::update_display(&odom->l_chassis);
-			pros::Task::delay(100);
-		}
-	});
-
-
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
