@@ -2,14 +2,14 @@
 // Created by aaron on 10/22/2025.
 //
 
-#include "../../include/autons.hpp"
-#include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.hpp"
-#include "../../include/subsystems/conveyor.hpp"
-#include "../../include/pros/adi.hpp"
-#include "../../include/pros/misc.hpp"
-#include "../../include/pros/rtos.hpp"
-#include "../../include/pros/motors.hpp"
+#include "../../../include/autons.hpp"
+#include "../../../include/titanselect/titanselect.hpp"
+#include "../../../include/subsystems/drivetrain.hpp"
+#include "../../../include/subsystems/conveyor.hpp"
+#include "../../../include/pros/adi.hpp"
+#include "../../../include/pros/misc.hpp"
+#include "../../../include/pros/rtos.hpp"
+#include "../../../include/pros/motors.hpp"
 
 constexpr auto FULL_POWER = 127;
 
@@ -247,5 +247,5 @@ void nine_right_auton()
     }
 }
 
-ts::auton autons::nine_left = ts::auton("9 Left", nine_left_auton);
-ts::auton autons::nine_right = ts::auton("9 Right", nine_right_auton);
+ts::auton nine_left = ts::auton("9 Left", nine_left_auton);
+ts::auton nine_right = ts::auton("9 Right", nine_right_auton);

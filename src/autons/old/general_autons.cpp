@@ -2,14 +2,14 @@
 // Created by aaron on 9/10/2025.
 //
 
-#include "../../include/autons.hpp"
-#include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.hpp"
-#include "../../include/subsystems/conveyor.hpp"
-#include "../../include/pros/adi.hpp"
-#include "../../include/pros/misc.hpp"
-#include "../../include/pros/rtos.hpp"
-#include "../../include/pros/motors.hpp"
+#include "../../../include/autons.hpp"
+#include "../../../include/titanselect/titanselect.hpp"
+#include "../../../include/subsystems/drivetrain.hpp"
+#include "../../../include/subsystems/conveyor.hpp"
+#include "../../../include/pros/adi.hpp"
+#include "../../../include/pros/misc.hpp"
+#include "../../../include/pros/rtos.hpp"
+#include "../../../include/pros/motors.hpp"
 
 constexpr auto FULL_POWER = 127;
 
@@ -63,4 +63,4 @@ void old_skills_auton()
 //-5.59, -53.15, 20.25
 
 // Definitions below
-ts::auton autons::testing = ts::auton("Testing", testing_auton);
+ts::auton testing = ts::auton("Testing", testing_auton);

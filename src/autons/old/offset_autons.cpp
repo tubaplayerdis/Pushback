@@ -2,14 +2,14 @@
 // Created by aaron on 10/31/2025.
 //
 
-#include "../../include/autons.hpp"
-#include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.hpp"
-#include "../../include/subsystems/conveyor.hpp"
-#include "../../include/pros/adi.hpp"
-#include "../../include/pros/misc.hpp"
-#include "../../include/pros/rtos.hpp"
-#include "../../include/pros/motors.hpp"
+#include "../../../include/autons.hpp"
+#include "../../../include/titanselect/titanselect.hpp"
+#include "../../../include/subsystems/drivetrain.hpp"
+#include "../../../include/subsystems/conveyor.hpp"
+#include "../../../include/pros/adi.hpp"
+#include "../../../include/pros/misc.hpp"
+#include "../../../include/pros/rtos.hpp"
+#include "../../../include/pros/motors.hpp"
 
 constexpr auto FULL_POWER = 127;
 
@@ -236,5 +236,5 @@ void nine_awp_high_auton_offset()
     }
 }
 
-ts::auton autons::nine_right_offset = ts::auton("9 Right Offset", nine_right_auton_offset);
-ts::auton autons::nine_awp_high_offset = ts::auton("AWP High Offset", nine_awp_high_auton_offset);
+ts::auton nine_right_offset = ts::auton("9 Right Offset", nine_right_auton_offset);
+ts::auton nine_awp_high_offset = ts::auton("AWP High Offset", nine_awp_high_auton_offset);
