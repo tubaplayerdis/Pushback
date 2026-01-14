@@ -15,7 +15,7 @@ namespace coords
 {
     namespace sawp
     {
-        pos starting_location(-48.5, -14.5, 180);
+        pos starting_location(-48.7, -16.1, 0);
         pos match_loader_neg_neg_prime(-45, -41.5, 90);
         pos long_goal_neg_neg(-29.5, -49, 90);
         pos block_blip_neg_neg(-21, -22.5, 30);
@@ -26,12 +26,12 @@ namespace coords
 
         namespace dsr
         {
-            pos match_loader_neg_neg_prime(-45, -41.5, 90);
+            pos match_loader_neg_neg_prime(-45, -39.5, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-21, -22.5, 30);
-            pos block_blip_neg_pos(-21.5, 20.5, 0);
-            pos middle_goal_neg_pos(-11.5, 11.5, 130);
-            pos primer_match_loader_neg_pos(-45, 50, 90);
+            pos block_blip_neg_pos(-19, 20.5, 0);
+            pos middle_goal_neg_pos(-8, 11.5, 130);
+            pos primer_match_loader_neg_pos(-45, 50.5, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
     }
@@ -98,10 +98,10 @@ void sawp_auton()
     }
 
     {
-        chassis->turnToHeading(110, 400, {}, false);
+        chassis->turnToHeading(90, 400, {}, false);
         chassis->moveToPose(POS(coords::sawp::middle_goal_neg_pos), 700, {}, false);
         (void)conv->exhaust.move(0.5 * FULL_POWER);
-        pros::Task::delay(350);
+        pros::Task::delay(375);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 
@@ -197,7 +197,7 @@ void sawp_dsr_auton()
         chassis->turnToHeading(110, 400, {}, false);
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {}, false);
         (void)conv->exhaust.move(0.5 * FULL_POWER);
-        pros::Task::delay(350);
+        pros::Task::delay(375);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 

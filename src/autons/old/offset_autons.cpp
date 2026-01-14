@@ -236,5 +236,5 @@ void nine_awp_high_auton_offset()
     }
 }
 
-ts::auton nine_right_offset = ts::auton("9 Right Offset", nine_right_auton_offset);
-ts::auton nine_awp_high_offset = ts::auton("AWP High Offset", nine_awp_high_auton_offset);
+//ts::auton nine_right_offset = ts::auton("9 Right Offset", nine_right_auton_offset);
+//ts::auton nine_awp_high_offset = ts::auton("AWP High Offset", nine_awp_high_auton_offset);

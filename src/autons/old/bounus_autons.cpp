@@ -247,5 +247,5 @@ void nine_right_auton()
     }
 }
 
-ts::auton nine_left = ts::auton("9 Left", nine_left_auton);
-ts::auton nine_right = ts::auton("9 Right", nine_right_auton);
+//ts::auton nine_left = ts::auton("9 Left", nine_left_auton);
+//ts::auton nine_right = ts::auton("9 Right", nine_right_auton);

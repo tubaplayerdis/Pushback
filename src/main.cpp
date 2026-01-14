@@ -231,8 +231,9 @@ void opcontrol() {
 
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
         {
-        	//dt->lem_chassis.setPose(0,0,90);
-            odom->l_chassis.reset_location_normal(NEG_POS, NEG_POS);
+        	(void)odom->inertial.set_heading(0);
+        	odom->lem_chassis.setPose(0,0,0);
+        	odom->l_chassis.reset_location_force(NEG_NEG);
         }
 
 		lv_timer_handler();

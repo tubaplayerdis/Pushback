@@ -140,4 +140,4 @@ void nine_awp_high_auton()
     }
 }
 
-ts::auton nine_awp_high = ts::auton("9 AWP High", nine_awp_high_auton);
+//ts::auton nine_awp_high = ts::auton("9 AWP High", nine_awp_high_auton);

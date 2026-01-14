@@ -87,8 +87,7 @@ localization::localization() :
         right_loc(offsets::RIGHT, LEFT_LOC),
         left_loc(offsets::LEFT, RIGHT_LOC),
         front_loc(offsets::FRONT, FRONT_LOC),
-        l_chassis(loc_options, &inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc}),
-        monte_task(nullptr)
+        l_chassis(loc_options, &inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc})
 {
     time_at_last_call = pros::millis();
     lem_chassis.calibrate(true);
@@ -123,39 +122,5 @@ localization* localization::get()
 
 void localization::distance_sensor_reset()
 {
-    l_chassis.reset_location_force(NEG_NEG);
-}
-
-void localization::do_localization(lemlib::Chassis* chassis)
-{
-    return ;
-}
-
-void localization::start_localization()
-{
-    if(monte_task != nullptr)
-    {
-        stop_localization();
-        return;
-    }
-
-    //distance_sensor_reset(SKILLS_INITIAL);
-
-    monte_task = new pros::Task([this]() -> void
-    {
-        lemlib::Chassis* chassis = &lem_chassis;
-
-        while (true) {
-            this->do_localization(chassis);
-            pros::Task::delay(20);
-        }
-    });
-}
-
-void localization::stop_localization()
-{
-    if(monte_task == nullptr) return;
-    monte_task->suspend();
-    delete monte_task;
-    monte_task = nullptr;
+    l_chassis.reset_location();
 }

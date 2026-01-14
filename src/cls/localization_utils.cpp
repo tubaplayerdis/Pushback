@@ -17,6 +17,7 @@
 #include "../../include/pros/imu.h"
 #include "../../include/pros/imu.hpp"
 #include <cmath>
+#include <fstream>
 
 #include "../../include/pros/llemu.hpp"
 
@@ -203,8 +204,7 @@ vector2 localization_chassis::vectorize(pros::imu_accel_s_t accel)
     return vector2(magnitude,angle);
 }
 
-localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(
-                                                                                                                                                                         settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0), b_display(false)
+localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0), b_display(false), location_task(nullptr)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -558,6 +558,33 @@ void localization_chassis::shutdown_display()
 {
     pros::lcd::shutdown();
 }
+
+void localization_chassis::start_location_recording(std::string filename)
+{
+    if (location_task != nullptr) location_task->suspend();
+    delete location_task;
+    location_task = new pros::Task([filename, this]() -> void
+    {
+        std::ofstream output(filename);
+        while (true)
+        {
+            lemlib::Pose pose = chassis->getPose();
+            output << pose.x << ", " << pose.y << ", " << pose.theta << "\n";
+            pros::Task::delay(50);
+        }
+        output.close();
+    });
+}
+
+void localization_chassis::stop_location_recording()
+{
+    if (location_task != nullptr)
+    {
+        location_task->suspend();
+        delete location_task;
+    }
+}
+
 
 
 

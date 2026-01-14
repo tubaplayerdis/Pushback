@@ -412,6 +412,11 @@ public:
 private:
 
     /*
+     * Location recording task pointer
+     */
+    pros::Task* location_task;
+
+    /*
      * Sensors
      */
     localization_sensor* north;
@@ -467,7 +472,26 @@ public:
      */
     bool reset_location_force(quadrant quad);
 
+    /**
+     * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know where it is and the sensors are fully trusted.
+     *
+     * @param quad0 The quadrant the robot is currently in.
+     * @param quad2 The quadrant the robot is currently facing.
+     * @return Whether the function was successfully in reset the location of the robot.
+     */
     bool reset_location_normal(quadrant quad0, quadrant quad2);
+
+    /**
+     * @brief Starts an odometry system recording in a background task
+     *
+     * @param filename name of the file for the recording
+     */
+    void start_location_recording(std::string filename);
+
+    /**
+     * @brief Stops the current odometry system recording
+     */
+    void stop_location_recording();
 };
 
 #endif //PUSHBACK_LOCALIZATION_UTILS_HPP
