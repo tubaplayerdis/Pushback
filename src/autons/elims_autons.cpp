@@ -11,6 +11,22 @@
 #include "../../include/pros/rtos.hpp"
 #include "../../include/pros/motors.hpp"
 
+namespace coords
+{
+    namespace elims
+    {
+        namespace left
+        {
+
+        }
+
+        namespace right
+        {
+
+        }
+    }
+}
+
 void elims_left_auton()
 {
 
