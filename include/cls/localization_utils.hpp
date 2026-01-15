@@ -220,7 +220,12 @@ struct localization_options
     /**
      * Interval in MS that MBL updates
      */
-    const int interval_time = 50;
+    const int interval_time = 100;
+
+    /**
+     * Unsigned char representing how to trust the distance sensors on the robot. Used in DSR and not MBL
+     */
+    const unsigned char sensor_trust = 225;
 
     /**
      * Velocity threshold in inches/s at which is needed to apply correction.
