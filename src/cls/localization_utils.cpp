@@ -204,7 +204,7 @@ vector2 localization_chassis::vectorize(pros::imu_accel_s_t accel)
     return vector2(magnitude,angle);
 }
 
-localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings), data(0, vector2(0,0), vector2(0,0), lemlib::Pose(0,0,0)), active_sensors(0), b_display(false), location_task(nullptr)
+localization_chassis::localization_chassis(localization_options settings, pros::Imu *inertial, lemlib::Chassis* chas ,std::array<localization_sensor *,4> sensors) : options(settings), active_sensors(0), b_display(false), location_task(nullptr)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -212,16 +212,6 @@ localization_chassis::localization_chassis(localization_options settings, pros::
     west = sensors.at(3);
     imu = inertial;
     chassis = chas;
-
-    auto pose = chassis->getPose();
-
-    pros::imu_accel_s_t accel = imu->get_accel();
-    float heading = imu->get_heading();
-
-    localization_data current = {
-        pros::millis(), vector2(accel.x, accel.y), vector2(0, heading), pose
-    };
-    data = current;
 }
 
 quadrant localization_chassis::sensor_relevancy()
@@ -559,17 +549,26 @@ void localization_chassis::shutdown_display()
     pros::lcd::shutdown();
 }
 
-void localization_chassis::start_location_recording(std::string filename)
+void localization_chassis::start_location_recording(std::string date, std::string time)
 {
     if (location_task != nullptr) location_task->suspend();
     delete location_task;
-    location_task = new pros::Task([filename, this]() -> void
+    location_task = new pros::Task([this, time, date]() -> void
     {
-        std::ofstream output(filename);
+        std::ofstream output("odom_data.txt", std::ios::app);
+        std::ofstream output2("dist_data.txt", std::ios::app);
+
+        double mil = pros::millis();
+
+        output << "\n" << "Timestamp: " << date << " " << time << " " << mil << "\n";
+        output2 << "\n" << "Timestamp: " << date << " " << time << " " << mil << "\n";
+
         while (true)
         {
             lemlib::Pose pose = chassis->getPose();
+            vector3 pose1 = get_position_calculation(get_quadrant()).get_value();
             output << pose.x << ", " << pose.y << ", " << pose.theta << "\n";
+            output2 << pose1.x << ", " << pose1.y << ", " << pose1.z << "\n";
             pros::Task::delay(50);
         }
         output.close();
@@ -585,6 +584,62 @@ void localization_chassis::stop_location_recording()
     }
 }
 
+double get_average_velocity(lemlib::Pose one, lemlib::Pose two, double time)
+{
+    return abs(sqrt(pow(two.x - one.x,2) + pow(two.y - one.y,2)) / time);
+}
+
+double get_average_velocity(vector3 one, vector3 two, double time)
+{
+    return abs(sqrt(pow(two.x - one.x,2) + pow(two.y - one.y,2)) / time);
+}
+
+void localization_chassis::start_mbl()
+{
+    if (location_task != nullptr) location_task->suspend();
+    delete location_task;
+    location_task = new pros::Task([this]() -> void
+    {
+        const int interval_time = this->options.interval_time;
+        const double velocity_threshold = this->options.velocity_threshold * (static_cast<double>(interval_time) / 1000.0);
+        const double dist_err = this->options.sensor_error * (static_cast<double>(interval_time) / 1000.0);
+        const double gain = this->options.sensor_correction_gain;
+
+        while (true)
+        {
+            lemlib::Pose pose_odom_old = chassis->getPose();
+            conf_pair<vector3> pose_dist_old = get_position_calculation(get_quadrant());
+
+            pros::Task::delay(interval_time);
+
+            lemlib::Pose pose_odom_new = chassis->getPose();
+            conf_pair<vector3> pose_dist_new = get_position_calculation(get_quadrant());
+
+            double odom_vel = get_average_velocity(pose_odom_old, pose_odom_new, interval_time);
+            double dist_vel = get_average_velocity(pose_dist_old.get_value(), pose_dist_new.get_value(), interval_time);
+
+            if (odom_vel < velocity_threshold) continue;
+
+            if (odom_vel > dist_vel - dist_err && odom_vel < dist_vel + dist_err)
+            {
+                double real_x = pose_odom_new.x + gain * (pose_dist_new.get_value().x - pose_odom_new.x);
+                double real_y = pose_odom_new.y + gain * (pose_dist_new.get_value().y - pose_odom_new.y);
+
+                lemlib::Pose real_pose = lemlib::Pose(real_x, real_y, pose_odom_new.theta);
+                chassis->setPose(real_pose);
+            }
+        }
+    });
+}
+
+void localization_chassis::stop_mbl()
+{
+    if (mbl_task != nullptr)
+    {
+        mbl_task->suspend();
+        delete mbl_task;
+    }
+}
 
 
 

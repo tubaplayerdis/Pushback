@@ -215,52 +215,27 @@ enum sensors
     WEST = 8,
 };
 
-struct localization_data
-{
-    /**
-     * Time of data point in MS
-     */
-    int32_t call_time;
-
-    /**
-     * Acceleration vector as direction and magnitude
-     */
-    vector2 last_acceleration;
-
-    /**
-     * Velocity vector as direction and magnitude
-     */
-    vector2 last_velocity;
-
-    /**
-     * Last position
-     */
-    lemlib::Pose last_position;
-
-    localization_data(int32_t ct, vector2 la, vector2 lv, lemlib::Pose lp) : last_position(lp)
-    {
-        call_time = ct;
-        last_acceleration = la;
-        last_velocity = lv;
-    }
-};
-
 struct localization_options
 {
     /**
-     * Trust in the distance sensors around the robot.
+     * Interval in MS that MBL updates
      */
-    const float sensor_trust = 0.0;
+    const int interval_time = 50;
 
     /**
-     * Trust in the odometry system of the robot.
+     * Velocity threshold in inches/s at which is needed to apply correction.
      */
-    const unsigned char odometry_trust = 240;
+    const double velocity_threshold = 0.2;
+
+    /**
+     * Estimated error of the sensors in inches/s
+     */
+    const double sensor_error = 0.25;
 
     /**
      * Percentage at which the sensor values correct odometry as to smooth out correction
      */
-    const float sensor_correction_gain = 0.25;
+    const double sensor_correction_gain = 0.25;
 };
 
 class localization_chassis;
@@ -374,6 +349,8 @@ public:
      */
     static float conf_avg(conf_pair<float> one, conf_pair<float> two);
 
+
+
     /**
      * @brief Returns the confidence pair of a coordinate pair representing the robots location gathered from the sensors.
      * @param quad Current quadrant of the robot
@@ -417,6 +394,11 @@ private:
     pros::Task* location_task;
 
     /*
+     * MBL task pointer
+     */
+    pros::Task* mbl_task;
+
+    /*
      * Sensors
      */
     localization_sensor* north;
@@ -435,11 +417,6 @@ private:
      */
     localization_options options;
 
-    /**
-     * Last given localization data
-     */
-    localization_data data;
-
 public:
 
     /**
@@ -452,6 +429,16 @@ public:
      * @param sensors array of pointers to the localization sensors of the robot
      */
     localization_chassis(localization_options settings, pros::Imu* inertial, lemlib::Chassis* base, std::array<localization_sensor*,4> sensors);
+
+    /**
+     * @breif Starts the mbl localization model
+     */
+    void start_mbl();
+
+    /**
+     * @brief Stops the mbl localization model
+     */
+    void stop_mbl();
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot already knows where it is.
@@ -482,11 +469,11 @@ public:
     bool reset_location_normal(quadrant quad0, quadrant quad2);
 
     /**
-     * @brief Starts an odometry system recording in a background task
+     * @brief Starts an odometry system and distance sensor system recording in a background task
      *
      * @param filename name of the file for the recording
      */
-    void start_location_recording(std::string filename);
+    void start_location_recording(std::string date, std::string time);
 
     /**
      * @brief Stops the current odometry system recording
