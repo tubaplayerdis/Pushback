@@ -31,8 +31,8 @@ void elims_left_auton()
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
-    constexpr auto MATCH_LOADER = -80;
-    constexpr auto LONG_GOAL = 10;
+    constexpr auto MATCH_LOADER = -55;
+    constexpr auto LONG_GOAL = 40;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
@@ -56,30 +56,56 @@ void elims_left_auton()
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        conv->wings.toggle();
     }
 
     {
         chassis->moveToPoint(-26.5, 18.5, 600, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPoint(-8, 43.5, 800, {.forwards = false}, false);
+        chassis->moveToPoint(-5, 42.5, 900, {.forwards = false}, false);
     }
 
     {
-        chassis->moveToPose(-8.5, 8.5, 135, 1500, {}, false);
+        chassis->moveToPose(-7, 8.5, 135, 1700, {.lead = 0.7}, true);
+        {
+            pros::Task::delay(1000);
+            (void)conv->conveyor_intake.move(-0.5 * FULL_POWER);
+            pros::Task::delay(300);
+            (void)conv->conveyor_intake.brake();
+            chassis->waitUntilDone();
+        }
     }
 
     {
-        (void)conv->conveyor_intake.move(-0.8 * FULL_POWER);
+        (void)conv->conveyor_intake.move(0.65 * FULL_POWER);
+        (void)conv->exhaust.move(-0.8 * FULL_POWER);
         conv->trapdoor.toggle();
-        pros::Task::delay(2000);
+        pros::Task::delay(2100);
         conv->trapdoor.toggle();
         (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
         conv->match_loader.toggle();
     }
 
     {
-        chassis->moveToPose(-56, 46.5, 90, 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
+        chassis->moveToPose(-57, 47.5, 90, 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        pros::Task::delay(700);
     }
+
+    {
+        chassis->moveToPose(-26, 46.5, 90, 1500, {.minSpeed = 30}, false);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        pros::Task::delay(1500);
+        conv->match_loader.toggle();
+    }
+
+    {
+        chassis->moveToPoint(-36, 55, 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(-12, 57, 90, 1000, {}, false);
+        chassis->moveToPose(-6, 57, 90, 1000, {}, false);
+    }
+
 }
 
 

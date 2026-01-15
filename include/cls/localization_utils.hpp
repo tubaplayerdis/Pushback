@@ -223,9 +223,9 @@ struct localization_options
     const int interval_time = 100;
 
     /**
-     * Unsigned char representing how to trust the distance sensors on the robot. Used in DSR and not MBL
+     * Unsigned char representing how to trust the distance sensors on the robot. Used in DSR and not MBL. 0 is full trust and 1 is the least trust
      */
-    const unsigned char sensor_trust = 225;
+    const float sensor_trust = 0.0;
 
     /**
      * Velocity threshold in inches/s at which is needed to apply correction.
