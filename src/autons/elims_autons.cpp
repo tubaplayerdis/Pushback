@@ -49,9 +49,7 @@ void elims_left_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(0,0,270);
-
-    dt->l_chassis.reset_location_force(NEG_POS);
+    dt->lem_chassis.setPose(-46.15,12.80,270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -92,7 +90,7 @@ void elims_left_auton()
     }
 
     {
-        chassis->moveToPose(-26, 46.5, 90, 1500, {.minSpeed = 30}, false);
+        chassis->moveToPose(-25, 46.5, 90, 1500, {.minSpeed = 30}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -102,8 +100,9 @@ void elims_left_auton()
 
     {
         chassis->moveToPoint(-36, 55, 700, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPose(-12, 57, 90, 1000, {}, false);
-        chassis->moveToPose(-6, 57, 90, 1000, {}, false);
+        chassis->moveToPose(-12, 58, 90, 1000, {}, false);
+        chassis->moveToPose(-6, 58, 90, 1000, {}, false);
+        chassis->tank(0, 0, true);
     }
 
 }

@@ -204,9 +204,9 @@ void opcontrol() {
 		pid_tune_mode();
 	}
 
-	(void)odom->inertial.set_heading(0);
-	odom->lem_chassis.setPose(0,0,0);
-	odom->l_chassis.reset_location_force(NEG_NEG);
+	(void)odom->inertial.set_heading(270);
+	odom->lem_chassis.setPose(0,0,270);
+	odom->l_chassis.reset_location_force(NEG_POS);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -231,9 +231,9 @@ void opcontrol() {
 
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
         {
-        	(void)odom->inertial.set_heading(0);
-        	odom->lem_chassis.setPose(0,0,0);
-        	odom->l_chassis.reset_location_force(NEG_NEG);
+        	(void)odom->inertial.set_heading(270);
+			odom->lem_chassis.setPose(0,0,270);
+			odom->l_chassis.reset_location_force(NEG_POS);
         }
 
 		lv_timer_handler();
