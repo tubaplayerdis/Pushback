@@ -26,8 +26,8 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
-        (void)exhaust.move(-FULL_POWER * 0.75);
-        (void)conveyor_intake.move(FULL_POWER * 0.5);
+        (void)exhaust.move(-FULL_POWER * 0.8);
+        (void)conveyor_intake.move(FULL_POWER * 0.65);
         (void)trapdoor.extend();
     } else
     {

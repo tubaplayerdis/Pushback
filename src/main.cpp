@@ -206,7 +206,7 @@ void opcontrol() {
 
 	(void)odom->inertial.set_heading(270);
 	odom->lem_chassis.setPose(0,0,270);
-	odom->l_chassis.reset_location_force(NEG_POS);
+	odom->l_chassis.reset_location_force(NEG_NEG);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -233,7 +233,7 @@ void opcontrol() {
         {
         	(void)odom->inertial.set_heading(270);
 			odom->lem_chassis.setPose(0,0,270);
-			odom->l_chassis.reset_location_force(NEG_POS);
+			odom->l_chassis.reset_location_force(NEG_NEG);
         }
 
 		lv_timer_handler();

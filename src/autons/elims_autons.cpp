@@ -17,7 +17,27 @@ namespace coords
     {
         namespace left
         {
+            pos starting_location(-46.15,12.80,270);
+            pos block_blip_trio(-26.5, 18.5, 0);
+            pos block_blip_duo(-5, 42.5, 0);
+            pos middle_goal_high(-7, 8.5, 135);
+            pos match_loader(-57, 47.5, 90);
+            pos long_goal(-25, 46.5, 90);
+            pos wing_prime_back(-36, 55, 0);
+            pos wing_forward_init(-12, 58, 90);
+            pos wing_forward_final(-6, 58, 90);
 
+            namespace dsr
+            {
+                pos block_blip_trio(-26.5, 18.5, 0);
+                pos block_blip_duo(-5, 42.5, 0);
+                pos middle_goal_high(-7, 8.5, 135);
+                pos match_loader(-57, 47.5, 90);
+                pos long_goal(-25, 46.5, 90);
+                pos wing_prime_back(-36, 55, 0);
+                pos wing_forward_init(-12, 58, 90);
+                pos wing_forward_final(-6, 58, 90);
+            }
         }
 
         namespace right
@@ -37,6 +57,8 @@ void elims_left_auton()
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
 
+    using namespace coords::elims::left;
+
     //Get drivetrain object
     localization* dt  = localization::get();
 
@@ -49,7 +71,7 @@ void elims_left_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(-46.15,12.80,270);
+    dt->lem_chassis.setPose(POS(starting_location));
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -110,8 +132,75 @@ void elims_left_auton()
 
 void elims_right_auton()
 {
+    constexpr auto FULL_POWER = 127;
+    constexpr auto NO_POWER = 0;
+    constexpr auto MATCH_LOADER = -55;
+    constexpr auto LONG_GOAL = 40;
+    constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
 
+    //Get drivetrain object
+    localization* dt  = localization::get();
+
+    //Get conveyor object
+    conveyor* conv = conveyor::get();
+
+    localization* lc = localization::get();
+
+    //Get lemlib chassis object
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    (void)dt->inertial.set_heading(270);
+    dt->lem_chassis.setPose(-46.15,-12.8,270);
+
+    {
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        chassis->moveToPoint(-26.5, -18.5, 600, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(-5, -42.5, 900, {.forwards = false}, false);
+    }
+
+    {
+        chassis->moveToPose(-36, -39, 270, 800, {.minSpeed = 30}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 90}, false);
+        chassis->moveToPose(-25, -46.5, 90, 500, {.minSpeed = 30}, false);
+    }
+    {
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        pros::Task::delay(1500);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        conv->match_loader.toggle();
+        chassis->moveToPose(-57, -47, 90, 1200, {.forwards = false, .minSpeed = 20}, false);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+        pros::Task::delay(600);
+    }
+
+    {
+        chassis->moveToPoint(-27, -49, 2000, {.minSpeed = 30}, false);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        pros::Task::delay(1500);
+        conv->match_loader.toggle();
+    }
+
+    {
+        chassis->moveToPoint(-36, -39, 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(-12, -37.5, 90, 1000, {}, false);
+        chassis->moveToPoint(-2, -37.5, 1000, {}, false);
+        chassis->tank(0, 0, true);
+    }
 }
 
 ts::auton autons::elims_left = ts::auton("ELIM LEFT", elims_left_auton);
-ts::auton autons::elims_right = ts::auton("ELIM RIGHT", elims_left_auton);
+ts::auton autons::elims_right = ts::auton("ELIM RIGHT", elims_right_auton);
