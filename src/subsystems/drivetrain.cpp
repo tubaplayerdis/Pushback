@@ -18,7 +18,26 @@ motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE)
 
 void drivetrain::tick_implementation()
 {
+    constexpr auto FULL_POWER = 127;
 
+    if (controller_master.get_digital(ports::drivetrain::controls::SWING_LEFT))
+    {
+        (void)motors_left.set_brake_mode_all(pros::MotorBrake::hold);
+        (void)motors_right.move(FULL_POWER);
+    }
+    else if (controller_master.get_digital(ports::drivetrain::controls::SWING_RIGHT))
+    {
+        (void)motors_left.move(FULL_POWER);
+        (void)motors_right.set_brake_mode_all(pros::MotorBrake::hold);
+    }
+    else
+    {
+        if (motors_left.get_brake_mode(0) != pros::MotorBrake::coast || motors_right.get_brake_mode(0) != pros::MotorBrake::coast)
+        {
+            (void)motors_left.set_brake_mode_all(pros::MotorBrake::coast);
+            (void)motors_right.set_brake_mode_all(pros::MotorBrake::coast);
+        }
+    }
 }
 
 drivetrain* drivetrain::get()

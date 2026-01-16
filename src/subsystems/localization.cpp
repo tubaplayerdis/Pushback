@@ -44,27 +44,27 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(14, // proportional gain (kP)
+    controller_settings_lateral(14.01, // proportional gain (kP)
                                               0.00, // integral gain (kI)
                                               75, // derivative gain (kD)
                                               0, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
-                                              0, // large error range, in inches
-                                              0, // large error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
     );
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.5,  // kP — reduce a bit (was 1.6)
+    controller_settings_angular(2.35,  // kP — reduce a bit (was 1.6)
                                 0.001,  // kI — keep off
-                                16.0,  // kD — increase slightly for more damping
+                                15.9,  // kD — increase slightly for more damping
                                 0.0,    // anti-windup
                                 0.5,  // small error range
                                 100,  // small error timeout
-                                0,  // large error range
-                                0,  // large error timeout
+                                3,  // large error range
+                                500,  // large error timeout
                                 0     // slew rate
     );
 }
@@ -103,15 +103,6 @@ void localization::tick_implementation()
 
     //Apply inputs.
     lem_chassis.arcade(throttle, turn);
-
-    if (controller_master.get_digital(ports::drivetrain::controls::SWING_LEFT))
-    {
-        lem_chassis.arcade(0, -127);
-    }
-    else if (controller_master.get_digital(ports::drivetrain::controls::SWING_RIGHT))
-    {
-        lem_chassis.arcade(0, 127);
-    }
 }
 
 localization* localization::get()

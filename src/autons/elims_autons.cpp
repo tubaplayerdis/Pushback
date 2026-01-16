@@ -30,7 +30,7 @@ namespace coords
             namespace dsr
             {
                 pos block_blip_trio(-26.5, 18.5, 0);
-                pos block_blip_duo(-5, 42.5, 0);
+                pos block_blip_duo(-4.5, 42.5, 0);
                 pos middle_goal_high(-7, 8.5, 135);
                 pos match_loader(-57, 47.5, 90);
                 pos long_goal(-25, 46.5, 90);
@@ -42,7 +42,16 @@ namespace coords
 
         namespace right
         {
-
+            pos starting_location(-46.15,-12.8,270);
+            pos block_blip_trio(-26.5, -18.5, 0);
+            pos block_blip_duo(-5, -42.5, 0);
+            pos long_goal_prime(-36, -39, 270);
+            pos long_goal_uno(-25, -46.5, 90);
+            pos match_loader(-57, -47, 90);
+            pos long_goal_duo(-27, -49, 90);
+            pos wing_prime_back(-36, -39, 0);
+            pos wing_forward_init(-12, -37.5, 90);
+            pos wing_forward_final(-2, -37.5, 90);
         }
     }
 }
@@ -79,12 +88,12 @@ void elims_left_auton()
     }
 
     {
-        chassis->moveToPoint(-26.5, 18.5, 600, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPoint(-5, 42.5, 900, {.forwards = false}, false);
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(block_blip_duo), 900, {.forwards = false}, false);
     }
 
     {
-        chassis->moveToPose(-7, 8.5, 135, 1700, {.lead = 0.7}, true);
+        chassis->moveToPose(POS(middle_goal_high), 1700, {.lead = 0.7}, true);
         {
             pros::Task::delay(1000);
             (void)conv->conveyor_intake.move(-0.5 * FULL_POWER);
@@ -106,13 +115,13 @@ void elims_left_auton()
     }
 
     {
-        chassis->moveToPose(-57, 47.5, 90, 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
+        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(700);
     }
 
     {
-        chassis->moveToPose(-25, 46.5, 90, 1500, {.minSpeed = 30}, false);
+        chassis->moveToPose(POS(long_goal), 1500, {.minSpeed = 30}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -121,16 +130,14 @@ void elims_left_auton()
     }
 
     {
-        chassis->moveToPoint(-36, 55, 700, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPose(-12, 58, 90, 1000, {}, false);
-        chassis->moveToPose(-6, 58, 90, 1000, {}, false);
+        chassis->moveToPoint(MPOS(wing_prime_back), 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(wing_forward_init), 1000, {}, false);
+        chassis->moveToPose(POS(wing_forward_final), 1000, {}, false);
         chassis->tank(0, 0, true);
     }
-
 }
 
-
-void elims_right_auton()
+void elims_left_dsr_auton()
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
@@ -139,6 +146,8 @@ void elims_right_auton()
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
+
+    using namespace coords::elims::left::dsr;
 
     //Get drivetrain object
     localization* dt  = localization::get();
@@ -152,7 +161,8 @@ void elims_right_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(-46.15,-12.8,270);
+    dt->lem_chassis.setPose(0, 0, 270);
+    dt->l_chassis.reset_location_force(NEG_POS);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -160,14 +170,98 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPoint(-26.5, -18.5, 600, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPoint(-5, -42.5, 900, {.forwards = false}, false);
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(block_blip_duo), 900, {.forwards = false}, false);
     }
 
     {
-        chassis->moveToPose(-36, -39, 270, 800, {.minSpeed = 30}, false);
+        chassis->moveToPose(POS(middle_goal_high), 1700, {.lead = 0.7}, true);
+        {
+            pros::Task::delay(1000);
+            (void)conv->conveyor_intake.move(-0.5 * FULL_POWER);
+            pros::Task::delay(300);
+            (void)conv->conveyor_intake.brake();
+            chassis->waitUntilDone();
+        }
+    }
+
+    {
+        (void)conv->conveyor_intake.move(0.65 * FULL_POWER);
+        (void)conv->exhaust.move(-0.8 * FULL_POWER);
+        conv->trapdoor.toggle();
+        pros::Task::delay(2100);
+        conv->trapdoor.toggle();
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+        conv->match_loader.toggle();
+    }
+
+    {
+        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        pros::Task::delay(700);
+        dt->l_chassis.reset_location_force(NEG_POS);
+    }
+
+    {
+        chassis->moveToPose(POS(long_goal), 1500, {.minSpeed = 30}, false);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        pros::Task::delay(1500);
+        dt->l_chassis.reset_location_force(NEG_POS);
+        conv->match_loader.toggle();
+    }
+
+    {
+        chassis->moveToPoint(MPOS(wing_prime_back), 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(wing_forward_init), 1000, {}, false);
+        chassis->moveToPose(POS(wing_forward_final), 1000, {}, false);
+        chassis->tank(0, 0, true);
+    }
+}
+
+
+void elims_right_auton()
+{
+    constexpr auto FULL_POWER = 127;
+    constexpr auto NO_POWER = 0;
+    constexpr auto MATCH_LOADER = -55;
+    constexpr auto LONG_GOAL = 40;
+    constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
+
+    using namespace coords::elims::right;
+
+    //Get drivetrain object
+    localization* dt  = localization::get();
+
+    //Get conveyor object
+    conveyor* conv = conveyor::get();
+
+    localization* lc = localization::get();
+
+    //Get lemlib chassis object
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    (void)dt->inertial.set_heading(270);
+    dt->lem_chassis.setPose(POS(starting_location));
+
+    {
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(block_blip_duo), 900, {.forwards = false}, false);
+    }
+
+    {
+        chassis->moveToPose(POS(long_goal_prime), 800, {.minSpeed = 30}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 90}, false);
-        chassis->moveToPose(-25, -46.5, 90, 500, {.minSpeed = 30}, false);
+        chassis->moveToPose(POS(long_goal_uno), 500, {.minSpeed = 30}, false);
     }
     {
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
@@ -179,14 +273,14 @@ void elims_right_auton()
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPose(-57, -47, 90, 1200, {.forwards = false, .minSpeed = 20}, false);
+        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         pros::Task::delay(600);
     }
 
     {
-        chassis->moveToPoint(-27, -49, 2000, {.minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(long_goal_duo), 2000, {.minSpeed = 30}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -195,12 +289,13 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPoint(-36, -39, 700, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPose(-12, -37.5, 90, 1000, {}, false);
-        chassis->moveToPoint(-2, -37.5, 1000, {}, false);
+        chassis->moveToPoint(MPOS(wing_prime_back), 700, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(wing_forward_init), 1000, {}, false);
+        chassis->moveToPoint(MPOS(wing_forward_final), 1000, {}, false);
         chassis->tank(0, 0, true);
     }
 }
 
 ts::auton autons::elims_left = ts::auton("ELIM LEFT", elims_left_auton);
+ts::auton autons::elims_left_dsr = ts::auton("ELIM LEFT DSR", elims_left_dsr_auton);
 ts::auton autons::elims_right = ts::auton("ELIM RIGHT", elims_right_auton);

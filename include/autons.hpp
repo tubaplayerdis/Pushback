@@ -31,6 +31,7 @@ namespace autons
     extern ts::auton sawp_dsr;
     extern ts::auton sawp_no_dsr;
     extern ts::auton elims_left;
+    extern ts::auton elims_left_dsr;
     extern ts::auton elims_right;
 }
 
