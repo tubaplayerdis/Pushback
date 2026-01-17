@@ -18,10 +18,10 @@ namespace coords
         pos starting_location(-48.7, -16.1, 0);
         pos match_loader_neg_neg_prime(-45, -41.5, 90);
         pos long_goal_neg_neg(-29.5, -49, 90);
-        pos block_blip_neg_neg(-21, -22.5, 180);
-        pos block_blip_neg_pos(-19, 20.5, 0);
-        pos middle_goal_neg_pos(-8, 12, 130);
-        pos primer_match_loader_neg_pos(-45, 50, 90);
+        pos block_blip_neg_neg(-22.75, -15.5, 180);
+        pos block_blip_neg_pos(-22.75, 21.5, 0);
+        pos middle_goal_neg_pos(-8.5, 16.5, 135);
+        pos primer_match_loader_neg_pos(-45, 52.5, 90);
         pos long_goal_neg_pos(-29, 52, 90);
 
         namespace dsr
@@ -91,9 +91,9 @@ void sawp_auton()
         conv->match_loader.toggle();
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);//Not match loader just moving backwards
         pros::Task::delay(300);
-        chassis->swingToHeading(200, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->moveToPose(POS(coords::sawp::block_blip_neg_neg), 500, {.forwards = false, .minSpeed = 30}, false);
-        chassis->moveToPoint(MPOS(coords::sawp::block_blip_neg_pos), 1500, {.forwards = false, .maxSpeed = 75}, false);
+        chassis->swingToHeading(195, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->moveToPose(POS(coords::sawp::block_blip_neg_neg), 1000, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(coords::sawp::block_blip_neg_pos), 1200, {.forwards = false, .maxSpeed = 75}, false);
         conv->match_loader.toggle();
     }
 
@@ -187,8 +187,8 @@ void sawp_dsr_auton()
 
     {
         chassis->swingToHeading(195, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
+        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
         chassis->moveToPoint(MPOS(block_blip_neg_pos), 1200, {.forwards = false, .maxSpeed = 75}, false);
         conv->match_loader.toggle();
     }
