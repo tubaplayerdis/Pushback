@@ -31,7 +31,7 @@ namespace coords
     namespace segment_dos
     {
         pos parking_zone_blue(65.5, 12, 0);
-        pos red_block_blip_pos_neg(30.5, -15.5, 35);
+        pos red_block_blip_pos_neg(30.5, -16.25, 35);
         pos middle_goal_neg(8.5, -8.5, 315);
     }
 
@@ -39,7 +39,7 @@ namespace coords
     {
         pos match_loader_pos_neg(57, -46.5, 270);
         pos pos_neg_trans_pose(24, -58, 270);
-        pos pos_neg_trans_point(-36, -56.75, 270);
+        pos pos_neg_trans_point(-36, -57.5, 270);
         pos long_goal_neg_neg(-25, -46.8, 90);
         pos match_loader_neg_neg(-59, -46.5, 90);
         pos parking_zone_red(-67, -11, 180);
@@ -193,7 +193,6 @@ void skills_routine()
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         pros::Task::delay(2000);
-        (void)conv->exhaust.move(-0.2 * FULL_POWER);
     }
 
     {
@@ -210,13 +209,13 @@ void skills_routine()
 #ifdef SECTION_2
 
     {
-        (void)conv->exhaust.move(-0.2 * FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         dt->l_chassis.reset_location_normal(POS_POS, POS_NEG);
     }
 
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 1400, {.forwards = false, .lead = 0.1, .minSpeed = 75, .earlyExitRange = 0.5}, false);
+        (void)conv->exhaust.move(-0.2 * FULL_POWER);
         chassis->tank(-91, -86, true);
         pros::Task::delay(800);
         conv->match_loader.toggle();

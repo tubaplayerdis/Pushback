@@ -35,8 +35,8 @@ namespace coords
                 pos match_loader(-57, 47.5, 90);
                 pos long_goal(-25, 46.5, 90);
                 pos wing_prime_back(-36, 55, 0);
-                pos wing_forward_init(-12, 58, 90);
-                pos wing_forward_final(-6, 58, 90);
+                pos wing_forward_init(-12, 57.5, 90);
+                pos wing_forward_final(-6, 57.5, 90);
             }
         }
 
@@ -117,7 +117,7 @@ void elims_left_auton()
     {
         chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(700);
+        pros::Task::delay(800);
     }
 
     {
@@ -199,7 +199,7 @@ void elims_left_dsr_auton()
     {
         chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(700);
+        pros::Task::delay(800);
         dt->l_chassis.reset_location_force(NEG_POS);
     }
 
