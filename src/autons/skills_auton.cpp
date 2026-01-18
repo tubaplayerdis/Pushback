@@ -50,7 +50,7 @@ namespace power_values
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
-    constexpr auto MATCH_LOADER = -80;
+    constexpr auto MATCH_LOADER = -40;
     constexpr auto LONG_GOAL = 10;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
@@ -217,9 +217,9 @@ void skills_routine()
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 1400, {.forwards = false, .lead = 0.1, .minSpeed = 75, .earlyExitRange = 0.5}, false);
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
         chassis->tank(-91, -86, true);
-        pros::Task::delay(800);
+        pros::Task::delay(900);
         conv->match_loader.toggle();
-        pros::Task::delay(300);
+        pros::Task::delay(200);
         conv->match_loader.toggle();
     }
 

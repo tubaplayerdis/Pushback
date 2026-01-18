@@ -199,9 +199,14 @@ void opcontrol() {
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
-	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
+	//if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
+	//{
+	//	pid_tune_mode();
+	//}
+
+	if (pros::c::competition_get_status() & COMPETITION_CONNECTED)
 	{
-		pid_tune_mode();
+		conv->wings.extend();
 	}
 
 	(void)odom->inertial.set_heading(270);
@@ -215,10 +220,10 @@ void opcontrol() {
 			controller_master.print(1, 0, "DT MOTORS HOT");
 		} else
 		{
-			//auton_name = sel->get_selected_auton_name();
-			//controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
-			lemlib::Pose pose = odom->lem_chassis.getPose();
-			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
+			auton_name = sel->get_selected_auton_name();
+			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
+			//lemlib::Pose pose = odom->lem_chassis.getPose();
+			//controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
 			//controller_master.print(1, 0, "%.2f, %.2f, %.2f", odom->estimated_position.x, odom->estimated_position.y, pose.theta);
 		}
 

@@ -30,13 +30,13 @@ namespace coords
             namespace dsr
             {
                 pos block_blip_trio(-26.5, 18.5, 0);
-                pos block_blip_duo(-4.5, 42.5, 0);
+                pos block_blip_duo(-6, 42.5, 0);
                 pos middle_goal_high(-7, 8.5, 135);
                 pos match_loader(-57, 47.5, 90);
                 pos long_goal(-25, 46.5, 90);
                 pos wing_prime_back(-36, 55, 0);
                 pos wing_forward_init(-12, 57.5, 90);
-                pos wing_forward_final(-6, 57.5, 90);
+                pos wing_forward_final(-10, 57.5, 90);
             }
         }
 
@@ -49,7 +49,7 @@ namespace coords
             pos long_goal_uno(-25, -46.5, 90);
             pos match_loader(-57, -47, 90);
             pos long_goal_duo(-27, -49, 90);
-            pos wing_prime_back(-36, -39, 0);
+            pos wing_prime_back(-36.5, -39, 0);
             pos wing_forward_init(-12, -37.5, 90);
             pos wing_forward_final(-2, -37.5, 90);
         }
