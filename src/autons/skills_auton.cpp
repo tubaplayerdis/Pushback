@@ -143,9 +143,7 @@ void skills_routine()
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(200);
-        brake_motors(chassis);
-        pros::Task::delay(1800);
+        pros::Task::delay(2000);
     }
 
     {
@@ -175,9 +173,7 @@ void skills_routine()
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
         chassis->moveToPose(POS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false }, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(200);
-        brake_motors(chassis);
-        pros::Task::delay(1800);
+        pros::Task::delay(2000);
     }
 
     {
@@ -278,9 +274,7 @@ void skills_routine()
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         dt->l_chassis.reset_location_normal(POS_NEG, POS_NEG);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(200);
-        brake_motors(chassis);
-        pros::Task::delay(1800);
+        pros::Task::delay(2000);
     }
 
     {
@@ -308,9 +302,7 @@ void skills_routine()
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(200);
-        brake_motors(chassis);
-        pros::Task::delay(1800);
+        pros::Task::delay(2000);
         dt->l_chassis.reset_location_force(NEG_NEG);
     }
 
