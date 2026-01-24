@@ -26,11 +26,11 @@ namespace coords
 
         namespace dsr
         {
-            pos match_loader_neg_neg_prime(-45, -41.5, 90);
+            pos match_loader_neg_neg_prime(-45, -40.75, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
             pos block_blip_neg_pos(-23.00, 21.5, 0);
-            pos middle_goal_neg_pos(-9.5, 16.5, 135);
+            pos middle_goal_neg_pos(-11.5, 16.5, 135);
             pos primer_match_loader_neg_pos(-45, 52.5, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
@@ -177,8 +177,6 @@ void sawp_dsr_auton()
 
     {
         conv->match_loader.toggle();
-        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);//Not match loader just moving backwards
-        pros::Task::delay(300);
     }
 
     {
@@ -186,7 +184,8 @@ void sawp_dsr_auton()
     }
 
     {
-        chassis->swingToHeading(195, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->swingToHeading(205, lemlib::DriveSide::LEFT, 700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        dt->l_chassis.reset_location_force(NEG_NEG);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
         chassis->moveToPoint(MPOS(block_blip_neg_pos), 1200, {.forwards = false, .maxSpeed = 75}, false);
