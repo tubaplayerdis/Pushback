@@ -66,18 +66,22 @@ localization_sensor::localization_sensor(float off, int port) :
             sensor(port)
 {}
 
-float errorize_heading_domain(float heading)
+
+/**
+ * @breif Recursive function mapping the heading into the domain of -45 to 45 degrees to use with cos
+ */
+float coterminal_recursive_quad(float heading)
 {
     if (static_cast<int>(heading) % 45 == 0) return 1;
 
     if (heading < -45.0f)
     {
-        return errorize_heading_domain(heading + 90.0f);
+        return coterminal_recursive_quad(heading + 90.0f);
     }
 
     if (heading > 45.0f)
     {
-        return errorize_heading_domain(heading - 90.0f);
+        return coterminal_recursive_quad(heading - 90.0f);
     }
 
     return heading;
@@ -100,7 +104,7 @@ conf_pair<float> localization_sensor::distance(float heading)
 
     auto reading = sensor_reading * mm_inch_conversion_factor;
 
-    heading = errorize_heading_domain(heading);
+    heading = coterminal_recursive_quad(heading);
 
     float heading_err_rad = heading * deg_rad_conversion_factor;
 
