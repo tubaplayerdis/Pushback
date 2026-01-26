@@ -23,15 +23,15 @@ namespace coords
         pos red_block_blip_neg_pos(-32.00, 17.5, 220);
         pos middle_goal_pos(-8.5, 8.5, 135);
         pos match_loader_neg_pos(-57, 46.5, 90);
-        pos neg_pos_trans_pose(-24, 57, 90);
-        pos neg_pos_trans_point(35, 57, 90);
+        pos neg_pos_trans_pose(-24, 58, 90);
+        pos neg_pos_trans_point(35, 58, 90);
         pos long_goal_pos_pos(25, 47, 270);
         pos match_loader_pos_pos(59.0, 46.5, 270);
     }
 
     namespace segment_dos
     {
-        pos parking_zone_blue(67.25, 13.0, 0);
+        pos parking_zone_blue(67.50, 13.0, 0);
         pos red_block_blip_pos_neg(30.5, -17.50, 35);
         pos middle_goal_neg(6.5, -8.5, 315);
     }
@@ -40,8 +40,8 @@ namespace coords
     {
         pos match_loader_pos_neg(57, -45.5, 270);
         pos pos_neg_trans_pose(24, -59.5, 270);
-        pos pos_neg_trans_point(-36, -59.5, 270);
-        pos long_goal_neg_neg(-25, -46.0, 90);
+        pos pos_neg_trans_point(-36, -59.75, 270);
+        pos long_goal_neg_neg(-25, -46, 90);
         pos match_loader_neg_neg(-59, -46.85, 90);
     }
 
@@ -55,7 +55,7 @@ namespace power_values
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
-    constexpr auto MATCH_LOADER = -40;
+    constexpr auto MATCH_LOADER = -50;
     constexpr auto LONG_GOAL = 10;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
@@ -146,6 +146,7 @@ void skills_routine()
 
     {
         conv->match_loader.toggle();
+        (void)conv->trapdoor.retract();
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(coords::segment_uno::match_loader_neg_pos), 2000, {.forwards = false, .lead = 0.50, .maxSpeed = 90}, false);
@@ -246,7 +247,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_dos::middle_goal_neg), 2500, {.earlyExitRange = 0.5}, false);
+        chassis->moveToPose(POS(coords::segment_dos::middle_goal_neg), 2500, {.earlyExitRange = 0.75}, false);
     }
 
     {
@@ -323,7 +324,7 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_tres::long_goal_neg_neg), 1500, {}, false);
-        chassis->tank(LONG_GOAL, LONG_GOAL, true);
+        chassis->tank(LONG_GOAL + 20, LONG_GOAL + 20, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         pros::Task::delay(2000);
@@ -348,7 +349,7 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_quad::parking_zone_red), 1600, {.forwards = false, .lead = 0.35}, false);
-        chassis->tank(-FULL_POWER, -FULL_POWER, true);
+        chassis->tank(-FULL_POWER * 0.7, -FULL_POWER * 0.7, true);
         pros::Task::delay(600);
         chassis->tank(NO_POWER, NO_POWER, true);
     }
