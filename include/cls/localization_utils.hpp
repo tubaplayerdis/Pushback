@@ -256,7 +256,7 @@ class localization_sensor
      * Offset vector of the localization sensor.
      * X is front to back, Y is side to side, Z is theta of sensor.
      */
-    const float offset;
+    const vector2 offset;
 
     /**
      * Pros distance sensor object.
@@ -272,6 +272,14 @@ public:
      * @param port Port of the distance sensor.
      */
     localization_sensor(float off, int port);
+
+    /**
+     * @brief Constructor for localization sensor.
+     * @note Offsets should be done in inches.
+     * @param off Offset of the sensor from the origin in the direction the sensor is facing
+     * @param port Port of the distance sensor.
+     */
+    localization_sensor(vector2 off, int port);
 
     /**
      * @brief Distance read from the distance sensor as a confidence pair.

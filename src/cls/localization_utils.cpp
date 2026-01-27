@@ -62,6 +62,11 @@ static const circle neg_neg_ml_exclusion(-67.5, -47, 5);
 static const circle pos_neg_ml_exclusion(-67.5, 47, 5);
 
 localization_sensor::localization_sensor(float off, int port) :
+            offset(off, 0),
+            sensor(port)
+{}
+
+localization_sensor::localization_sensor(vector2 off, int port) :
             offset(off),
             sensor(port)
 {}
@@ -109,15 +114,17 @@ conf_pair<float> localization_sensor::distance(float heading)
     float heading_err_rad = heading * deg_rad_conversion_factor;
 
     float actual_reading = cos(heading_err_rad) * reading;
-    float actual_offset = cos(heading_err_rad) * offset;
+    float parallel_offset = cos(heading_err_rad) * offset.x;
+    float perpendicular_offset = sin(heading_err_rad) * offset.y;
 
     if (heading == 270)
     {
-        actual_offset = offset;
+        parallel_offset = offset.x;
+        perpendicular_offset = 0;
         actual_reading = reading;
     }
 
-    return conf_pair<float>(actual_reading + actual_offset, sensor_confidence);
+    return conf_pair<float>(actual_reading + parallel_offset + perpendicular_offset, sensor_confidence);
 }
 
 float localization_chassis::normalize_heading(float heading)
