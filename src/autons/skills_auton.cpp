@@ -40,14 +40,14 @@ namespace coords
     {
         pos match_loader_pos_neg(57, -45.5, 270);
         pos pos_neg_trans_pose(24, -59.5, 270);
-        pos pos_neg_trans_point(-36, -59.75, 270);
+        pos pos_neg_trans_point(-36, -60.5, 270);
         pos long_goal_neg_neg(-25, -46, 90);
         pos match_loader_neg_neg(-59, -46.85, 90);
     }
 
     namespace segment_quad
     {
-        pos parking_zone_red(-68, -13.0, 180);
+        pos parking_zone_red(-68.5, -13.0, 180);
     }
 }
 
@@ -141,15 +141,20 @@ void skills_routine()
         (void)conv->exhaust.move(-FULL_POWER * 0.8);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
         (void)conv->trapdoor.extend();
-        pros::Task::delay(1000);
+        pros::Task::delay(1100);
     }
 
     {
         conv->match_loader.toggle();
-        (void)conv->trapdoor.retract();
         (void)conv->conveyor_intake.move(FULL_POWER);
-        (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(coords::segment_uno::match_loader_neg_pos), 2000, {.forwards = false, .lead = 0.50, .maxSpeed = 90}, false);
+        (void)conv->exhaust.move(FULL_POWER * 0.80);
+        chassis->moveToPose(POS(coords::segment_uno::match_loader_neg_pos), 2000, {.forwards = false, .lead = 0.50, .maxSpeed = 90}, true);
+        {
+            pros::Task::delay(500);
+            (void)conv->trapdoor.retract();
+            (void)conv->exhaust.move(FULL_POWER * -0.20);
+            chassis->waitUntilDone();
+        }
     }
 
     {
@@ -228,10 +233,10 @@ void skills_routine()
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 1600, {.forwards = false, .lead = 0.35}, false);
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
-        chassis->tank(-70, -67, true);
-        pros::Task::delay(1100);
+        chassis->tank(-71, -68, true);
+        pros::Task::delay(1000);
         conv->match_loader.toggle();
-        pros::Task::delay(400);
+        pros::Task::delay(500);
     }
 
     {
@@ -354,9 +359,9 @@ void skills_routine()
         chassis->tank(NO_POWER, NO_POWER, true);
     }
 
-    stop_loop = true;
 #endif
 
+    stop_loop = true;
     //29.61, 42.62
 
     while (true)

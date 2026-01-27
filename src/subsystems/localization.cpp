@@ -114,6 +114,10 @@ void localization::tick_implementation()
             (void)drive->motors_left.move(FULL_POWER);
             (void)drive->motors_right.set_brake_mode_all(pros::MotorBrake::hold);
         }
+        else if (controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
+        {
+            lem_chassis.tank(-71, -68, true);
+        }
         else
         {
             if (drive->motors_left.get_brake_mode(0) != pros::MotorBrake::coast || drive->motors_right.get_brake_mode(0) != pros::MotorBrake::coast)

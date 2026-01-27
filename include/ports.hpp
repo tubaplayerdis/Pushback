@@ -44,6 +44,7 @@ namespace ports
             constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
             constexpr auto SWING_LEFT = pros::E_CONTROLLER_DIGITAL_LEFT;
             constexpr auto SWING_RIGHT = pros::E_CONTROLLER_DIGITAL_RIGHT;
+            constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_A;
         }
 
         namespace settings
