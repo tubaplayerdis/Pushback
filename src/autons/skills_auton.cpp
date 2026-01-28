@@ -47,7 +47,7 @@ namespace coords
 
     namespace segment_quad
     {
-        pos parking_zone_red(-68.5, -13.0, 180);
+        pos parking_zone_red(-68.5, -13.25, 180);
     }
 }
 
