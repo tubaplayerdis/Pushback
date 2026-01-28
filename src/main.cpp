@@ -199,10 +199,10 @@ void opcontrol() {
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
-	//if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
-	//{
-	//	pid_tune_mode();
-	//}
+	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
+	{
+		pid_tune_mode();
+	}
 
 	if (pros::c::competition_get_status() & COMPETITION_CONNECTED)
 	{

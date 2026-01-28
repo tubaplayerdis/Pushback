@@ -40,14 +40,14 @@ namespace coords
     {
         pos match_loader_pos_neg(57, -45.5, 270);
         pos pos_neg_trans_pose(24, -59.5, 270);
-        pos pos_neg_trans_point(-36, -60.5, 270);
+        pos pos_neg_trans_point(-36, -59.75, 270);
         pos long_goal_neg_neg(-25, -46, 90);
         pos match_loader_neg_neg(-59, -46.85, 90);
     }
 
     namespace segment_quad
     {
-        pos parking_zone_red(-68.5, -13.25, 180);
+        pos parking_zone_red(-69, -13.25, 180);
     }
 }
 
@@ -60,6 +60,8 @@ namespace power_values
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
+    constexpr auto SCORING_TIME = 2500;
+    constexpr auto MATCHLOADING_TIME = 2500;
 }
 
 void brake_motors(lemlib::Chassis* chassis)
@@ -141,7 +143,7 @@ void skills_routine()
         (void)conv->exhaust.move(-FULL_POWER * 0.8);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
         (void)conv->trapdoor.extend();
-        pros::Task::delay(1100);
+        pros::Task::delay(1000);
     }
 
     {
@@ -163,7 +165,7 @@ void skills_routine()
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(2000);
+        pros::Task::delay(MATCHLOADING_TIME);
     }
 
     {
@@ -185,7 +187,7 @@ void skills_routine()
         chassis->tank( LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(2000);
+        pros::Task::delay(SCORING_TIME);
     }
 
     {
@@ -193,7 +195,7 @@ void skills_routine()
         (void)conv->exhaust.move(-0.2 * FULL_POWER);
         chassis->moveToPose(POS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false }, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(2000);
+        pros::Task::delay(MATCHLOADING_TIME);
     }
 
     {
@@ -294,7 +296,7 @@ void skills_routine()
         chassis->moveToPose(POS(coords::segment_tres::match_loader_pos_neg), 2000, {.forwards = false, .lead = 0.40, .maxSpeed = 90}, false);
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(2000);
+        pros::Task::delay(MATCHLOADING_TIME);
     }
 
     {
@@ -314,7 +316,7 @@ void skills_routine()
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(2000);
+        pros::Task::delay(SCORING_TIME);
         dt->l_chassis.reset_location_force(NEG_NEG);
     }
 
@@ -323,7 +325,7 @@ void skills_routine()
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(2000);
+        pros::Task::delay(MATCHLOADING_TIME);
         dt->l_chassis.reset_location_force(NEG_NEG);
     }
 
@@ -332,7 +334,7 @@ void skills_routine()
         chassis->tank(LONG_GOAL + 20, LONG_GOAL + 20, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        pros::Task::delay(2000);
+        pros::Task::delay(SCORING_TIME);
     }
 
 #endif
@@ -354,9 +356,11 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_quad::parking_zone_red), 1600, {.forwards = false, .lead = 0.35}, false);
+        conv->match_loader.extend();//Used to clear the blocks
         chassis->tank(-FULL_POWER * 0.7, -FULL_POWER * 0.7, true);
         pros::Task::delay(600);
         chassis->tank(NO_POWER, NO_POWER, true);
+        conv->match_loader.retract();//Fix cog if the robot has gone too far
     }
 
 #endif
