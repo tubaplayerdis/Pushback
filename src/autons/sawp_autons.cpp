@@ -26,12 +26,13 @@ namespace coords
 
         namespace dsr
         {
-            pos match_loader_neg_neg_prime(-45, -40.75, 90);
+            pos push_point(-47, 3, 0);
+            pos match_loader_neg_neg_prime(-45, -41.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
-            pos block_blip_neg_pos(-23.00, 21.5, 0);
-            pos middle_goal_neg_pos(-11.5, 16.5, 135);
-            pos primer_match_loader_neg_pos(-45, 52.5, 90);
+            pos block_blip_neg_pos(-22.0, 23.5, 0);
+            pos middle_goal_neg_pos(-10.5, 16.5, 135);
+            pos primer_match_loader_neg_pos(-45, 52.0, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
     }
@@ -119,7 +120,7 @@ void sawp_auton()
     }
 }
 
-void sawp_dsr_auton()
+void sawp_dsr_auton_raw(bool push)
 {
     using namespace coords::sawp::dsr;
 
@@ -147,6 +148,11 @@ void sawp_dsr_auton()
 
     dt->l_chassis.reset_location_force(NEG_NEG);
 
+    if (push)
+    {
+        chassis->moveToPoint(MPOS(push_point), 500, {}, false);
+    }
+
     {
         conv->wings.toggle();
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -155,7 +161,7 @@ void sawp_dsr_auton()
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 1000, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 1800, {.forwards = false, .minSpeed = 30}, false);
         chassis->swingToHeading(TPOS(match_loader_neg_neg_prime), lemlib::DriveSide::LEFT, 700, {}, false);
     }
 
@@ -188,8 +194,7 @@ void sawp_dsr_auton()
         dt->l_chassis.reset_location_force(NEG_NEG);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
-        chassis->moveToPoint(MPOS(block_blip_neg_pos), 1200, {.forwards = false, .maxSpeed = 75}, false);
-        conv->match_loader.toggle();
+        chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, false);
     }
 
     {
@@ -201,6 +206,7 @@ void sawp_dsr_auton()
     }
 
     {
+        conv->match_loader.toggle();
         chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20}, false);
         chassis->swingToHeading(TPOS(primer_match_loader_neg_pos), lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
@@ -219,5 +225,16 @@ void sawp_dsr_auton()
 
 }
 
+void sawp_dsr_auton()
+{
+    sawp_dsr_auton_raw(false);
+}
+
+void sawp_dsr_auton_push()
+{
+    sawp_dsr_auton_raw(true);
+}
+
 ts::auton autons::sawp_dsr = ts::auton("SAWP DSR", sawp_dsr_auton);
+ts::auton autons::sawp_dsr_push = ts::auton("SAWP DSR PUSH", sawp_dsr_auton_push);
 ts::auton autons::sawp_no_dsr = ts::auton("SAWP", sawp_auton);

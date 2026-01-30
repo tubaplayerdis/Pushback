@@ -50,9 +50,16 @@ void conveyor::tick_implementation() {
             (void)conveyor_intake.move(-FULL_POWER);
         } else if (controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
         {
-            conveyor_intake.move(FULL_POWER);
-            exhaust.move(FULL_POWER * -0.2);
-        }else
+            if (trapdoor.is_extended()) trapdoor.retract();
+            (void)conveyor_intake.move(FULL_POWER);
+            (void)exhaust.move(FULL_POWER * -0.2);
+        } else if (controller_master.get_digital(CONVEYOR_OUT_HALF))
+        {
+            if (trapdoor.is_extended()) trapdoor.retract();
+            (void)conveyor_intake.move(-FULL_POWER * 0.5);
+            (void)exhaust.move(-FULL_POWER);
+        }
+        else
         {
             (void)conveyor_intake.brake();
             if(!did_exhaust) (void)exhaust.brake();

@@ -69,6 +69,7 @@ namespace ports
         {
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
+            constexpr auto CONVEYOR_OUT_HALF = pros::E_CONTROLLER_DIGITAL_B;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
             constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_UP;
