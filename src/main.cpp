@@ -13,6 +13,9 @@ extern "C"
 {
 	#include "titanselect/titanselect.h"
 }
+
+#define COMPETITION
+
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 localization* odom = nullptr;
@@ -199,11 +202,12 @@ void opcontrol() {
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
+#ifndef COMPETITION
 	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
 	{
 		pid_tune_mode();
 	}
-
+#endif
 	if (pros::c::competition_get_status() & COMPETITION_CONNECTED)
 	{
 		conv->wings.extend();
@@ -221,10 +225,12 @@ void opcontrol() {
 		} else
 		{
 			auton_name = sel->get_selected_auton_name();
+#ifdef COMPETITION
 			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
-			//lemlib::Pose pose = odom->lem_chassis.getPose();
-			//controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
-			//controller_master.print(1, 0, "%.2f, %.2f, %.2f", odom->estimated_position.x, odom->estimated_position.y, pose.theta);
+#else
+			lemlib::Pose pose = odom->lem_chassis.getPose();
+			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
+#endif
 		}
 
         if(controller_master.get_digital_new_press(ports::CYCLE_AUTONS))
@@ -234,12 +240,14 @@ void opcontrol() {
         	pros::delay(100);
         }
 
-        if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+#ifndef COMPETITION
+        if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
         	(void)odom->inertial.set_heading(270);
 			odom->lem_chassis.setPose(0,0,270);
 			odom->l_chassis.reset_location_force(NEG_NEG);
         }
+#endif
 
 		lv_timer_handler();
         odom->tick();

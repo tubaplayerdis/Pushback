@@ -44,7 +44,7 @@ namespace ports
             constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
             constexpr auto SWING_LEFT = pros::E_CONTROLLER_DIGITAL_LEFT;
             constexpr auto SWING_RIGHT = pros::E_CONTROLLER_DIGITAL_RIGHT;
-            constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_A;
+            constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_B;
         }
 
         namespace settings
@@ -69,10 +69,10 @@ namespace ports
         {
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
-            constexpr auto CONVEYOR_OUT_HALF = pros::E_CONTROLLER_DIGITAL_B;
+            constexpr auto CONVEYOR_OUT_HALF = pros::E_CONTROLLER_DIGITAL_Y;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
             constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
-            constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_UP;
+            constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_A;
             constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
         }
     }

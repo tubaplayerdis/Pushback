@@ -357,7 +357,7 @@ void skills_routine()
     {
         chassis->moveToPose(POS(coords::segment_quad::parking_zone_red), 1600, {.forwards = false, .lead = 0.35}, false);
         chassis->tank(-70, -70, true);
-        pros::Task::delay(700);
+        pros::Task::delay(800);
         chassis->tank(NO_POWER, NO_POWER, true);
     }
 
