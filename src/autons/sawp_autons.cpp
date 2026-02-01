@@ -27,7 +27,7 @@ namespace coords
         namespace dsr
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-45, -41.25, 90);
+            pos match_loader_neg_neg_prime(-45, -42.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
             pos block_blip_neg_pos(-22.0, 23.5, 0);
@@ -161,7 +161,7 @@ void sawp_dsr_auton_raw(bool push)
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 1900, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {.forwards = false, .minSpeed = 30}, false);
         chassis->swingToHeading(TPOS(match_loader_neg_neg_prime), lemlib::DriveSide::LEFT, 700, {}, false);
     }
 

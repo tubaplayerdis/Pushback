@@ -31,7 +31,7 @@ namespace coords
             {
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
-                pos middle_goal_high(-7, 8.5, 135);
+                pos middle_goal_high(-6.5, 8.5, 135);
                 pos match_loader(-57, 47.5, 90);
                 pos long_goal(-25, 46.5, 90);
                 pos wing_prime_back(-36, 55, 0);
@@ -171,7 +171,7 @@ void elims_left_dsr_auton()
     {
         chassis->moveToPose(POS(middle_goal_high), 1700, {.lead = 0.7}, true);
         {
-            pros::Task::delay(1000);
+            pros::Task::delay(1100);
             (void)conv->conveyor_intake.move(-0.5 * FULL_POWER);
             pros::Task::delay(300);
             (void)conv->conveyor_intake.brake();
