@@ -34,8 +34,14 @@ public:
     /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;
 
+    /// Pros rotation sensor for horizontal wheel
+    pros::Rotation rotation_horizontal;
+
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
+
+    /// LemLib horizontal tracking wheel for autons
+    lemlib::TrackingWheel tracking_horizontal;
 
     /// LemLib "odometry" object for autons
     lemlib::OdomSensors odom_sensors;
@@ -58,6 +64,7 @@ public:
     /// Left localization sensor. Located on the opposite side of the brain.
     localization_sensor left_loc;
 
+    /// Localization chassis object
     localization_chassis l_chassis;
 
 public:

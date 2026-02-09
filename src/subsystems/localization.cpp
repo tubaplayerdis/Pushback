@@ -77,7 +77,9 @@ static std::uint32_t time_at_last_call;
 localization::localization() :
         inertial(INERTIAL),
         rotation_vertical(ROTATION_VERTICAL),
-        tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
+        rotation_horizontal(ROTATION_HORIZONTAL),
+        tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
+        tracking_horizontal(&rotation_horizontal, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
         odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
         lem_drivetrain(&drivetrain::get()->motors_left, &drivetrain::get()->motors_right, ports::drivetrain::settings::DRIVETRAIN_TRACK_WIDTH, ports::drivetrain::settings::DRIVETRAIN_WHEEL_DIAMETER, ports::drivetrain::settings::DRIVETRAIN_RPM, ports::drivetrain::settings::DRIVETRAIN_HORIZONTAL_DRIFT),
         lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
