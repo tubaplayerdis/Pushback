@@ -43,6 +43,9 @@ public:
     /// Pneumatics for the "wing" mechanisms
     pros::adi::Pneumatics wings;
 
+    /// Intake lift pneumatics
+    pros::adi::Pneumatics descore;
+
 private:
 
     /// Private constructor to enable use of get() method.

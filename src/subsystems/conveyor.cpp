@@ -17,7 +17,8 @@ conveyor::conveyor() :
         conveyor_intake(CONVEYOR),
         trapdoor(TRAPDOOR, false),
         match_loader(MATCH_LOADER, false),
-        wings(WINGS, false)
+        wings(WINGS, false),
+        descore(DESCORE, false)
 {
     (void)exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 }
@@ -53,11 +54,6 @@ void conveyor::tick_implementation() {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)conveyor_intake.move(FULL_POWER);
             (void)exhaust.move(FULL_POWER * -0.2);
-        } else if (controller_master.get_digital(CONVEYOR_OUT_HALF))
-        {
-            if (trapdoor.is_extended()) trapdoor.retract();
-            (void)conveyor_intake.move(-FULL_POWER * 0.5);
-            (void)exhaust.move(-FULL_POWER);
         }
         else
         {
@@ -68,7 +64,14 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital_new_press(TOGGLE_MATCH_LOADER))
     {
+        if (descore.is_extended()) descore.retract();
         (void)match_loader.toggle();
+    }
+
+    if (controller_master.get_digital_new_press(TOGGLE_DESCORE))
+    {
+        if (match_loader.is_extended()) trapdoor.retract();
+        descore.toggle();
     }
 
     if (controller_master.get_digital_new_press(TOGGLE_WINGS))

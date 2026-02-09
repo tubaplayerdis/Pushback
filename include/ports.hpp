@@ -64,12 +64,13 @@ namespace ports
         constexpr auto MATCH_LOADER = 'B';
         constexpr auto WINGS = 'A';
         constexpr auto TRAPDOOR = 'C';
+        constexpr auto DESCORE = 'D';
 
         namespace controls
         {
             constexpr auto CONVEYOR_IN = pros::E_CONTROLLER_DIGITAL_L1;
             constexpr auto CONVEYOR_OUT = pros::E_CONTROLLER_DIGITAL_R1;
-            constexpr auto CONVEYOR_OUT_HALF = pros::E_CONTROLLER_DIGITAL_Y;
+            constexpr auto TOGGLE_DESCORE = pros::E_CONTROLLER_DIGITAL_Y;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
             constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_A;
