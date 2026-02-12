@@ -14,6 +14,7 @@
 #include "../lemlib/chassis/trackingWheel.hpp"
 #include "../pros/imu.hpp"
 #include "../cls/localization_utils.hpp"
+#include "../pros/adi.hpp"
 
 /*
  * For the localization class, the robot's sides are approached unconventionally due to the odometry setup.
@@ -34,8 +35,8 @@ public:
     /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;
 
-    /// Pros rotation sensor for horizontal wheel
-    pros::Rotation rotation_horizontal;
+    /// Pros encoder for horizontal wheel
+    pros::adi::Encoder encoder_horizontal;
 
     /// LemLib vertical tracking wheel for autons
     lemlib::TrackingWheel tracking_vertical;
@@ -66,19 +67,6 @@ public:
 
     /// Localization chassis object
     localization_chassis l_chassis;
-
-public:
-
-    void set_estimated_position(vector3 position)
-    {
-        estimated_position = position;
-    }
-
-    /// Velocity based off inertial sensor acceleration readings.
-    vector3 estimated_velocity;
-
-    /// Position based off inertial sensor acceleration readings.
-    vector3 estimated_position;
 
 private:
 

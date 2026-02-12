@@ -22,23 +22,7 @@
 #include <random>
 #include <math.h>
 
-#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/math.h"
-#include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/math.h"
-
-
 std::unique_ptr<localization> odometry_instance;
-
-using namespace ports::localization;
-using namespace ports::localization::settings;
-
-
-/**
- * @brief The distance to the wall from the center of the field.
- *
- * @details Initially it would seem as though the field is around 72 inches away as the field's center is described as 12ft x 12ft and therefore 144in x 144in,
- * but the reality is that 4 inches are taken by the field walls and subsequently the wall is 70.208 inches away from the center.
- */
-static constexpr float wall_coord = 70.208;
 
 namespace pid
 {
@@ -71,27 +55,24 @@ namespace pid
 
 static const localization_options loc_options = {};
 
-/// timepoint value representing the last time the tick function was ran and updated this variable
-static std::uint32_t time_at_last_call;
+using namespace ports::localization;
+using namespace ports::localization::settings;
 
 localization::localization() :
         inertial(INERTIAL),
         rotation_vertical(ROTATION_VERTICAL),
-        rotation_horizontal(ROTATION_HORIZONTAL),
-        tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
-        tracking_horizontal(&rotation_horizontal, ODOMETRY_WHEEL_SIZE, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
-        odom_sensors(&tracking_vertical, nullptr, nullptr, nullptr, &inertial),
+        encoder_horizontal(ENCODER_HORIZONTAL_0, ENCODER_HORIZONTAL_1, false),
+        tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE_VERTICAL, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
+        tracking_horizontal(&encoder_horizontal, ODOMETRY_WHEEL_SIZE_HORIZONTAL, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
+        odom_sensors(&tracking_vertical, nullptr, &tracking_horizontal, nullptr, &inertial),
         lem_drivetrain(&drivetrain::get()->motors_left, &drivetrain::get()->motors_right, ports::drivetrain::settings::DRIVETRAIN_TRACK_WIDTH, ports::drivetrain::settings::DRIVETRAIN_WHEEL_DIAMETER, ports::drivetrain::settings::DRIVETRAIN_RPM, ports::drivetrain::settings::DRIVETRAIN_HORIZONTAL_DRIFT),
         lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
-        estimated_velocity(0,0,0),
-        estimated_position(0,0,0),
         rear_loc(offsets::REAR, REAR_LOC),
         right_loc(offsets::RIGHT, LEFT_LOC),
         left_loc(offsets::LEFT, RIGHT_LOC),
         front_loc(offsets::FRONT, FRONT_LOC),
         l_chassis(loc_options, &inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc})
 {
-    time_at_last_call = pros::millis();
     lem_chassis.calibrate(true);
 }
 
