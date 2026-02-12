@@ -41,9 +41,9 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.35,  // kP — reduce a bit (was 1.6)
+    controller_settings_angular(2.5,  // kP — reduce a bit (was 1.6)
                                 0.001,  // kI — keep off
-                                15.9,  // kD — increase slightly for more damping
+                                15.8,  // kD — increase slightly for more damping
                                 0.0,    // anti-windup
                                 0.5,  // small error range
                                 100,  // small error timeout
@@ -61,7 +61,7 @@ using namespace ports::localization::settings;
 localization::localization() :
         inertial(INERTIAL),
         rotation_vertical(ROTATION_VERTICAL),
-        encoder_horizontal(ENCODER_HORIZONTAL_0, ENCODER_HORIZONTAL_1, false),
+        encoder_horizontal(ENCODER_HORIZONTAL_0, ENCODER_HORIZONTAL_1, true),
         tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE_VERTICAL, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
         tracking_horizontal(&encoder_horizontal, ODOMETRY_WHEEL_SIZE_HORIZONTAL, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
         odom_sensors(&tracking_vertical, nullptr, &tracking_horizontal, nullptr, &inertial),

@@ -215,7 +215,6 @@ void elims_left_dsr_auton()
     }
 }
 
-
 void elims_right_auton()
 {
     constexpr auto FULL_POWER = 127;
@@ -246,16 +245,17 @@ void elims_right_auton()
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
+        conv->wings.toggle();
     }
 
     {
-        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 40, .earlyExitRange = 0.2}, false);
         conv->match_loader.toggle();
-        chassis->swingToHeading(30, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->swingToHeading(40, lemlib::DriveSide::LEFT, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1000, {.forwards = false, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(match_loader), 1000, {.forwards = false, .minSpeed = 50}, false);
     }
 
     {
@@ -282,6 +282,7 @@ void elims_right_auton()
     }
 
     {
+        conv->wings.toggle();
         chassis->swingToHeading(130, lemlib::DriveSide::LEFT, 500, {.minSpeed = 80}, false);
         chassis->swingToHeading(60, lemlib::DriveSide::RIGHT, 500, {.minSpeed = 80}, false);
         dt->l_chassis.reset_location_force(NEG_NEG);
