@@ -161,7 +161,7 @@ void pid_tune_mode()
 		if (controller_master.get_digital_new_press(ports::tune::TEST_LATERAL))
 		{
 			chassis->setPose(0,0,0);
-			chassis->moveToPoint(0, 10, 4000);
+			chassis->moveToPoint(0, 40, 4000);
 		}
 
 		if (false)
