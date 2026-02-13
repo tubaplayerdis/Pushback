@@ -5,6 +5,7 @@
 #include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/subsystems/localization.hpp"
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
 #include "../../include/pros/misc.hpp"
@@ -143,10 +144,7 @@ void sawp_dsr_auton_raw(bool push)
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    (void)dt->inertial.set_heading(0);
-    dt->lem_chassis.setPose(0,0,0);
-
-    dt->l_chassis.reset_location_force(NEG_NEG);
+    dt->l_chassis.perform_dsr_init(NEG_NEG, 0);
 
     if (push)
     {
@@ -171,7 +169,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
@@ -186,12 +184,12 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
         chassis->swingToHeading(205, lemlib::DriveSide::LEFT, 700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
         chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, false);
@@ -214,7 +212,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_POS);
+        dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
     {

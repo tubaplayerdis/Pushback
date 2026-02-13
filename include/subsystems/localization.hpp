@@ -13,7 +13,7 @@
 #include "../lemlib/chassis/chassis.hpp"
 #include "../lemlib/chassis/trackingWheel.hpp"
 #include "../pros/imu.hpp"
-#include "../cls/localization_utils.hpp"
+#include "../TitanReset/TitanReset.hpp"
 #include "../pros/adi.hpp"
 
 /*
@@ -54,19 +54,19 @@ public:
     lemlib::Chassis lem_chassis;
 
     /// Front localization sensor. Located near aligner
-    localization_sensor front_loc;
+    tr_sensor front_loc;
 
     /// Rear localization sensor. Located near match loader mount.
-    localization_sensor rear_loc;
+    tr_sensor rear_loc;
 
     /// Right localization sensor. Located on the side of the brain.
-    localization_sensor right_loc;
+    tr_sensor right_loc;
 
     /// Left localization sensor. Located on the opposite side of the brain.
-    localization_sensor left_loc;
+    tr_sensor left_loc;
 
     /// Localization chassis object
-    localization_chassis l_chassis;
+    tr_chassis l_chassis;
 
 private:
 

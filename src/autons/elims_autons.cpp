@@ -5,6 +5,7 @@
 #include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/subsystems/localization.hpp"
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
 #include "../../include/pros/misc.hpp"
@@ -154,9 +155,7 @@ void elims_left_dsr_auton()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(0, 0, 270);
-    dt->l_chassis.reset_location_force(NEG_POS);
+    dt->l_chassis.perform_dsr_init(NEG_POS, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -194,7 +193,7 @@ void elims_left_dsr_auton()
         chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.5,.minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
-        dt->l_chassis.reset_location_force(NEG_POS);
+        dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
     {
@@ -203,7 +202,7 @@ void elims_left_dsr_auton()
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(1500);
-        dt->l_chassis.reset_location_force(NEG_POS);
+        dt->l_chassis.perform_dsr_quad(NEG_POS);
         conv->match_loader.toggle();
     }
 
@@ -238,9 +237,7 @@ void elims_right_auton()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    (void)dt->inertial.set_heading(270);
-    dt->lem_chassis.setPose(0, 0, 270);
-    dt->l_chassis.reset_location_force(NEG_NEG);
+    dt->l_chassis.perform_dsr_init(NEG_POS, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -265,7 +262,7 @@ void elims_right_auton()
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
@@ -278,14 +275,14 @@ void elims_right_auton()
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
         conv->wings.toggle();
         chassis->swingToHeading(130, lemlib::DriveSide::LEFT, 500, {.minSpeed = 80}, false);
         chassis->swingToHeading(60, lemlib::DriveSide::RIGHT, 500, {.minSpeed = 80}, false);
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
         chassis->moveToPose(POS(wing_forward_final), 1000, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
     }

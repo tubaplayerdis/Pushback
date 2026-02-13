@@ -4,6 +4,7 @@
 #include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
 #include "../../include/subsystems/drivetrain.hpp"
+#include "../../include/subsystems/localization.hpp"
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
 #include "../../include/pros/misc.hpp"
@@ -110,7 +111,7 @@ void skills_routine()
 #ifdef SECTION_1
 
     {
-        dt->l_chassis.reset_location_force(NEG_POS);
+        dt->l_chassis.perform_dsr_init(NEG_POS, 0);
     }
 
     {
@@ -165,7 +166,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_normal(NEG_POS, NEG_POS);
+        dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
     {
@@ -176,7 +177,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_normal(POS_POS, POS_NEG);
+        dt->l_chassis.perform_dsr_quad(POS_POS);
     }
 
     {
@@ -199,7 +200,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_normal(POS_POS, POS_NEG);
+        dt->l_chassis.perform_dsr_quad(POS_POS);
     }
 
     {
@@ -228,7 +229,7 @@ void skills_routine()
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
-        dt->l_chassis.reset_location_normal(POS_POS, POS_NEG);
+        dt->l_chassis.perform_dsr_quad(POS_POS);
         conv->wings.extend();
     }
 
@@ -249,7 +250,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_force(POS_NEG);
+        dt->l_chassis.perform_dsr_quad(POS_NEG);
         (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
@@ -300,7 +301,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_normal(POS_NEG, POS_NEG);
+        dt->l_chassis.perform_dsr_quad(POS_NEG);
         chassis->moveToPose(POS(coords::segment_tres::pos_neg_trans_pose), 1000, {.minSpeed = 40}, false);
         conv->match_loader.toggle();
         chassis->moveToPoint(MPOS(coords::segment_tres::pos_neg_trans_point), 1700, {.minSpeed = 40}, false);
@@ -308,7 +309,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
@@ -317,7 +318,7 @@ void skills_routine()
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         pros::Task::delay(SCORING_TIME);
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
@@ -326,7 +327,7 @@ void skills_routine()
         chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
@@ -348,7 +349,7 @@ void skills_routine()
 #endif
 
     {
-        dt->l_chassis.reset_location_force(NEG_NEG);
+        dt->l_chassis.perform_dsr_quad(NEG_NEG);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         (void)conv->conveyor_intake.move(FULL_POWER);
         conv->match_loader.retract();

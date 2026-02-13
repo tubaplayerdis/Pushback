@@ -13,7 +13,7 @@
 #include "../../include/lemlib/pose.hpp"
 #include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/units/units.hpp"
-#include "../../include/cls/localization_utils.hpp"
+#include "../../include/TitanReset/TitanReset.hpp"
 #include "../../include/pros/rtos.hpp"
 #include <memory>
 #include <chrono>
@@ -53,8 +53,6 @@ namespace pid
     );
 }
 
-static const localization_options loc_options = {};
-
 using namespace ports::localization;
 using namespace ports::localization::settings;
 
@@ -67,11 +65,11 @@ localization::localization() :
         odom_sensors(&tracking_vertical, nullptr, &tracking_horizontal, nullptr, &inertial),
         lem_drivetrain(&drivetrain::get()->motors_left, &drivetrain::get()->motors_right, ports::drivetrain::settings::DRIVETRAIN_TRACK_WIDTH, ports::drivetrain::settings::DRIVETRAIN_WHEEL_DIAMETER, ports::drivetrain::settings::DRIVETRAIN_RPM, ports::drivetrain::settings::DRIVETRAIN_HORIZONTAL_DRIFT),
         lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
-        rear_loc(offsets::REAR, REAR_LOC),
-        right_loc(offsets::RIGHT, LEFT_LOC),
-        left_loc(offsets::LEFT, RIGHT_LOC),
-        front_loc(offsets::FRONT, FRONT_LOC),
-        l_chassis(loc_options, &inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc})
+        rear_loc({offsets::REAR_X, offsets::REAR_Y}, REAR_LOC),
+        right_loc({offsets::RIGHT_X, offsets::RIGHT_Y}, LEFT_LOC),
+        left_loc({offsets::LEFT_X, offsets::LEFT_Y}, RIGHT_LOC),
+        front_loc({offsets::FRONT_X, offsets::FRONT_Y}, FRONT_LOC),
+        l_chassis(&inertial, &lem_chassis, {&rear_loc, &right_loc, &left_loc, &front_loc})
 {
     lem_chassis.calibrate(true);
 }
@@ -126,5 +124,5 @@ localization* localization::get()
 
 void localization::distance_sensor_reset()
 {
-    l_chassis.reset_location();
+    l_chassis.perform_dsr();
 }

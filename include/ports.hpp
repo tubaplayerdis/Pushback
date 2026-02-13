@@ -99,10 +99,17 @@ namespace ports
 
         namespace offsets
         {
-            constexpr auto FRONT = 5.5;
-            constexpr auto REAR = 5.85;
-            constexpr auto LEFT = 5.25;
-            constexpr auto RIGHT = 5.25;
+            constexpr auto FRONT_X = 5.361;
+            constexpr auto FRONT_Y = 5.25;
+
+            constexpr auto RIGHT_X = 5.371;
+            constexpr auto RIGHT_Y = 3.23;
+
+            constexpr auto REAR_X = 5.823;
+            constexpr auto REAR_Y = -4.691;
+
+            constexpr auto LEFT_X = 5.371;
+            constexpr auto LEFT_Y = 3.23;
         }
     }
 }
