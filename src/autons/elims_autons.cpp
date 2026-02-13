@@ -237,7 +237,7 @@ void elims_right_auton()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    dt->l_chassis.perform_dsr_init(NEG_POS, 270);
+    dt->l_chassis.perform_dsr_init(NEG_NEG, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);

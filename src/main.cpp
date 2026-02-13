@@ -242,7 +242,9 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->l_chassis.perform_dsr_init(NEG_NEG, 270);
+        	(void)odom->inertial.set_heading(270);
+        	odom->lem_chassis.setPose(0,0,270);
+        	odom->l_chassis.perform_dsr_quad(NEG_NEG);
         }
 #endif
 

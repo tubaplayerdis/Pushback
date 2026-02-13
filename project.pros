@@ -47,7 +47,7 @@
                 "version": "0.5.6"
             },
             "TitanReset": {
-                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\TitanReset@0.0.1",
+                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\TitanReset@0.0.2",
                 "metadata": {
                     "origin": "TitanReset"
                 },
@@ -55,17 +55,17 @@
                 "py/object": "pros.conductor.templates.local_template.LocalTemplate",
                 "supported_kernels": "^4.2.1",
                 "system_files": [
+                    "include\\TitanReset\\TRChassis.hpp",
                     "firmware\\hot-cold-asset.mk",
                     "include\\TitanReset\\TitanReset.hpp",
-                    "include\\TitanReset\\TRConstants.hpp",
-                    "include\\TitanReset\\TRChassis.hpp",
                     "include\\TitanReset\\TRSensor.hpp",
+                    "firmware\\TitanReset.a",
                     "include\\TitanReset\\TRTypes.hpp",
-                    "firmware\\TitanReset.a"
+                    "include\\TitanReset\\TRConstants.hpp"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "0.0.1"
+                "version": "0.0.2"
             },
             "kernel": {
                 "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\kernel@4.2.1",
