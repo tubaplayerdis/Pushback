@@ -28,11 +28,11 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(14.01, // proportional gain (kP)
+    controller_settings_lateral(10.50, // proportional gain (kP)
                                               0.00, // integral gain (kI)
-                                              75, // derivative gain (kD)
+                                              70, // derivative gain (kD)
                                               0, // anti windup
-                                              0.5, // small error range, in inches
+                                              1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
                                               3, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
@@ -41,15 +41,15 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.5,  // kP — reduce a bit (was 1.6)
-                                0.001,  // kI — keep off
-                                15.8,  // kD — increase slightly for more damping
-                                0.0,    // anti-windup
-                                0.5,  // small error range
-                                100,  // small error timeout
-                                3,  // large error range
-                                500,  // large error timeout
-                                0     // slew rate
+    controller_settings_angular(2.1,   // kP: Lowered slightly to reduce 180° momentum
+                            0.0,  // kI: Increased to help finish small 10° turns
+                            13,  // kD: Lowered slightly to reduce "choke" on start
+                            0.0,   // anti-windup: Prevents kI from growing too large
+                            1, // small error range, in inches
+                            100, // small error range timeout, in milliseconds
+                            3, // large error range, in inches
+                            500, // large error range timeout, in milliseconds
+                            0      // slew rate
     );
 }
 
@@ -113,7 +113,7 @@ void localization::tick_implementation()
     }
 
     //Apply inputs.
-    lem_chassis.arcade(throttle, turn);
+    lem_chassis.arcade(throttle, turn, false, 0.65);
 }
 
 localization* localization::get()

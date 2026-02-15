@@ -74,10 +74,16 @@ void conveyor::tick_implementation() {
         descore.toggle();
     }
 
-    if (controller_master.get_digital_new_press(TOGGLE_WINGS))
+    if (controller_master.get_digital(TOGGLE_WINGS))
     {
-        // Toggle the ears (wings) that can fit into the long goals.
-        (void)wings.toggle();
+        wings.extend();
+    }
+    else
+    {
+        if (wings.is_extended())
+        {
+            wings.retract();
+        }
     }
 }
 

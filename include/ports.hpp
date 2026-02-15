@@ -73,8 +73,8 @@ namespace ports
             constexpr auto TOGGLE_DESCORE = pros::E_CONTROLLER_DIGITAL_Y;
             constexpr auto EXHAUST_OUT = pros::E_CONTROLLER_DIGITAL_L2;
             constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
-            constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_A;
-            constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
+            constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_R2;
+            constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_A;//Moves the ramp down, move intake in and ove exhaust backwards slightly
         }
     }
 
@@ -92,7 +92,7 @@ namespace ports
         namespace settings
         {
             constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -1.100; //The vertical offset of the horizontal tracking wheel from the center of the robot in inches.
-            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
+            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = -0.5; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = lemlib::Omniwheel::NEW_2;
             constexpr auto ODOMETRY_WHEEL_SIZE_HORIZONTAL = lemlib::Omniwheel::NEW_275_HALF;
         }
