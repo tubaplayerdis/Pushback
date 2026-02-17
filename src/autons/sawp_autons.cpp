@@ -146,6 +146,8 @@ void sawp_dsr_auton_raw(bool push)
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 0);
 
+    dt->l_chassis.start_location_recording(__DATE__, __TIME__);
+
     if (push)
     {
         chassis->moveToPoint(MPOS(push_point), 550, {}, false);

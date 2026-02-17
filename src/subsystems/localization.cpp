@@ -97,7 +97,7 @@ void localization::tick_implementation()
         }
         else if (controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
         {
-            lem_chassis.tank(-71, -68, true);
+            lem_chassis.tank(-50, -47, true);
         }
         else
         {
