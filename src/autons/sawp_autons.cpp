@@ -196,15 +196,25 @@ void sawp_dsr_auton_raw(bool push)
 
     {
         chassis->turnToPoint(MPOS(middle_goal_neg_pos), 400, {}, false);
-        chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, false);
-        (void)conv->exhaust.move(0.5 * FULL_POWER);
-        pros::Task::delay(375);
+        chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, true);
+        {
+            conv->conveyor_intake.move(-FULL_POWER);
+            pros::Task::delay(500);
+            conv->conveyor_intake.brake();
+            chassis->waitUntilDone();
+        }
+        (void)conv->exhaust.move(-FULL_POWER * 0.8);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
+        (void)conv->trapdoor.extend();
+        pros::Task::delay(650);
+        (void)conv->trapdoor.retract();
+        (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .minSpeed = 20}, false);
+        chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .minSpeed = 40}, false);
         chassis->swingToHeading(TPOS(primer_match_loader_neg_pos), lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(1000);
