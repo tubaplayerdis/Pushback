@@ -173,7 +173,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_neg_neg), 900, {.forwards = true, .minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(long_goal_neg_neg), 900, {.forwards = true, .minSpeed = 60, .earlyExitRange = 0.5}, false);
         chassis->tank(70, 70, true);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(1250);
@@ -188,15 +188,14 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        chassis->swingToHeading(205, lemlib::DriveSide::LEFT, 700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        dt->l_chassis.perform_dsr_quad(NEG_NEG);
+        chassis->swingToPoint(MPOS(block_blip_neg_neg), lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .earlyExitRange = 1}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 50}, false);
         chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, false);
     }
 
     {
-        chassis->turnToHeading(120, 400, {}, false);
+        chassis->turnToPoint(MPOS(middle_goal_neg_pos), 400, {}, false);
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, false);
         (void)conv->exhaust.move(0.5 * FULL_POWER);
         pros::Task::delay(375);
@@ -205,7 +204,7 @@ void sawp_dsr_auton_raw(bool push)
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 20}, false);
+        chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .minSpeed = 20}, false);
         chassis->swingToHeading(TPOS(primer_match_loader_neg_pos), lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(1000);
@@ -216,7 +215,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_neg_pos), 1000, {.minSpeed = 30}, false);
+        chassis->moveToPoint(MPOS(long_goal_neg_pos), 1000, {.minSpeed = 60, .earlyExitRange = 0.5}, false);
         chassis->tank(70, 70, true);
         (void)conv->exhaust.move(FULL_POWER);
     }
