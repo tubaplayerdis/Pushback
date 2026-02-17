@@ -158,15 +158,17 @@ void elims_left_dsr_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 270);
 
+    dt->l_chassis.start_location_recording(__DATE__, __TIME__);
+
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 
     {
-        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30, .earlyExitRange = 0.5}, false);
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2.0}, false);
         conv->match_loader.toggle();
-        chassis->swingToHeading(125, lemlib::DriveSide::RIGHT, 700, {.direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .minSpeed = 30}, false);
+        chassis->swingToHeading(155, lemlib::DriveSide::RIGHT, 700, {.direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .minSpeed = 30}, false);
         //chassis->moveToPoint(MPOS(block_blip_duo), 900, {.forwards = false}, false);
     }
 
@@ -192,7 +194,7 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .horizontalDrift = 2, .lead = 0.4, .minSpeed = 20}, false);
+        chassis->moveToPose(POS(match_loader), 2000, {.forwards = false, .horizontalDrift = 2, .lead = 0.4, .minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
         dt->l_chassis.perform_dsr_quad(NEG_POS);
@@ -241,7 +243,7 @@ void elims_right_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 270);
 
-    dt->l_chassis.start_location_recording("2/14/2026", "1012");
+    dt->l_chassis.start_location_recording(__DATE__, __TIME__);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -287,7 +289,7 @@ void elims_right_auton()
         chassis->swingToHeading(130, lemlib::DriveSide::LEFT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
-        chassis->moveToPose(POS(wing_forward_final), 1000, {.minSpeed = 60, .earlyExitRange = 0.1}, false);
+        chassis->moveToPose(POS(wing_forward_final), 1000, {.horizontalDrift = 2, .lead = 0.1, .minSpeed = 60, .earlyExitRange = 0.1}, false);
         chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     }
 }

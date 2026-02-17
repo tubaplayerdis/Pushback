@@ -42,5 +42,5 @@ plt.quiver(
 plt.axis("equal")
 plt.xlabel("X (in)")
 plt.ylabel("Y (in)")
-plt.title("Lemlib Odometry Overlay")
+plt.title("TitanReset debug data")
 plt.show()

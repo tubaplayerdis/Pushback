@@ -47,7 +47,7 @@
                 "version": "0.5.6"
             },
             "TitanReset": {
-                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\TitanReset@0.0.2",
+                "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\TitanReset@0.0.3",
                 "metadata": {
                     "origin": "TitanReset"
                 },
@@ -56,16 +56,16 @@
                 "supported_kernels": "^4.2.1",
                 "system_files": [
                     "include\\TitanReset\\TRChassis.hpp",
-                    "firmware\\hot-cold-asset.mk",
-                    "include\\TitanReset\\TitanReset.hpp",
-                    "include\\TitanReset\\TRSensor.hpp",
-                    "firmware\\TitanReset.a",
                     "include\\TitanReset\\TRTypes.hpp",
-                    "include\\TitanReset\\TRConstants.hpp"
+                    "include\\TitanReset\\TRConstants.hpp",
+                    "firmware\\hot-cold-asset.mk",
+                    "firmware\\TitanReset.a",
+                    "include\\TitanReset\\TRSensor.hpp",
+                    "include\\TitanReset\\TitanReset.hpp"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "0.0.2"
+                "version": "0.0.3"
             },
             "kernel": {
                 "location": "C:\\Users\\aaron\\AppData\\Roaming\\PROS\\templates\\kernel@4.2.1",

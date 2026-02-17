@@ -64,14 +64,14 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital_new_press(TOGGLE_MATCH_LOADER))
     {
-        if (descore.is_extended()) descore.retract();
+        if (descore.is_extended() && !match_loader.is_extended()) descore.retract();
         (void)match_loader.toggle();
     }
 
     if (controller_master.get_digital_new_press(TOGGLE_DESCORE))
     {
-        if (match_loader.is_extended()) trapdoor.retract();
-        descore.toggle();
+        if (match_loader.is_extended() && !descore.is_extended()) match_loader.retract();
+        (void)descore.toggle();
     }
 
     if (controller_master.get_digital(TOGGLE_WINGS))

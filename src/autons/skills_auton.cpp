@@ -151,7 +151,7 @@ void skills_routine()
         conv->match_loader.toggle();
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER * 0.80);
-        chassis->moveToPose(POS(coords::segment_uno::match_loader_neg_pos), 2000, {.forwards = false, .lead = 0.40, .maxSpeed = 90}, true);
+        chassis->moveToPose(POS(coords::segment_uno::match_loader_neg_pos), 2000, {.forwards = false, .horizontalDrift = 2, .lead = 0.40, .maxSpeed = 90}, true);
         {
             pros::Task::delay(500);
             (void)conv->trapdoor.retract();
@@ -294,7 +294,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_tres::match_loader_pos_neg), 2000, {.forwards = false, .lead = 0.40, .maxSpeed = 90}, false);
+        chassis->moveToPose(POS(coords::segment_tres::match_loader_pos_neg), 2000, {.forwards = false, .horizontalDrift = 2, .lead = 0.40, .maxSpeed = 90}, false);
         (void)conv->exhaust.move(-FULL_POWER * 0.2);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
