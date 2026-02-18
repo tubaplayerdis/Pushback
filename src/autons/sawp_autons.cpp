@@ -28,12 +28,12 @@ namespace coords
         namespace dsr
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-45, -42.25, 90);
+            pos match_loader_neg_neg_prime(-45, -38.50, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
-            pos block_blip_neg_pos(-22.0, 23.5, 0);
-            pos middle_goal_neg_pos(-10.5, 16.5, 135);
-            pos primer_match_loader_neg_pos(-45, 52.0, 90);
+            pos block_blip_neg_pos(-25.5, 24, 0);
+            pos middle_goal_neg_pos(-10.5, 10.5, 135);
+            pos match_loader_neg_pos(-57, 50.5, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
     }
@@ -186,11 +186,11 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        dt->l_chassis.perform_dsr_quad(NEG_NEG);
+        //dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_neg_neg), lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .earlyExitRange = 1}, false);
+        chassis->turnToPoint(MPOS(block_blip_neg_pos), 1000, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .earlyExitRange = 1}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 50}, false);
         chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, false);
@@ -200,15 +200,16 @@ void sawp_dsr_auton_raw(bool push)
         chassis->turnToPoint(MPOS(middle_goal_neg_pos), 400, {}, false);
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, true);
         {
+            conv->exhaust.brake();
             conv->conveyor_intake.move(-FULL_POWER);
-            pros::Task::delay(500);
+            pros::Task::delay(200);
             conv->conveyor_intake.brake();
             chassis->waitUntilDone();
         }
         (void)conv->exhaust.move(-FULL_POWER * 0.8);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
         (void)conv->trapdoor.extend();
-        pros::Task::delay(650);
+        pros::Task::delay(900);
         (void)conv->trapdoor.retract();
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
@@ -216,8 +217,7 @@ void sawp_dsr_auton_raw(bool push)
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(primer_match_loader_neg_pos), 2000, {.forwards = false, .minSpeed = 40}, false);
-        chassis->swingToHeading(TPOS(primer_match_loader_neg_pos), lemlib::DriveSide::RIGHT, 500, {}, false);
+        chassis->moveToPose(POS(match_loader_neg_pos), 2000, {.forwards = false, .horizontalDrift = 2, .lead = 0.4, .minSpeed = 20}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(1000);
     }
