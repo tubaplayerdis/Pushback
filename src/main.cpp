@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-#define COMPETITION
+//#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
@@ -214,7 +214,7 @@ void opcontrol() {
 		conv->wings.extend();
 	}
 
-	odom->l_chassis.perform_dsr_init(NEG_NEG, 270);
+	odom->l_chassis.perform_dsr_init(NEG_NEG, 0);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -227,7 +227,8 @@ void opcontrol() {
 #ifdef COMPETITION
 			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
 #else
-			lemlib::Pose pose = odom->lem_chassis.getPose();
+			//odom->l_chassis.perform_dsr();
+			auto pose = odom->lem_chassis.getPose();
 			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
 #endif
 		}

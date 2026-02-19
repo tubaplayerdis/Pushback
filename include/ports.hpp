@@ -62,8 +62,8 @@ namespace ports
         constexpr auto EXHAUST = 1;
         constexpr auto CONVEYOR = -10;
         constexpr auto MATCH_LOADER = 'B';
-        constexpr auto WINGS = 'A';
-        constexpr auto TRAPDOOR = 'C';
+        constexpr auto WINGS = 'C';
+        constexpr auto TRAPDOOR = 'A';
         constexpr auto DESCORE = 'D';
 
         namespace controls
@@ -84,10 +84,10 @@ namespace ports
         constexpr auto ROTATION_VERTICAL = 14;
         constexpr auto ENCODER_HORIZONTAL_0 = 'E';
         constexpr auto ENCODER_HORIZONTAL_1 = 'F';
-        constexpr auto FRONT_LOC = 4; //North
-        constexpr auto REAR_LOC = 3; //South
+        constexpr auto FRONT_LOC = 3; //North
+        constexpr auto REAR_LOC = 5; //South
         constexpr auto LEFT_LOC = 2; //West
-        constexpr auto RIGHT_LOC = 5; //East
+        constexpr auto RIGHT_LOC = 4; //East
 
         namespace settings
         {
@@ -99,14 +99,14 @@ namespace ports
 
         namespace offsets
         {
-            constexpr auto FRONT_X = 5.361;
+            constexpr auto FRONT_X = 5.651;
             constexpr auto FRONT_Y = 5.25;
 
             constexpr auto RIGHT_X = 5.371;
             constexpr auto RIGHT_Y = 3.23;
 
             constexpr auto REAR_X = 5.823;
-            constexpr auto REAR_Y = -4.691;
+            constexpr auto REAR_Y = 4.691;
 
             constexpr auto LEFT_X = 5.371;
             constexpr auto LEFT_Y = 3.23;
