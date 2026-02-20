@@ -214,7 +214,7 @@ void opcontrol() {
 		conv->wings.extend();
 	}
 
-	odom->l_chassis.perform_dsr_init(NEG_NEG, 0);
+	odom->l_chassis.perform_dsr_init(POS_POS, 270);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -228,7 +228,7 @@ void opcontrol() {
 			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
 #else
 			//odom->l_chassis.perform_dsr();
-			auto pose = odom->lem_chassis.getPose();
+			auto pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
 			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
 #endif
 		}
@@ -243,9 +243,7 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	(void)odom->inertial.set_heading(270);
-        	odom->lem_chassis.setPose(0,0,270);
-        	odom->l_chassis.perform_dsr_quad(NEG_NEG);
+        	odom->l_chassis.perform_dsr_init(NEG_NEG, 0);
         }
 #endif
 

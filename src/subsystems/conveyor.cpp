@@ -74,16 +74,9 @@ void conveyor::tick_implementation() {
         (void)descore.toggle();
     }
 
-    if (controller_master.get_digital(TOGGLE_WINGS))
+    if (controller_master.get_digital_new_press(TOGGLE_WINGS))
     {
-        wings.extend();
-    }
-    else
-    {
-        if (wings.is_extended())
-        {
-            wings.retract();
-        }
+        wings.toggle();
     }
 }
 

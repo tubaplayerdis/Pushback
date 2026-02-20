@@ -6,7 +6,7 @@
 
 /**
  * Options used by TitanReset when initializing the TitanReset chassis.
- * 
+ *
  * @note Subject to change as more modifiable options are added.
  */
 struct tr_options
@@ -53,7 +53,7 @@ public:
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know which quadrant it is in.
-     * 
+     *
      * @note Use this function after a movement that performs an action such as driving over a parking zone which crosses quadrants.
      *
      * @param quad The quadrant the robot is currently in
@@ -62,8 +62,8 @@ public:
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know where it is and the sensors are fully trusted.
-     * 
-     * @note This will set the heading of the chassis and imu as it performs a distance sensor reset. 
+     *
+     * @note This will set the heading of the chassis and imu as it performs a distance sensor reset.
      * @warning This will always set the location of the robot. Use only in a situation where the robot starts in familliar place each time like the start of an auton.
      *
      * @param quadrant The quadrant the robot is currently in
@@ -80,9 +80,13 @@ public:
     /**
      * @brief Starts an odometry system and distance sensor system recording in a background task
      *
-     * @param filename name of the file for the recording
+     * @note appends to the files: odom_data.txt, dist_data.txt respectively
+     *
+     * @param name name of the recording
+     * @param date date of the recording
+     * @param time time of the recording
      */
-    void start_location_recording(std::string date, std::string time);
+    void start_location_recording(std::string name, std::string date = __DATE__, std::string time = __TIME__);
 
     /**
      * @brief Stops the current odometry system recording
@@ -198,7 +202,7 @@ private:
      */
     pros::Task* location_task;
 
-    /** 
+    /**
      * Sensors
      */
     tr_sensor* north;
@@ -207,7 +211,7 @@ private:
     tr_sensor* west;
     pros::Imu* imu;
 
-    /** 
+    /**
      * Drivebase reference
      */
     tr_drivebase_generic* chassis;
