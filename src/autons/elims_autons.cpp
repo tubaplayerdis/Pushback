@@ -120,6 +120,7 @@ void elims_left_dsr_auton()
     }
 
     {
+        conv->exhaust.move(EXHAUST_INDEX);
         chassis->swingToHeading(130, lemlib::DriveSide::LEFT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         chassis->moveToPose(POS(wing_forward_final), 1500, {.minSpeed = 40}, false);
@@ -196,6 +197,7 @@ void elims_right_auton()
 
     {
         conv->wings.toggle();
+        conv->exhaust.move(EXHAUST_INDEX);
         chassis->swingToHeading(130, lemlib::DriveSide::LEFT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {.minSpeed = 120, .earlyExitRange = 1}, false);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
