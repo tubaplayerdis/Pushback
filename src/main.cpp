@@ -203,6 +203,8 @@ void opcontrol() {
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
+	odom->lem_chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+
 #ifndef COMPETITION
 	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
 	{

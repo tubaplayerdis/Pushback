@@ -5,7 +5,7 @@ from PIL import Image
 
 # Load lemlib data
 data = pd.read_csv(
-    "elims_right_debug.txt",
+    "elims_left.txt",
     header=None,
     names=["x", "y", "theta"]
 )
