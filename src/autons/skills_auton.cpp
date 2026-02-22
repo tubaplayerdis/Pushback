@@ -39,10 +39,10 @@ namespace coords
 
     namespace segment_tres
     {
-        pos match_loader_pos_neg(50, -45.0, 270);
-        pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-35, -62, 270);
-        pos long_goal_neg_neg(-25, -47.0, 90);
+        pos match_loader_pos_neg(49, -47.0, 270);
+        pos pos_neg_trans_pose(24, -61.5, 270);
+        pos pos_neg_trans_point(-35, -61.5, 270);
+        pos long_goal_neg_neg(-25, -46.75, 90);
         pos match_loader_neg_neg(-58, -47.5, 90);
     }
 

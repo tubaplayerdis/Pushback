@@ -36,7 +36,7 @@ namespace coords
         {
             pos block_blip_trio(-29.0, -19.0, 0);
             pos long_goal_uno(-25, -46.0, 90);
-            pos match_loader(-55, -46.5, 90);
+            pos match_loader(-55, -45.75, 90);
             pos wing_forward_final(-4, -36.5, 90);
         }
     }
@@ -165,11 +165,11 @@ void elims_right_auton()
     {
         chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 80, .earlyExitRange = 0.5}, false);
         conv->match_loader.toggle();
-        chassis->swingToPoint(MPOS(match_loader), lemlib::DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 95, .earlyExitRange = 5}, false);
+        chassis->swingToPoint(MPOS(match_loader), lemlib::DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 105, .earlyExitRange = 5}, false);
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.20, .minSpeed = 60}, false);
+        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.20, .minSpeed = 50}, false);
     }
 
     {

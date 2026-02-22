@@ -18,12 +18,12 @@ namespace coords
     {
         namespace dsr
         {
-            pos push_point(-47, 3, 0);
+            pos push_point(-47, 4, 0);
             pos match_loader_neg_neg_prime(-47.3, -38.50, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -40.50, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -40.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
-            pos block_blip_neg_pos(-24, 24, 0);
+            pos block_blip_neg_pos(-24, 24.5, 0);
             pos middle_goal_neg_pos(-8.0, 10.5, 135);
             pos match_loader_neg_pos(-55, 47.6, 90);
             pos long_goal_neg_pos(-29, 47.6, 90);
