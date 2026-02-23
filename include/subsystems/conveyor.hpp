@@ -13,14 +13,6 @@
 #include "../pros/distance.hpp"
 #include "../pros/optical.hpp"
 
-/// Represents the colors of the game objects.
-enum object_color : uint8_t
-{
-    NEUTRAL = 0,
-    BLUE = 1,
-    RED = 2
-};
-
 class conveyor final : public subsystem
 {
     /// Friend class to allow unique_ptr to access deconstructor
@@ -43,7 +35,7 @@ public:
     /// Pneumatics for the "wing" mechanisms
     pros::adi::Pneumatics wings;
 
-    /// Intake lift pneumatics
+    /// Middle goal descore pneumatics
     pros::adi::Pneumatics descore;
 
 private:

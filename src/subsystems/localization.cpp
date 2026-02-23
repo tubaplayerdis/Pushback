@@ -126,3 +126,8 @@ void localization::distance_sensor_reset()
 {
     l_chassis.perform_dsr();
 }
+
+void localization::distance_sensor_reset()
+{
+    l_chassis.perform_dsr();
+}

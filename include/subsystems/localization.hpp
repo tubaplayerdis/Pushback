@@ -29,6 +29,7 @@ class localization final : public subsystem
     friend class std::unique_ptr<localization>;
 
 public:
+
     /// Inertial sensor responsible for things like velocity and rotation
     pros::Imu inertial;
 
@@ -38,34 +39,34 @@ public:
     /// Pros encoder for horizontal wheel
     pros::adi::Encoder encoder_horizontal;
 
-    /// LemLib vertical tracking wheel for autons
+    /// LemLib vertical tracking wheel wrapper object
     lemlib::TrackingWheel tracking_vertical;
 
-    /// LemLib horizontal tracking wheel for autons
+    /// LemLib horizontal tracking wheel wrapper object
     lemlib::TrackingWheel tracking_horizontal;
 
-    /// LemLib "odometry" object for autons
+    /// LemLib "odometry" object aggregating odometry objects
     lemlib::OdomSensors odom_sensors;
 
-    /// LemLib drivetrain object. Used in autons and the chassis object
+    /// LemLib drivetrain object. Organizes the motors.
     lemlib::Drivetrain lem_drivetrain;
 
-    /// LemLib chassis object. Used in autons and for controller inputs
+    /// LemLib chassis object. Compiles the Odometry and Drivetrain objects for advanced autonomous creation
     lemlib::Chassis lem_chassis;
 
-    /// Front localization sensor. Located near aligner
+    /// Front TitanReset sensor. Located near aligner
     tr_sensor front_loc;
 
-    /// Rear localization sensor. Located near match loader mount.
+    /// Rear TitanReset sensor. Located near match loader mount.
     tr_sensor rear_loc;
 
-    /// Right localization sensor. Located on the side of the brain.
+    /// Right TitanReset sensor. Located on the side of the brain.
     tr_sensor right_loc;
 
-    /// Left localization sensor. Located on the opposite side of the brain.
+    /// Left TitanReset sensor. Located on the opposite side of the brain.
     tr_sensor left_loc;
 
-    /// Localization chassis object
+    /// TitanReset chassis object
     tr_chassis l_chassis;
 
 private:
@@ -79,10 +80,6 @@ protected:
     void tick_implementation() override;
 
 public:
-
-    /// Resets the pose of the lemlib chassis object during skills or before autons.
-    /// @note Set the heading of the robot beforehand. An example is for skills where the robot needs to be told it is 90 degrees turned.
-    void distance_sensor_reset();
 
     /// public accessor method for singleton.
     static localization* get();
