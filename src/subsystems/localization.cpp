@@ -121,13 +121,3 @@ localization* localization::get()
     if (!odometry_instance) odometry_instance = std::unique_ptr<localization>(new localization() );
     return odometry_instance.get();
 }
-
-void localization::distance_sensor_reset()
-{
-    l_chassis.perform_dsr();
-}
-
-void localization::distance_sensor_reset()
-{
-    l_chassis.perform_dsr();
-}
