@@ -6,7 +6,7 @@
 
 /**
  * Options used by TitanReset when initializing the TitanReset chassis.
- *
+ * 
  * @note Subject to change as more modifiable options are added.
  */
 struct tr_options
@@ -16,6 +16,15 @@ struct tr_options
      */
     const float sensor_trust = 1.0;
 };
+
+/**
+ *  Standard field perimeter radii.
+ */
+namespace tr_fields
+{
+    constexpr float plastic = 70.205;
+    constexpr float metal = 70.336;
+}
 
 /**
  * TitanReset chassis object. Used to perform distance sensor resets
@@ -33,7 +42,7 @@ public:
      * @param base pointer to the lemlib chassis of the robot
      * @param sensors array of pointers to the localization sensors of the robot
      */
-    tr_chassis(pros::Imu* inertial, lemlib::Chassis* base, std::array<tr_sensor*,4> sensors);
+    tr_chassis(pros::Imu* inertial, lemlib::Chassis* base, std::array<tr_sensor*,4> sensors, const float field_radius = tr_fields::plastic);
 
     /**
      * @brief Initialize the localization chassis
@@ -41,10 +50,10 @@ public:
      *
      * @param settings customizable trust and gain options for the localization algorithm
      * @param inertial pointer to the inertial sensor on the robot
-     * @param base pointer to the lemlib chassis of the robot
+     * @param base pointer to the drivebase chassis of the robot
      * @param sensors array of pointers to the localization sensors of the robot
      */
-    tr_chassis(pros::Imu* inertial, tr_drivebase_generic* base, std::array<tr_sensor*,4> sensors);
+    tr_chassis(pros::Imu* inertial, tr_drivebase_generic* base, std::array<tr_sensor*,4> sensors, const float field_radius = tr_fields::plastic);
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot already knows where it is and where it is facing.
@@ -53,7 +62,7 @@ public:
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know which quadrant it is in.
-     *
+     * 
      * @note Use this function after a movement that performs an action such as driving over a parking zone which crosses quadrants.
      *
      * @param quad The quadrant the robot is currently in
@@ -62,8 +71,8 @@ public:
 
     /**
      * @brief Performs a distance sensor reset using the sensors on the robot given the robot does not know where it is and the sensors are fully trusted.
-     *
-     * @note This will set the heading of the chassis and imu as it performs a distance sensor reset.
+     * 
+     * @note This will set the heading of the chassis and imu as it performs a distance sensor reset. 
      * @warning This will always set the location of the robot. Use only in a situation where the robot starts in familliar place each time like the start of an auton.
      *
      * @param quadrant The quadrant the robot is currently in
@@ -79,7 +88,7 @@ public:
 
     /**
      * @brief Starts an odometry system and distance sensor system recording in a background task
-     *
+     * 
      * @note appends to the files: odom_data.txt, dist_data.txt respectively
      *
      * @param name name of the recording
@@ -108,6 +117,11 @@ private:
     * Active sensors being used by the robot.
     */
     int active_sensors;
+
+    /**
+     * Active field radius.
+     */
+    const float wall_cord;
 
     void set_active_sensors(int sensors);
 
@@ -202,7 +216,7 @@ private:
      */
     pros::Task* location_task;
 
-    /**
+    /** 
      * Sensors
      */
     tr_sensor* north;
@@ -211,7 +225,7 @@ private:
     tr_sensor* west;
     pros::Imu* imu;
 
-    /**
+    /** 
      * Drivebase reference
      */
     tr_drivebase_generic* chassis;
