@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-#define COMPETITION
+//#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
@@ -245,7 +245,9 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->l_chassis.perform_dsr_init(NEG_NEG, 0);
+        	odom->lem_chassis.setPose(0,0,180);
+        	odom->lem_chassis.turnToHeading(280,1000, {.minSpeed = 80}, false);
+        	odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 30, .earlyExitRange = 1}, false);
         }
 #endif
 

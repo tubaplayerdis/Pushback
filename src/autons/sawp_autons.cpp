@@ -23,7 +23,7 @@ namespace coords
             pos match_loader_neg_neg_prime_push(-47.3, -40.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-22.75, -15, 180);
-            pos block_blip_neg_pos(-24, 24.5, 0);
+            pos block_blip_neg_pos(-24, 30.5, 0);
             pos middle_goal_neg_pos(-8.0, 10.5, 135);
             pos match_loader_neg_pos(-55, 47.6, 90);
             pos long_goal_neg_pos(-29, 47.6, 90);
@@ -107,14 +107,22 @@ void sawp_dsr_auton_raw(bool push)
         }
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 50}, false);
-        chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, true);
+        chassis->moveToPoint(MPOS(block_blip_neg_pos), 2500, {.forwards = false, .maxSpeed = 85}, true);
         {
             chassis->waitUntil(42);
+            conv->match_loader.toggle();
+            pros::Task::delay(150);
             conv->match_loader.toggle();
             chassis->waitUntilDone();
         }
     }
 
+    {
+        chassis->turnToHeading(280,1000, {.minSpeed = 80}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 30, .earlyExitRange = 1}, false);
+    }
+
+    /*
     {
         chassis->turnToPoint(MPOS(middle_goal_neg_pos), 500, {.minSpeed = 40, .earlyExitRange = 0.1}, false);
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, true);
@@ -133,9 +141,19 @@ void sawp_dsr_auton_raw(bool push)
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
+    */
 
     {
-        chassis->moveToPose(POS(match_loader_neg_pos), 1500, {.forwards = false, .horizontalDrift = 2, .lead = 0.25, .minSpeed = 60}, false);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        chassis->turnToHeading(90, 1000, {.minSpeed = 100, .earlyExitRange = 1}, true);
+        pros::Task::delay(1500);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+        dt->l_chassis.perform_dsr_quad(NEG_POS);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(match_loader_neg_pos), 1500, {.forwards = false, .minSpeed = 60}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(1000);
     }
@@ -145,9 +163,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_neg_pos), 1000, {.minSpeed = 60, .earlyExitRange = 4}, false);
-        chassis->tank(30, 30, true);
-        (void)conv->exhaust.move(FULL_POWER);
+        chassis->moveToPoint(MPOS(middle_goal_neg_pos), 1500, {.minSpeed = 60, .earlyExitRange = 4}, false);
     }
 
 }

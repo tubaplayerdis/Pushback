@@ -24,6 +24,13 @@
 
 std::unique_ptr<localization> odometry_instance;
 
+namespace field_constants
+{
+    constexpr float metal = 70.408;
+    constexpr float plastic = 70.283;
+    constexpr float home = 70.208;
+}
+
 namespace pid
 {
     // Linear/lateral movement settings
@@ -69,7 +76,7 @@ localization::localization() :
         right_loc({offsets::RIGHT_X, offsets::RIGHT_Y}, LEFT_LOC),
         left_loc({offsets::LEFT_X, offsets::LEFT_Y}, RIGHT_LOC),
         front_loc({offsets::FRONT_X, offsets::FRONT_Y}, FRONT_LOC),
-        l_chassis(&inertial, &lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc})
+        l_chassis(&inertial, &lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::home)
 {
     lem_chassis.calibrate(true);
 }
