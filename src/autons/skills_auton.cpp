@@ -393,4 +393,4 @@ void skills_routine()
     }
 }
 
-ts::auton autons::skills = ts::auton("Skills", skills_routine);
+ts::auton autons::skills = ts::auton("SKILLZ", skills_routine);

@@ -42,8 +42,6 @@ namespace ports
         {
             constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
             constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
-            constexpr auto SWING_LEFT = pros::E_CONTROLLER_DIGITAL_LEFT;
-            constexpr auto SWING_RIGHT = pros::E_CONTROLLER_DIGITAL_RIGHT;
             constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_B;
         }
 
@@ -75,6 +73,7 @@ namespace ports
             constexpr auto TOGGLE_MATCH_LOADER = pros::E_CONTROLLER_DIGITAL_X;
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_A;
             constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
+            constexpr auto HALF_OUT = pros::E_CONTROLLER_DIGITAL_RIGHT;
         }
     }
 

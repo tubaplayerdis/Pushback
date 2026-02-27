@@ -24,11 +24,11 @@ namespace coords
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
                 pos middle_goal_high(-8.5, 8.5, 135);
-                pos match_loader(-55, 46.65, 90);
+                pos match_loader(-55, 47.05, 90);
                 pos long_goal(-25, 47.0, 90);
                 pos wing_prime_back(-36, 55, 0);
                 pos wing_forward_init(-12, 57.5, 90);
-                pos wing_forward_final(-4, 57.5, 90);
+                pos wing_forward_final(-4, 60.5, 90);
             }
         }
 
@@ -106,7 +106,7 @@ void elims_left_dsr_auton()
         chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .horizontalDrift = 2, .lead = 0.3, .minSpeed = 60}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
-        dt->l_chassis.perform_dsr_quad(NEG_POS);
+        //dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
     {
@@ -115,7 +115,7 @@ void elims_left_dsr_auton()
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(1000);
-        dt->l_chassis.perform_dsr_quad(NEG_POS);
+        //dt->l_chassis.perform_dsr_quad(NEG_POS);
         conv->match_loader.toggle();
     }
 
@@ -163,13 +163,13 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 80, .earlyExitRange = 0.5}, false);
+        chassis->moveToPoint(MPOS(block_blip_trio), 600, {.forwards = false, .minSpeed = 100, .earlyExitRange = 0.5}, false);
         conv->match_loader.toggle();
         chassis->swingToPoint(MPOS(match_loader), lemlib::DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 105, .earlyExitRange = 5}, false);
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.20, .minSpeed = 50}, false);
+        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .lead = 0.20, .minSpeed = 60}, false);
     }
 
     {
@@ -207,5 +207,5 @@ void elims_right_auton()
     }
 }
 
-ts::auton autons::elims_left_dsr = ts::auton("ELIM LEFT DSR", elims_left_dsr_auton);
-ts::auton autons::elims_right = ts::auton("ELIM RIGHT DSR", elims_right_auton);
+ts::auton autons::elims_left_dsr = ts::auton("GORDON", elims_left_dsr_auton);
+ts::auton autons::elims_right = ts::auton("GERBERT", elims_right_auton);

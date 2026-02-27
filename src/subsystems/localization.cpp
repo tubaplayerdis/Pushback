@@ -76,7 +76,7 @@ localization::localization() :
         right_loc({offsets::RIGHT_X, offsets::RIGHT_Y}, LEFT_LOC),
         left_loc({offsets::LEFT_X, offsets::LEFT_Y}, RIGHT_LOC),
         front_loc({offsets::FRONT_X, offsets::FRONT_Y}, FRONT_LOC),
-        l_chassis(&inertial, &lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::home)
+        l_chassis(&inertial, &lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::metal)
 {
     lem_chassis.calibrate(true);
 }
@@ -88,36 +88,6 @@ void localization::tick_implementation()
     //Acquire throttle and turning values
     int32_t throttle = -1 * controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
     int32_t turn = controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
-
-    if (throttle == 0 && turn == 0)
-    {
-        drivetrain* drive = drivetrain::get();
-        if (controller_master.get_digital(ports::drivetrain::controls::SWING_LEFT))
-        {
-            (void)drive->motors_left.set_brake_mode_all(pros::MotorBrake::hold);
-            (void)drive->motors_right.move(FULL_POWER);
-        }
-        else if (controller_master.get_digital(ports::drivetrain::controls::SWING_RIGHT))
-        {
-            (void)drive->motors_left.move(FULL_POWER);
-            (void)drive->motors_right.set_brake_mode_all(pros::MotorBrake::hold);
-        }
-        else if (controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
-        {
-            lem_chassis.tank(-50, -47, true);
-        }
-        else
-        {
-            if (drive->motors_left.get_brake_mode(0) != pros::MotorBrake::coast || drive->motors_right.get_brake_mode(0) != pros::MotorBrake::coast)
-            {
-                (void)drive->motors_left.set_brake_mode_all(pros::MotorBrake::coast);
-                (void)drive->motors_right.set_brake_mode_all(pros::MotorBrake::coast);
-            }
-            (void)drive->motors_left.brake();
-            (void)drive->motors_right.brake();
-        }
-        return;
-    }
 
     //Apply inputs.
     lem_chassis.arcade(throttle, turn, false, 0.65);
