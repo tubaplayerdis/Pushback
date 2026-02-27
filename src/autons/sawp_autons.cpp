@@ -303,12 +303,12 @@ void sawp_dsr_auton_raw(bool push)
 
 void sawp_dsr_auton()
 {
-    sawp_dsr_counter_auton_raw(false);
+    sawp_dsr_auton_raw(false);
 }
 
 void sawp_dsr_auton_push()
 {
-    sawp_dsr_counter_auton_raw(true);
+    sawp_dsr_auton_raw(true);
 }
 
 void sawp_dsr_counter_auton()
