@@ -74,6 +74,7 @@ namespace ports
             constexpr auto TOGGLE_WINGS = pros::E_CONTROLLER_DIGITAL_A;
             constexpr auto RAMP_MACRO = pros::E_CONTROLLER_DIGITAL_R2;//Moves the ramp down, move intake in and ove exhaust backwards slightly
             constexpr auto HALF_OUT = pros::E_CONTROLLER_DIGITAL_RIGHT;
+            constexpr auto QUARTER_OUT = pros::E_CONTROLLER_DIGITAL_LEFT;
         }
     }
 
