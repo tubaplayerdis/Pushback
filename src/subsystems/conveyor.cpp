@@ -4,6 +4,7 @@
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
+constexpr auto EXHAUST_INDEX = -0.35 * FULL_POWER;
 
 //Private Singleton
 std::unique_ptr<conveyor> conveyor_instance;
@@ -43,7 +44,7 @@ void conveyor::tick_implementation() {
         {
             if (trapdoor.is_extended()) trapdoor.retract(); //Color sort will do this
             (void)conveyor_intake.move(FULL_POWER);
-            if (!did_exhaust) (void)exhaust.move(-0.2 * FULL_POWER);
+            if (!did_exhaust) (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
@@ -53,17 +54,17 @@ void conveyor::tick_implementation() {
         {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)conveyor_intake.move(FULL_POWER);
-            (void)exhaust.move(FULL_POWER * -0.2);
+            (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)conveyor_intake.move(FULL_POWER * -0.65);
-            (void)exhaust.move(FULL_POWER * -0.2);
+            (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)conveyor_intake.move(FULL_POWER * -0.30);
-            (void)exhaust.move(FULL_POWER * -0.2);
+            (void)exhaust.move(EXHAUST_INDEX);
         }
         else
         {

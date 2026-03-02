@@ -23,11 +23,11 @@ namespace coords
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
         pos middle_goal_pos(-9.5, 10.5, 135);
-        pos match_loader_neg_pos(-55, 46.5, 90);
+        pos match_loader_neg_pos(-55, 48, 90);
         pos neg_pos_trans_pose(-24, 61.5, 90);
         pos neg_pos_trans_point(35.5, 62, 90);
         pos long_goal_pos_pos(25, 47.0, 270);
-        pos long_goal_pos_pos_two(25, 44.75, 270);
+        pos long_goal_pos_pos_two(25, 45.75, 270);
         pos match_loader_pos_pos(58.0, 47.0, 270);
     }
 
@@ -37,16 +37,16 @@ namespace coords
         pos block_quad_pos_pos(15.0, 20.0, 155);
         pos red_block_blip_pos_neg(30.5, -17.50, 35);
         pos middle_goal_neg(5.5, -10.5, 315);
-        pos match_loader_pos_neg(48, -44.00, 270);
+        pos match_loader_pos_neg(48, -44.10, 270);
     }
 
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -61.5, 270);
-        pos pos_neg_trans_point(-35, -62, 270);
-        pos long_goal_neg_neg(-25, -47.00, 90);
-        pos match_loader_neg_neg(-58, -47.0, 90);
-        pos long_goal_neg_neg_two(-25, -44.75, 90);
+        pos pos_neg_trans_point(-35, -63, 270);
+        pos long_goal_neg_neg(-25, -46.75, 90);
+        pos match_loader_neg_neg(-58, -46.75, 90);
+        pos long_goal_neg_neg_two(-25, -46.75, 90);
     }
 
     namespace segment_quad
@@ -59,13 +59,13 @@ namespace power_values
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
-    constexpr auto MATCH_LOADER = -60;
+    constexpr auto MATCH_LOADER = -40;
     constexpr auto LONG_GOAL = 30;
     constexpr auto EXHAUST_INDEX = -0.35 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
-    constexpr auto SCORING_TIME = 1500;
-    constexpr auto MATCHLOADING_TIME = 2000;
+    constexpr auto SCORING_TIME = 1800;
+    constexpr auto MATCHLOADING_TIME = 1800;
 }
 
 void brake_motors(lemlib::Chassis* chassis)
@@ -110,10 +110,10 @@ void skills_routine()
     }
 
     {
-        chassis->tank(-50, -47, true);
+        chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
-        pros::Task::delay(700);
+        pros::Task::delay(600);
     }
 
     {
@@ -197,7 +197,7 @@ void skills_routine()
         chassis->tank( LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        chassis->turnToHeading(270, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
+        //chassis->turnToHeading(270, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
         pros::Task::delay(SCORING_TIME);
     }
 
@@ -253,7 +253,7 @@ void skills_routine()
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .lead = 0.35}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->tank(-50, -47, true);
+        chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
         pros::Task::delay(500);
@@ -295,8 +295,8 @@ void skills_routine()
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(MATCHLOADING_TIME);
         (void)conv->exhaust.move(EXHAUST_INDEX);
+        pros::Task::delay(MATCHLOADING_TIME);
     }
 
     //section 2 still needs to have the goal scoring and positioning done
@@ -333,7 +333,7 @@ void skills_routine()
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
-        chassis->turnToHeading(90, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
+        //chassis->turnToHeading(90, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
         pros::Task::delay(SCORING_TIME);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
@@ -374,7 +374,7 @@ void skills_routine()
     {
         chassis->moveToPose(POS(coords::segment_quad::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 30}, false);
         chassis->tank(-50, -50, true);
-        pros::Task::delay(1200);
+        pros::Task::delay(900);
         chassis->tank(NO_POWER, NO_POWER, true);
     }
 
