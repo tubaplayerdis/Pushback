@@ -58,7 +58,7 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
-            (void)conveyor_intake.move(FULL_POWER * -0.65);
+            (void)conveyor_intake.move(FULL_POWER * -0.90);
             (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {

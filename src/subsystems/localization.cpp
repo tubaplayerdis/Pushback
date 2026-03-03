@@ -89,8 +89,15 @@ void localization::tick_implementation()
     int32_t throttle = -1 * controller_master.get_analog(ports::drivetrain::controls::VERTICAL_AXIS);
     int32_t turn = controller_master.get_analog(ports::drivetrain::controls::HORIZONTAL_AXIS);
 
-    //Apply inputs.
-    lem_chassis.arcade(throttle, turn, false, 0.65);
+    if (throttle == 0 && turn == 0 && controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
+    {
+        lem_chassis.tank(-55, -52, true);
+    }
+    else
+    {
+        //Apply inputs.
+        lem_chassis.arcade(throttle, turn, false, 0.65);
+    }
 }
 
 localization* localization::get()
