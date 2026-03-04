@@ -27,9 +27,6 @@ conveyor::conveyor() :
             while (true)
             {
                 conveyor_intake.move(FULL_POWER * -0.55);
-                pros::Task::delay(100);
-                conveyor_intake.brake();
-                pros::Task::delay(100);
             }
         })
 {
@@ -71,7 +68,8 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
-            if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_SUSPENDED) low_goal_macro.resume();
+            conveyor_intake.move(FULL_POWER * -0.50);
+            //if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_SUSPENDED) low_goal_macro.resume();
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
