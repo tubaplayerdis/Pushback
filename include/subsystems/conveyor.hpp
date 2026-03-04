@@ -40,6 +40,8 @@ public:
 
 private:
 
+    pros::Task low_goal_macro;
+
     /// Private constructor to enable use of get() method.
     conveyor();
 

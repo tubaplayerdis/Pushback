@@ -1,6 +1,8 @@
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/ports.hpp"
 #include <memory>
+
+#include "../../include/pros/rtos.h"
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
@@ -19,8 +21,19 @@ conveyor::conveyor() :
         trapdoor(TRAPDOOR, false),
         match_loader(MATCH_LOADER, false),
         wings(WINGS, false),
-        descore(DESCORE, false)
+        descore(DESCORE, false),
+        low_goal_macro([this]() -> void
+        {
+            while (true)
+            {
+                conveyor_intake.move(FULL_POWER * -0.55);
+                pros::Task::delay(100);
+                conveyor_intake.brake();
+                pros::Task::delay(100);
+            }
+        })
 {
+    low_goal_macro.suspend();
     (void)exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
@@ -58,8 +71,7 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
-            (void)conveyor_intake.move(FULL_POWER * -0.90);
-            (void)exhaust.move(EXHAUST_INDEX);
+            if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_SUSPENDED) low_goal_macro.resume();
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
@@ -69,6 +81,7 @@ void conveyor::tick_implementation() {
         else
         {
             (void)conveyor_intake.brake();
+            if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_RUNNING) low_goal_macro.suspend();
             if(!did_exhaust) (void)exhaust.brake();
         }
     }
