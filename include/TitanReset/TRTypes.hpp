@@ -145,7 +145,7 @@ struct tr_vector3
      * @brief Standard constructor for vector, initializes values to input parameters
      * @param arr
      */
-    tr_vector3(std::array<float, 3> arr)
+    explicit tr_vector3(std::array<float, 3> arr)
     {
         x = arr[0];
         y = arr[1];
@@ -177,7 +177,7 @@ struct tr_vector2
      * @brief Standard constructor for vector, initializes values to input parameters
      * @param arr
      */
-    tr_vector2(std::array<float, 2> arr)
+    explicit tr_vector2(std::array<float, 2> arr)
     {
         x = arr[0];
         y = arr[1];
