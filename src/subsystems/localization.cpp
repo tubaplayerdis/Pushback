@@ -35,9 +35,9 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(10.50, // proportional gain (kP)
+    controller_settings_lateral(11.00, // proportional gain (kP)
                                               0.00, // integral gain (kI)
-                                              68, // derivative gain (kD)
+                                              68.25, // derivative gain (kD)
                                               0, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -48,9 +48,9 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(2.1,   // kP: Lowered slightly to reduce 180° momentum
+    controller_settings_angular(4.5,   // kP: Lowered slightly to reduce 180° momentum
                             0.0,  // kI: Increased to help finish small 10° turns
-                            13,  // kD: Lowered slightly to reduce "choke" on start
+                            34.61,  // kD: Lowered slightly to reduce "choke" on start
                             0.0,   // anti-windup: Prevents kI from growing too large
                             1, // small error range, in inches
                             100, // small error range timeout, in milliseconds

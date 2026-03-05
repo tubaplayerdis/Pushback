@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-#define COMPETITION
+//#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
@@ -155,7 +155,7 @@ void pid_tune_mode()
 		if (controller_master.get_digital_new_press(ports::tune::TEST_ANGULAR))
 		{
 			chassis->setPose(0,0,0);
-			chassis->turnToHeading(90, 3000);
+			chassis->turnToHeading(180, 3000);
 		}
 
 		if (controller_master.get_digital_new_press(ports::tune::TEST_LATERAL))

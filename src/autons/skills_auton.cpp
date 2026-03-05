@@ -12,10 +12,10 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-#define SECTION_1
+//#define SECTION_1
 #define SECTION_2
-#define SECTION_3
-#define SECTION_4
+//#define SECTION_3
+//#define SECTION_4
 
 namespace coords
 {
@@ -33,11 +33,12 @@ namespace coords
 
     namespace segment_dos
     {
-        pos parking_zone_blue(67.50, 13.0, 0);
-        pos block_quad_pos_pos(15.0, 20.0, 155);
-        pos red_block_blip_pos_neg(30.5, -17.50, 35);
-        pos middle_goal_neg(5.5, -10.5, 315);
-        pos match_loader_pos_neg(48, -44.10, 270);
+        pos parking_zone_blue(65.0, 15.0, 0);
+        pos block_quad_pos_pos(16.0, 20.0, 155);
+        pos red_block_blip_pos_neg(30.75, -17.75, 35);
+        pos middle_goal_neg(4.5, -4.5, 315);
+        pos middle_goal_neg_inner(1.5, -1.5, 315);
+        pos match_loader_pos_neg(48, -42.75, 270);
     }
 
     namespace segment_tres
@@ -251,7 +252,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .lead = 0.35}, false);
+        chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .lead = 0.35, .maxSpeed = 60}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
@@ -272,19 +273,19 @@ void skills_routine()
     {
         chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 90}, false);
         chassis->turnToHeading(45, 1000, {}, false);
-        chassis->moveToPoint(11, 16, 800, {.forwards = false}, false);
+        chassis->moveToPoint(14, 16, 1000, {.forwards = false}, false);
+        conv->descore.toggle();
+        chassis->moveToPoint(9, 11, 1000, {.forwards = false}, false);
     }
 
     {
-        conv->descore.toggle();
-        conv->conveyor_intake.move(-FULL_POWER * 0.95);
-        pros::Task::delay(1400);
-        conv->conveyor_intake.move(-FULL_POWER * 0.30);
-        pros::Task::delay(1000);
+        conv->conveyor_intake.move(-FULL_POWER * 0.55);
+        pros::Task::delay(3000);
         conv->descore.toggle();
     }
 
     {
+        chassis->moveToPoint(15, 20, 800, {}, false);
         conv->conveyor_intake.move(FULL_POWER);
         conv->exhaust.move(FULL_POWER);
         chassis->turnToPoint(MPOS(coords::segment_dos::match_loader_pos_neg), 1000, {.forwards = false}, false);
