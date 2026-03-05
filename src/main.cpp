@@ -246,8 +246,8 @@ void opcontrol() {
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
         	odom->lem_chassis.setPose(0,0,180);
-        	odom->lem_chassis.turnToHeading(280,1000, {.minSpeed = 80}, false);
-        	odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 30, .earlyExitRange = 1}, false);
+        	odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
+        	odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         }
 #endif
 
