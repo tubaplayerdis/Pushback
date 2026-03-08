@@ -36,8 +36,8 @@ namespace coords
             pos match_loader_neg_neg_prime(-47.3, -38.65, 90);
             pos match_loader_neg_neg_prime_push(-47.3, -38.65, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
-            pos block_blip_neg_neg(-22.75, -15, 180);
-            pos block_blip_neg_pos(-24, 38.55, 0);
+            pos block_blip_neg_neg(-22.5, -15, 180);
+            pos block_blip_neg_pos(-24, 38.95, 0);
             pos middle_goal_neg_pos(-8.0, 12, 135);
             pos match_loader_neg_pos(-56, 45.5, 90);
             pos long_goal_neg_pos(-29, 47.6, 90);
@@ -149,7 +149,7 @@ void sawp_dsr_counter_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPose(POS(match_loader_neg_pos), 1500, {.forwards = false, .lead = 0.1, .minSpeed = 60}, false);
+        chassis->moveToPose(POS(match_loader_neg_pos), 1500, {.forwards = false, .lead = 0.1, .minSpeed = 60, .earlyExitRange = 0.5}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(700);
     }

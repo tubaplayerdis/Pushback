@@ -145,7 +145,7 @@ struct tr_vector3
      * @brief Standard constructor for vector, initializes values to input parameters
      * @param arr
      */
-    explicit tr_vector3(std::array<float, 3> arr)
+    tr_vector3(std::array<float, 3> arr)
     {
         x = arr[0];
         y = arr[1];
@@ -177,7 +177,7 @@ struct tr_vector2
      * @brief Standard constructor for vector, initializes values to input parameters
      * @param arr
      */
-    explicit tr_vector2(std::array<float, 2> arr)
+    tr_vector2(std::array<float, 2> arr)
     {
         x = arr[0];
         y = arr[1];
@@ -185,13 +185,21 @@ struct tr_vector2
 };
 
 /**
- * @brief Generic drivebase class to allow support of any template.
+ * @brief Abstract drivebase class to allow support of any template.
  */
-class tr_drivebase_generic
+class tr_drivebase_abstract
 {
 public:
-    tr_drivebase_generic() {}
 
+    /**
+     * @return struct of type tr_vector3 (TitanReset proprietary vector structure) representing the "pose" of the robot in X, Y, Theta (in degrees).
+     * @note pure virtual function as to be impelemetned in a subclass appropriately.
+     */
     virtual tr_vector3 getPose() = 0;
+
+    /**
+     * @brief set the "pose" of the drivebase using a struct of type tr_vector3 (TitanReset proprietary vector structure) representing the "pose" of the robot in X, Y, Theta (in degrees).
+     * @note pure virtual function as to be impelemetned in a subclass appropriately.
+     */
     virtual void setPose(tr_vector3 new_pose) = 0;
 };

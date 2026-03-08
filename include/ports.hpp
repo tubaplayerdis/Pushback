@@ -93,7 +93,7 @@ namespace ports
         {
             constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -0.87; //The vertical offset of the horizontal tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = -0.47; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
-            constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = lemlib::Omniwheel::NEW_2;
+            constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = 2.00;
             constexpr auto ODOMETRY_WHEEL_SIZE_HORIZONTAL = lemlib::Omniwheel::NEW_275;
         }
 
@@ -102,13 +102,13 @@ namespace ports
             constexpr auto FRONT_X = 5.151;
             constexpr auto FRONT_Y = -5.25;
 
-            constexpr auto RIGHT_X = 4.871;
+            constexpr auto RIGHT_X = 5.05;
             constexpr auto RIGHT_Y = 3.23;
 
             constexpr auto REAR_X = 5.823;
             constexpr auto REAR_Y = 4.691;
 
-            constexpr auto LEFT_X = 4.871;
+            constexpr auto LEFT_X = 5.05;
             constexpr auto LEFT_Y = 3.23;
         }
     }

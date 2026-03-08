@@ -6,7 +6,7 @@
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
-constexpr auto EXHAUST_INDEX = -0.35 * FULL_POWER;
+constexpr auto EXHAUST_INDEX = -0.25 * FULL_POWER;
 
 //Private Singleton
 std::unique_ptr<conveyor> conveyor_instance;
@@ -22,15 +22,28 @@ conveyor::conveyor() :
         match_loader(MATCH_LOADER, false),
         wings(WINGS, false),
         descore(DESCORE, false),
+        do_low_goal_macro(false),
         low_goal_macro([this]() -> void
         {
             while (true)
             {
-                conveyor_intake.move(FULL_POWER * -0.55);
+                if (!do_low_goal_macro)
+                {
+                    pros::Task::delay(50);
+                    continue;
+                }
+                //Anti-jam
+                if (conveyor_intake.get_efficiency() < 0.10)
+                {
+                    (void)conveyor_intake.move(FULL_POWER);
+                    pros::Task::delay(100);
+                }
+
+                (void)conveyor_intake.move(FULL_POWER * -0.375);
+                pros::Task::delay(50);
             }
         })
 {
-    low_goal_macro.suspend();
     (void)exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 }
 
@@ -68,8 +81,8 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
-            conveyor_intake.move(FULL_POWER * -0.50);
-            //if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_SUSPENDED) low_goal_macro.resume();
+            //conveyor_intake.move(FULL_POWER * -0.40);
+            do_low_goal_macro = true;
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
@@ -79,7 +92,7 @@ void conveyor::tick_implementation() {
         else
         {
             (void)conveyor_intake.brake();
-            if (low_goal_macro.get_state() == pros::task_state_e_t::E_TASK_STATE_RUNNING) low_goal_macro.suspend();
+            do_low_goal_macro = false;
             if(!did_exhaust) (void)exhaust.brake();
         }
     }

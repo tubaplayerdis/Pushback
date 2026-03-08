@@ -216,7 +216,7 @@ void opcontrol() {
 		conv->wings.extend();
 	}
 
-	odom->l_chassis.perform_dsr_init(POS_POS, 270);
+	//odom->l_chassis.perform_dsr_init(POS_POS, 270);
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
@@ -245,9 +245,9 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->lem_chassis.setPose(0,0,180);
-        	odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
-        	odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        	odom->lem_chassis.setPose(0,0,0);
+        	//odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
+        	//odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         }
 #endif
 

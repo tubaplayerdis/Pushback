@@ -7,6 +7,7 @@
 
 #include "../cls/subsystem.hpp"
 #include "../pros/adi.hpp"
+#include "../pros/motors.hpp"
 #include "../pros/motor_group.hpp"
 #include "../pros/misc.h"
 #include "../controller.hpp"
@@ -41,6 +42,8 @@ public:
 private:
 
     pros::Task low_goal_macro;
+
+    bool do_low_goal_macro;
 
     /// Private constructor to enable use of get() method.
     conveyor();
