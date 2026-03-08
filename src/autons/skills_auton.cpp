@@ -23,8 +23,8 @@ namespace coords
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
         pos middle_goal_pos(-9.5, 10.5, 135);
         pos match_loader_neg_pos(-55, 47, 90);
-        pos neg_pos_trans_pose(-24, 62.5, 90);
-        pos neg_pos_trans_point(33.5, 65, 90);
+        pos neg_pos_trans_pose(-24, 62, 90);
+        pos neg_pos_trans_point(33.5, 62, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
         pos long_goal_pos_pos_two(25, 45.75, 270);
         pos match_loader_pos_pos(58.0, 47.0, 270);
