@@ -26,7 +26,6 @@ namespace coords
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(33.5, 62, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
-        pos long_goal_pos_pos_two(25, 45.75, 270);
         pos match_loader_pos_pos(58.0, 47.0, 270);
     }
 
@@ -104,7 +103,7 @@ void skills_routine()
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
-        pros::Task::delay(600);
+        pros::Task::delay(550);
     }
 
     {
@@ -133,7 +132,7 @@ void skills_routine()
 
     {
         (void)conv->conveyor_intake.move(-FULL_POWER);
-        pros::Task::delay(150);
+        pros::Task::delay(175);
     }
 
     {

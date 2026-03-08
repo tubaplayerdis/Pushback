@@ -228,7 +228,8 @@ void opcontrol() {
 #else
 			//odom->l_chassis.perform_dsr();
 			lemlib::Pose pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
-			controller_master.print(1,0, "%.2f, %0.2f           ", odom->inertial.get_heading(), pose.theta);
+			controller_master.print(1,0, "%.2f, %.2f, %.2f           ", pose.x, pose.y, pose.theta);
+			std::cout << pose.x << ", " << pose.y << ", " << pose.theta << std::endl;
 #endif
 		}
 
@@ -242,7 +243,7 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->lem_chassis.setPose(0,0, 180);
+        	odom->lem_chassis.setPose(0,0, 0);
         	//odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
         	//odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         }
