@@ -32,6 +32,7 @@ conveyor::conveyor() :
                     pros::Task::delay(50);
                     continue;
                 }
+
                 //Anti-jam
                 if (conveyor_intake.get_efficiency() < 0.10)
                 {
