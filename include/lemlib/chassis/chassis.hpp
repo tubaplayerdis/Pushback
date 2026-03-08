@@ -9,15 +9,10 @@
 #include "lemlib/exitcondition.hpp"
 #include "lemlib/driveCurve.hpp"
 
-namespace pros::v5
-{
-    class MotorGroup;
-}
-
 namespace lemlib {
 
 /**
- * @brief class containing the sensors used for localization
+ * @brief class containing the sensors used for odometry
  */
 class OdomSensors {
     public:
@@ -46,12 +41,13 @@ class OdomSensors {
          * @endcode
          */
         OdomSensors(TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
-                    TrackingWheel* horizontal2, pros::Imu* imu);
+                    TrackingWheel* horizontal2, pros::Imu* imu, float drift = 1.0f);
         TrackingWheel* vertical1;
         TrackingWheel* vertical2;
         TrackingWheel* horizontal1;
         TrackingWheel* horizontal2;
         pros::Imu* imu;
+        float imu_drift;
 };
 
 /**
@@ -342,7 +338,7 @@ class Chassis {
          * @param drivetrain drivetrain to be used for the chassis
          * @param lateralSettings settings for the lateral controller
          * @param angularSettings settings for the angular controller
-         * @param sensors sensors to be used for localization
+         * @param sensors sensors to be used for odometry
          * @param throttleCurve curve applied to throttle input during driver control
          * @param turnCurve curve applied to steer input during driver control
          *
@@ -914,7 +910,7 @@ class Chassis {
          * @warning Do not interact with these unless you know what you are doing
          */
         PID angularPID;
-    public:
+    protected:
         /**
          * @brief Indicates that this motion is queued and blocks current task until this motion reaches front of queue
          */

@@ -28,33 +28,6 @@ namespace ports
         constexpr auto TEST_LATERAL = pros::E_CONTROLLER_DIGITAL_X;
     }
 
-
-    namespace drivetrain
-    {
-        constexpr auto LEFT_A = -18;
-        constexpr auto LEFT_B = -19;
-        constexpr auto LEFT_C = -20;
-        constexpr auto RIGHT_A = 11;
-        constexpr auto RIGHT_B = 12;
-        constexpr auto RIGHT_C = 13;
-
-        namespace controls
-        {
-            constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
-            constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
-            constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_B;
-        }
-
-        namespace settings
-        {
-            constexpr auto DRIVETRAIN_TRACK_WIDTH = 10.5;
-            constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
-            constexpr auto DRIVETRAIN_RPM = 450;
-            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
-            constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
-        }
-    }
-
     namespace conveyor
     {
         constexpr auto EXHAUST = 1;
@@ -89,12 +62,33 @@ namespace ports
         constexpr auto LEFT_LOC = 2; //West
         constexpr auto RIGHT_LOC = 4; //East
 
+        constexpr auto LEFT_A = -18;
+        constexpr auto LEFT_B = -19;
+        constexpr auto LEFT_C = -20;
+        constexpr auto RIGHT_A = 11;
+        constexpr auto RIGHT_B = 12;
+        constexpr auto RIGHT_C = 13;
+
         namespace settings
         {
             constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -0.87; //The vertical offset of the horizontal tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = -0.47; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = 2.00;
             constexpr auto ODOMETRY_WHEEL_SIZE_HORIZONTAL = lemlib::Omniwheel::NEW_275;
+            constexpr auto INERTIAL_DRIFT = 1.00670f;
+
+            constexpr auto DRIVETRAIN_TRACK_WIDTH = 10.5;
+            constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;
+            constexpr auto DRIVETRAIN_RPM = 450;
+            constexpr auto DRIVETRAIN_HORIZONTAL_DRIFT = 2;
+            constexpr auto DRIVETRAIN_MOTOR_CARTRIDGE = pros::v5::MotorGears::blue;
+        }
+
+        namespace controls
+        {
+            constexpr auto VERTICAL_AXIS = pros::E_CONTROLLER_ANALOG_LEFT_Y;
+            constexpr auto HORIZONTAL_AXIS = pros::E_CONTROLLER_ANALOG_RIGHT_X;
+            constexpr auto BARRIER_CROSS = pros::E_CONTROLLER_DIGITAL_B;
         }
 
         namespace offsets

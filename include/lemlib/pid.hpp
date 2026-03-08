@@ -60,11 +60,13 @@ class PID {
          * @endcode
          */
         void reset();
-    public:
+
+
         // gains
         float kP;
         float kI;
         float kD;
+    protected:
 
         // optimizations
         const float windupRange;

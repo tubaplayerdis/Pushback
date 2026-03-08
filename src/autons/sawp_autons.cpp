@@ -4,7 +4,6 @@
 
 #include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/subsystems/localization.hpp"
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"

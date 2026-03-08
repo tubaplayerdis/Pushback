@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "../../../../../../pros-toolchain/usr/arm-none-eabi/include/c++/13.3.1/optional"
-#include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/liblvgl/lvgl.h"
 #include "../../include/lemlib/pose.hpp"
 #include "../../include/pros/imu.h"

@@ -4,6 +4,7 @@
 #include "pros/rtos.hpp"
 
 #define FMT_HEADER_ONLY
+#include "message.hpp"
 #include "fmt/core.h"
 #include "fmt/args.h"
 

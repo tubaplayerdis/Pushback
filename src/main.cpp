@@ -1,5 +1,4 @@
 #include "main.h"
-#include "../include/subsystems/drivetrain.hpp"
 #include "../include/subsystems/conveyor.hpp"
 #include "../include/ports.hpp"
 #include "autons.hpp"//This is needed for autons to show up
@@ -9,6 +8,7 @@
 
 #include "lemlib/pid.hpp"
 #include "subsystems/localization.hpp"
+#include "../include/autons.hpp"
 
 extern "C"
 {
@@ -20,7 +20,6 @@ extern "C"
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
 localization* odom = nullptr;
-drivetrain* dt = nullptr;
 conveyor* conv = nullptr;
 
 /**
@@ -32,7 +31,6 @@ conveyor* conv = nullptr;
 void initialize() {
 	ts_display_selector();
 	odom = localization::get();
-	dt = drivetrain::get();
 	conv = conveyor::get();
 }
 
@@ -199,7 +197,6 @@ void pid_tune_mode()
  */
 void opcontrol() {
     odom = localization::get();
-    dt = drivetrain::get();
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
 
@@ -220,7 +217,7 @@ void opcontrol() {
 
 	std::string auton_name = sel->get_selected_auton_name();
 	while (true) {
-		if(dt->motors_left.is_over_temp() || dt->motors_right.is_over_temp())
+		if(odom->motors_left.is_over_temp() || odom->motors_right.is_over_temp())
 		{
 			controller_master.print(1, 0, "DT MOTORS HOT");
 		} else
@@ -230,8 +227,8 @@ void opcontrol() {
 			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
 #else
 			//odom->l_chassis.perform_dsr();
-			auto pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
-			controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, odom->inertial.get_heading());
+			lemlib::Pose pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
+			controller_master.print(1,0, "%.2f, %0.2f           ", odom->inertial.get_heading(), pose.theta);
 #endif
 		}
 
@@ -245,7 +242,7 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->lem_chassis.setPose(0,0,0);
+        	odom->lem_chassis.setPose(0,0, 180);
         	//odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
         	//odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         }
@@ -253,7 +250,6 @@ void opcontrol() {
 
 		lv_timer_handler();
         odom->tick();
-        dt->tick();
         conv->tick();
 
 		pros::delay(20);                               // Run for 20 ms then update

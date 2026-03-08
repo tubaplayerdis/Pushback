@@ -25,6 +25,8 @@ struct pos
     pos(const float x, const float y, const float t) : X(x), Y(y), T(t) {}
 };
 
+void skills_routine();
+
 namespace autons
 {
     extern ts::auton skills;

@@ -3,7 +3,6 @@
 //
 #include "../../include/autons.hpp"
 #include "../../include/titanselect/titanselect.hpp"
-#include "../../include/subsystems/drivetrain.hpp"
 #include "../../include/subsystems/localization.hpp"
 #include "../../include/subsystems/conveyor.hpp"
 #include "../../include/pros/adi.hpp"
@@ -69,13 +68,6 @@ namespace power_values
     constexpr auto MATCHLOADING_TIME = 1800;
 }
 
-void brake_motors(lemlib::Chassis* chassis)
-{
-    (void)chassis->setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
-    (void)chassis->drivetrain.leftMotors->brake();
-    (void)chassis->drivetrain.rightMotors->brake();
-}
-
 void skills_routine()
 {
     using namespace coords::segment_uno;
@@ -86,8 +78,6 @@ void skills_routine()
 
     //Get conveyor object
     conveyor* conv = conveyor::get();
-
-    localization* lc = localization::get();
 
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;

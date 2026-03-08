@@ -10,6 +10,7 @@
 #include "../pros/rotation.hpp"
 #include "../pros/distance.hpp"
 #include "../pros/gps.hpp"
+#include "../pros/motor_group.hpp"
 #include "../lemlib/chassis/chassis.hpp"
 #include "../lemlib/chassis/trackingWheel.hpp"
 #include "../pros/imu.hpp"
@@ -29,6 +30,12 @@ class localization final : public subsystem
     friend class std::unique_ptr<localization>;
 
 public:
+
+    /// Left motor group. Includes 3 motors, A, B, C
+    pros::MotorGroup motors_left;
+
+    /// Right motor group. Includes 3 motors, A, B, C
+    pros::MotorGroup motors_right;
 
     /// Inertial sensor responsible for things like velocity and rotation
     pros::Imu inertial;

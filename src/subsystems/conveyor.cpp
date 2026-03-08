@@ -74,7 +74,7 @@ void conveyor::tick_implementation() {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)exhaust.move(-FULL_POWER);
             (void)conveyor_intake.move(-FULL_POWER);
-        } else if (controller_master.get_digital(ports::drivetrain::controls::BARRIER_CROSS))
+        } else if (controller_master.get_digital(ports::localization::controls::BARRIER_CROSS))
         {
             if (trapdoor.is_extended()) trapdoor.retract();
             (void)conveyor_intake.move(FULL_POWER);
