@@ -11,10 +11,10 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-//#define SECTION_1
+#define SECTION_1
 #define SECTION_2
-//#define SECTION_3
-//#define SECTION_4
+#define SECTION_3
+#define SECTION_4
 
 namespace coords
 {
@@ -32,7 +32,7 @@ namespace coords
     namespace segment_dos
     {
         pos parking_zone_blue(64.5, 16.5, 0);
-        pos block_quad_pos_pos(18, 19.5, 155);
+        pos block_quad_pos_pos(18, 19.85, 155);
         pos red_block_blip_pos_neg(30.75, -17.75, 35);
         pos middle_goal_neg(4.5, -4.5, 315);
         pos middle_goal_neg_inner(1.5, -1.5, 315);
@@ -41,16 +41,11 @@ namespace coords
 
     namespace segment_tres
     {
-        pos pos_neg_trans_pose(24, -61.5, 270);
-        pos pos_neg_trans_point(-35, -63, 270);
-        pos long_goal_neg_neg(-25, -46.75, 90);
-        pos match_loader_neg_neg(-58, -46.75, 90);
-        pos long_goal_neg_neg_two(-25, -46.75, 90);
-    }
-
-    namespace segment_quad
-    {
-        pos parking_zone_red(-69, -13.25, 180);
+        pos pos_neg_trans_pose(24, -62, 270);
+        pos pos_neg_trans_point(-33.5, -62, 270);
+        pos long_goal_neg_neg(-25, -47.1, 90);
+        pos match_loader_neg_neg(-58, -47.1, 90);
+        pos parking_zone_red(-64.5, -16.5, 180);
     }
 }
 
@@ -262,8 +257,8 @@ void skills_routine()
 
     {
         chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 90}, false);
-        chassis->turnToHeading(46, 1000, {}, false);
-        chassis->moveToPoint(16, 16, 1000, {.forwards = false}, false);
+        chassis->turnToHeading(45.5, 1000, {}, false);
+        chassis->moveToPoint(14, 14, 1000, {.forwards = false}, false);
         conv->descore.toggle();
         chassis->moveToPoint(11, 11, 1000, {.forwards = false}, false);
     }
@@ -309,13 +304,9 @@ void skills_routine()
         dt->l_chassis.perform_dsr_quad(POS_NEG);
         chassis->moveToPose(POS(coords::segment_tres::pos_neg_trans_pose), 1000, {.minSpeed = 40}, false);
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(coords::segment_tres::pos_neg_trans_point), 1700, {.minSpeed = 40}, false);
+        chassis->moveToPoint(MPOS(coords::segment_tres::pos_neg_trans_point), 2000, {}, false);
 
-        {
-            dt->l_chassis.perform_dsr_quad(NEG_NEG);
-        }
-
-        chassis->swingToPoint(MPOS(coords::segment_tres::long_goal_neg_neg), lemlib::DriveSide::RIGHT, 1700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 80}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 1500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 70}, false);
     }
 
     {
@@ -334,29 +325,19 @@ void skills_routine()
 
     {
         conv->match_loader.toggle();
-        (void)conv->exhaust.move(-FULL_POWER * 0.2);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->moveToPoint(MPOS(coords::segment_tres::match_loader_neg_neg), 1500, {.forwards = false, .maxSpeed = 70, .earlyExitRange = 4}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_tres::long_goal_neg_neg_two), 1500, {.lead = 0.1, .minSpeed = 50, .earlyExitRange = 5}, false);
+        chassis->moveToPoint(MPOS(coords::segment_tres::long_goal_neg_neg), 1500, {.minSpeed = 50}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         pros::Task::delay(SCORING_TIME);
     }
-
-#endif
-
-#ifdef SECTION_4
-
-#ifndef SECTION_3
-    (void)dt->inertial.set_heading(90);
-    dt->lem_chassis.setPose(0,0,90);
-    dt->l_chassis.reset_location_force(NEG_NEG);
-#endif
 
     {
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
@@ -366,7 +347,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_quad::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(coords::segment_tres::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 30}, false);
         chassis->tank(-50, -50, true);
         pros::Task::delay(900);
         chassis->tank(NO_POWER, NO_POWER, true);
