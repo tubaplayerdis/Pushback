@@ -11,10 +11,9 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-#define SECTION_1
-#define SECTION_2
+//#define SECTION_1
+//#define SECTION_2
 #define SECTION_3
-#define SECTION_4
 
 namespace coords
 {
@@ -42,7 +41,7 @@ namespace coords
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-33.5, -62, 270);
+        pos pos_neg_trans_point(-29.5, -61.5, 270);
         pos long_goal_neg_neg(-25, -47.1, 90);
         pos match_loader_neg_neg(-58, -47.1, 90);
         pos parking_zone_red(-64.5, -16.5, 180);
@@ -258,16 +257,16 @@ void skills_routine()
     {
         chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 90}, false);
         chassis->turnToHeading(45.5, 1000, {}, false);
-        chassis->moveToPoint(14, 14, 1000, {.forwards = false}, false);
+        chassis->moveToPoint(15, 15, 1000, {.forwards = false}, false);
         conv->descore.toggle();
         chassis->moveToPoint(11, 11, 1000, {.forwards = false}, false);
     }
 
     {
         (void)conv->conveyor_intake.move(-FULL_POWER);
-        pros::Task::delay(500);
+        pros::Task::delay(1000);
         conv->do_low_goal_macro = true;
-        pros::Task::delay(3500);
+        pros::Task::delay(3000);
         conv->do_low_goal_macro = false;
         conv->descore.toggle();
     }
@@ -297,7 +296,8 @@ void skills_routine()
     //Starts at the middle goal at approximately 8.5, -8.5
 
 #ifndef SECTION_2 //If section 2 is undefined and section 3 is defined, run the debug init
-
+    dt->l_chassis.perform_dsr_init(POS_NEG, 270);
+    conv->match_loader.toggle();
 #endif
 
     {
@@ -319,6 +319,7 @@ void skills_routine()
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         //chassis->turnToHeading(90, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
+        chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 1000, {}, true);
         pros::Task::delay(SCORING_TIME);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
@@ -347,7 +348,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPose(POS(coords::segment_tres::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 30}, false);
+        chassis->moveToPose(POS(coords::segment_tres::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 60}, false);
         chassis->tank(-50, -50, true);
         pros::Task::delay(900);
         chassis->tank(NO_POWER, NO_POWER, true);
