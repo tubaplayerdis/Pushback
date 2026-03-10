@@ -81,7 +81,7 @@ localization::localization() :
         right_loc({offsets::RIGHT_X, offsets::RIGHT_Y}, LEFT_LOC),
         left_loc({offsets::LEFT_X, offsets::LEFT_Y}, RIGHT_LOC),
         front_loc({offsets::FRONT_X, offsets::FRONT_Y}, FRONT_LOC),
-        l_chassis(&lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::home)
+        l_chassis(&lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::metal)
 {
     lemlib::InfoSink().setLowestLevel(lemlib::Level::INFO);
     lem_chassis.calibrate(true);

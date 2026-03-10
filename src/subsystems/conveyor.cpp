@@ -25,6 +25,9 @@ conveyor::conveyor() :
         do_low_goal_macro(false),
         low_goal_macro([this]() -> void
         {
+            constexpr auto FRESH_BLOCK_OUTPUT = FULL_POWER * -0.375;
+            constexpr auto OLD_BLOCK_OUTPUT = FULL_POWER * -0.475;
+
             while (true)
             {
                 if (!do_low_goal_macro)
@@ -40,7 +43,7 @@ conveyor::conveyor() :
                     pros::Task::delay(100);
                 }
 
-                (void)conveyor_intake.move(FULL_POWER * -0.375);
+                (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
                 pros::Task::delay(50);
             }
         })

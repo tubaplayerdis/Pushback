@@ -32,13 +32,13 @@ namespace coords
         namespace counter
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -38.65, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -38.65, 90);
+            pos match_loader_neg_neg_prime(-47.3, -38.25, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -38.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
-            pos block_blip_neg_neg(-22.5, -15, 180);
-            pos block_blip_neg_pos(-24, 38.95, 0);
-            pos middle_goal_neg_pos(-8.0, 12, 135);
-            pos match_loader_neg_pos(-56, 45.5, 90);
+            pos block_blip_neg_neg(-23.5, -15, 180);
+            pos block_blip_neg_pos(-23.5, 34.0, 0);
+            pos middle_goal_neg_pos(-10.0, 10.00, 135);
+            pos match_loader_neg_pos(-56, 47.2, 90);
             pos long_goal_neg_pos(-29, 47.6, 90);
         }
     }

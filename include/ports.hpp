@@ -75,7 +75,7 @@ namespace ports
             constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = -0.49; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
             constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = 2.00;
             constexpr auto ODOMETRY_WHEEL_SIZE_HORIZONTAL = lemlib::Omniwheel::NEW_275;
-            constexpr auto INERTIAL_DRIFT = 1.0080f;
+            constexpr auto INERTIAL_DRIFT = 1.0076;
 
             constexpr auto DRIVETRAIN_TRACK_WIDTH = 10.5;
             constexpr auto DRIVETRAIN_WHEEL_DIAMETER = lemlib::Omniwheel::NEW_325;

@@ -39,11 +39,11 @@ public:
     /// Middle goal descore pneumatics
     pros::adi::Pneumatics descore;
 
+    bool do_low_goal_macro;
+
 private:
 
     pros::Task low_goal_macro;
-
-    bool do_low_goal_macro;
 
     /// Private constructor to enable use of get() method.
     conveyor();
