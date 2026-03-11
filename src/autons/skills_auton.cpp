@@ -11,9 +11,9 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-//#define SECTION_1
+#define SECTION_1
 //#define SECTION_2
-#define SECTION_3
+//#define SECTION_3
 
 namespace coords
 {
@@ -25,7 +25,7 @@ namespace coords
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(33.5, 62, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
-        pos match_loader_pos_pos(58.0, 47.0, 270);
+        pos match_loader_pos_pos(58.0, 47.1, 270);
     }
 
     namespace segment_dos
@@ -41,9 +41,9 @@ namespace coords
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-29.5, -61.5, 270);
+        pos pos_neg_trans_point(-30, -62, 270);
         pos long_goal_neg_neg(-25, -47.1, 90);
-        pos match_loader_neg_neg(-58, -47.1, 90);
+        pos match_loader_neg_neg(-58, -47.5, 90);
         pos parking_zone_red(-64.5, -16.5, 180);
     }
 }
@@ -115,7 +115,7 @@ void skills_routine()
     }
 
     {
-        chassis->turnToPoint(0, 0, 800, {.minSpeed = 100, .earlyExitRange = 1}, false);
+        chassis->turnToHeading(135, 800, {.minSpeed = 100, .earlyExitRange = 1}, false);
         chassis->moveToPoint(-18.5, 18.5, 1500, {.forwards = false, .maxSpeed = 60}, false);
     }
         //-15.5, 14
@@ -319,7 +319,7 @@ void skills_routine()
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
         //chassis->turnToHeading(90, 1000, {.minSpeed = 127, .earlyExitRange = 10}, true);
-        chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 1000, {}, true);
+        //chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 1000, {}, true);
         pros::Task::delay(SCORING_TIME);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
     }
@@ -349,8 +349,8 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_tres::parking_zone_red), 1600, {.forwards = false, .lead = 0.35, .minSpeed = 60}, false);
-        chassis->tank(-50, -50, true);
-        pros::Task::delay(900);
+        chassis->tank(-90, -90, true);
+        pros::Task::delay(500);
         chassis->tank(NO_POWER, NO_POWER, true);
     }
 
