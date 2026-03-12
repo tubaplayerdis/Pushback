@@ -6,13 +6,20 @@
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
-constexpr auto EXHAUST_INDEX = -0.25 * FULL_POWER;
+constexpr auto EXHAUST_INDEX = -0.30 * FULL_POWER;
 
 //Private Singleton
 std::unique_ptr<conveyor> conveyor_instance;
 
 using namespace ports::conveyor;
 using namespace ports::conveyor::controls;
+
+double get_watts(pros::Motor &m) {
+    // Voltage is in mV, Current is in mA
+    double voltage = m.get_voltage() / 1000.0; // Convert to Volts
+    double current = m.get_current_draw() / 1000.0; // Convert to Amps
+    return voltage * current;
+}
 
 conveyor::conveyor() :
         subsystem(),
@@ -32,19 +39,29 @@ conveyor::conveyor() :
             {
                 if (!do_low_goal_macro)
                 {
-                    pros::Task::delay(50);
+                    pros::Task::delay(10);
                     continue;
                 }
 
+                /*
+                 *"The motor firmware will cut maximum motor current in half at 55 degC, to 1/4 at 60 degC, 1/8 at 65 degC and disable the motor completely if it reaches 70 degC"
+                 */
+
+                //controller_master.print(1, 0, "T: %.2f        ", conveyor_intake.get_temperature());
+
                 //Anti-jam
-                if (conveyor_intake.get_efficiency() < 0.10)
+                if (get_watts(conveyor_intake) < -6.5)
                 {
                     (void)conveyor_intake.move(FULL_POWER);
                     pros::Task::delay(100);
+
+                    //Get back up to speed
+                    (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
+                    pros::Task::delay(300);
                 }
 
                 (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
-                pros::Task::delay(50);
+                pros::Task::delay(10);
             }
         })
 {

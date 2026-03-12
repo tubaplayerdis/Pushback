@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-//#define COMPETITION
+#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
@@ -202,6 +202,8 @@ void opcontrol() {
 
 	odom->lem_chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
+	//odom->l_chassis.start_location_recording("ACEEL");
+
 #ifndef COMPETITION
 	if (controller_master.get_digital(ports::tune::PID_TUNE_MODE))
 	{
@@ -229,7 +231,7 @@ void opcontrol() {
 			//odom->l_chassis.perform_dsr();
 			lemlib::Pose pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
 			controller_master.print(1,0, "%.2f, %.2f, %.2f           ", pose.x, pose.y, pose.theta);
-			std::cout << pose.x << ", " << pose.y << ", " << pose.theta << std::endl;
+			//std::cout << pose.x << ", " << pose.y << ", " << pose.theta << std::endl;
 #endif
 		}
 
@@ -243,10 +245,12 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->l_chassis.perform_dsr_init(NEG_POS, 90);
-        	//odom->lem_chassis.setPose(0,0, 0);
-        	//odom->lem_chassis.turnToHeading(290,1000, {.minSpeed = 80}, false);
-        	//odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        	odom->lem_chassis.setPose(0,0,0);
+        	//(void)conv->conveyor_intake.move(-90);
+        	//pros::Task::delay(200);
+        	//conv->do_low_goal_macro = true;
+        	//pros::Task::delay(3800);
+        	//conv->do_low_goal_macro = false;
         }
 #endif
 

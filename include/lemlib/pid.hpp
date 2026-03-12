@@ -61,7 +61,6 @@ class PID {
          */
         void reset();
 
-
         // gains
         float kP;
         float kI;

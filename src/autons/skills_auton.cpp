@@ -11,8 +11,8 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-#define SECTION_1
-//#define SECTION_2
+//#define SECTION_1
+#define SECTION_2
 //#define SECTION_3
 
 namespace coords
@@ -20,8 +20,8 @@ namespace coords
     namespace segment_uno
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
-        pos middle_goal_pos(-9.5, 10.5, 135);
-        pos match_loader_neg_pos(-55, 47, 90);
+        pos middle_goal_pos(-12.5, 12.5, 135);
+        pos match_loader_neg_pos(-55, 47.5, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(33.5, 62, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
@@ -30,7 +30,7 @@ namespace coords
 
     namespace segment_dos
     {
-        pos parking_zone_blue(64.5, 16.5, 0);
+        pos parking_zone_blue(64, 14.0, 0);
         pos block_quad_pos_pos(18, 19.85, 155);
         pos red_block_blip_pos_neg(30.75, -17.75, 35);
         pos middle_goal_neg(4.5, -4.5, 315);
@@ -41,7 +41,7 @@ namespace coords
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-30, -62, 270);
+        pos pos_neg_trans_point(-33.5, -62, 270);
         pos long_goal_neg_neg(-25, -47.1, 90);
         pos match_loader_neg_neg(-58, -47.5, 90);
         pos parking_zone_red(-64.5, -16.5, 180);
@@ -58,7 +58,7 @@ namespace power_values
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
     constexpr auto SCORING_TIME = 1800;
-    constexpr auto MATCHLOADING_TIME = 1800;
+    constexpr auto MATCHLOADING_TIME = 1750;
 }
 
 void skills_routine()
@@ -89,7 +89,7 @@ void skills_routine()
 
     {
         (void)conv->wings.toggle();
-        (void)conv->exhaust.move(EXHAUST_INDEX);
+        (void)conv->exhaust.move(0.25 * -FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
@@ -97,7 +97,7 @@ void skills_routine()
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
-        pros::Task::delay(550);
+        pros::Task::delay(500);
     }
 
     {
@@ -106,6 +106,7 @@ void skills_routine()
             pros::Task::delay(1000);
             conv->match_loader.toggle();
         }
+        pros::Task::delay(100);
         dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
@@ -127,14 +128,14 @@ void skills_routine()
     {
         (void)conv->conveyor_intake.move(-FULL_POWER);
         (void)conv->exhaust.move(-FULL_POWER);
-        pros::Task::delay(150);
+        pros::Task::delay(200);
     }
 
     {
+        (void)conv->trapdoor.extend();
         (void)conv->exhaust.move(-FULL_POWER * 0.8);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
-        (void)conv->trapdoor.extend();
-        pros::Task::delay(2700);
+        pros::Task::delay(3200);
     }
 
     {
@@ -237,7 +238,7 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .horizontalDrift = 10, .lead = 0.5, .maxSpeed = 70, .minSpeed = 30, .earlyExitRange = 1}, false);
-        (void)conv->exhaust.move(EXHAUST_INDEX);
+        (void)conv->exhaust.move(-0.30 * FULL_POWER);
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
@@ -258,15 +259,18 @@ void skills_routine()
         chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 90}, false);
         chassis->turnToHeading(45.5, 1000, {}, false);
         chassis->moveToPoint(15, 15, 1000, {.forwards = false}, false);
+        (void)conv->conveyor_intake.move(NO_POWER);
         conv->descore.toggle();
         chassis->moveToPoint(11, 11, 1000, {.forwards = false}, false);
     }
 
     {
-        (void)conv->conveyor_intake.move(-FULL_POWER);
-        pros::Task::delay(1000);
+        conv->trapdoor.toggle();
+        (void)conv->conveyor_intake.move(FULL_POWER * -0.90);
+        pros::Task::delay(700);
+        conv->trapdoor.toggle();
         conv->do_low_goal_macro = true;
-        pros::Task::delay(3000);
+        pros::Task::delay(3300);
         conv->do_low_goal_macro = false;
         conv->descore.toggle();
     }

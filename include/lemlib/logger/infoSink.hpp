@@ -1,6 +1,5 @@
 #pragma once
 
-#include "baseSink.hpp"
 #include "lemlib/logger/message.hpp"
 #include "lemlib/logger/baseSink.hpp"
 

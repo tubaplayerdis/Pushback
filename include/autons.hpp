@@ -30,11 +30,13 @@ void skills_routine();
 namespace autons
 {
     extern ts::auton skills;
-    extern ts::auton sawp_dsr;
-    extern ts::auton sawp_dsr_push;
     extern ts::auton sawp_dsr_counter;
     extern ts::auton sawp_dsr_counter_push;
     extern ts::auton elims_left_dsr;
+    extern ts::auton elims_left_fast;
+    extern ts::auton elims_left_fast_fast;
+    extern ts::auton elims_right_fast_fast;
+    extern ts::auton elims_left_buttery;
     extern ts::auton elims_right;
 }
 

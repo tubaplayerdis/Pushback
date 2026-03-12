@@ -35,8 +35,8 @@ namespace coords
             pos match_loader_neg_neg_prime(-47.3, -38.25, 90);
             pos match_loader_neg_neg_prime_push(-47.3, -38.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
-            pos block_blip_neg_neg(-23.5, -15, 180);
-            pos block_blip_neg_pos(-23.5, 34.0, 0);
+            pos block_blip_neg_neg(-24.0, -15, 180);
+            pos block_blip_neg_pos(-24.0, 34.0, 0);
             pos middle_goal_neg_pos(-10.0, 10.00, 135);
             pos match_loader_neg_pos(-56, 47.2, 90);
             pos long_goal_neg_pos(-29, 47.6, 90);
@@ -142,7 +142,14 @@ void sawp_dsr_counter_auton_raw(bool push)
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
-        pros::Task::delay(1250);
+        if (push)
+        {
+            pros::Task::delay(750);
+        }
+        else
+        {
+            pros::Task::delay(1250);
+        }
         (void)conv->exhaust.move(EXHAUST_INDEX);
         dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
@@ -318,7 +325,7 @@ void sawp_dsr_counter_auton_push()
     sawp_dsr_counter_auton_raw(true);
 }
 
-ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
-ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
-ts::auton autons::sawp_dsr_counter = ts::auton("SAWP C", sawp_dsr_counter_auton);
-ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP CP", sawp_dsr_counter_auton_push);
+//ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
+//ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
+ts::auton autons::sawp_dsr_counter = ts::auton("SAWP", sawp_dsr_counter_auton);
+ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP PUSH", sawp_dsr_counter_auton_push);
