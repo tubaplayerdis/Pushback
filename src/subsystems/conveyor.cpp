@@ -56,11 +56,11 @@ conveyor::conveyor() :
                     pros::Task::delay(200);
 
                     //Get back up to speed
-                    (void)conveyor_intake.move(FRESH_BLOCK_OUTPUT);
+                    (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
                     pros::Task::delay(300);
                 }
 
-                (void)conveyor_intake.move(FRESH_BLOCK_OUTPUT);
+                (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
                 pros::Task::delay(10);
             }
         })
@@ -72,8 +72,8 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
-        (void)exhaust.move(-FULL_POWER * 0.8);
-        (void)conveyor_intake.move(FULL_POWER * 0.65);
+        (void)exhaust.move(-FULL_POWER * 0.65);
+        (void)conveyor_intake.move(FULL_POWER * 0.7);
         (void)trapdoor.extend();
     } else
     {

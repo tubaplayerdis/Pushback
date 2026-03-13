@@ -21,7 +21,7 @@ namespace coords
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
         pos middle_goal_pos(-12.5, 12.5, 135);
-        pos match_loader_neg_pos(-55, 45.0, 90);
+        pos match_loader_neg_pos(-55, 44.5, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(33.5, 62, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
@@ -126,14 +126,14 @@ void skills_routine()
         conv->match_loader.toggle();
         (void)conv->conveyor_intake.move(-FULL_POWER);
         (void)conv->exhaust.move(-FULL_POWER * 0.25);
-        pros::Task::delay(250);
+        pros::Task::delay(275);
     }
 
     {
         (void)conv->trapdoor.extend();
-        (void)conv->exhaust.move(-FULL_POWER * 0.8);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
-        pros::Task::delay(3200);
+        (void)conv->exhaust.move(-FULL_POWER * 0.65);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
+        pros::Task::delay(3300);
     }
 
     {
@@ -342,7 +342,7 @@ void skills_routine()
     }
 
     {
-        dt->l_chassis.perform_dsr_quad(NEG_NEG);
+        //dt->l_chassis.perform_dsr_quad(NEG_NEG);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         (void)conv->conveyor_intake.move(FULL_POWER);
         conv->match_loader.retract();
