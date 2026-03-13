@@ -53,14 +53,14 @@ conveyor::conveyor() :
                 if (get_watts(conveyor_intake) < -6.5)
                 {
                     (void)conveyor_intake.move(FULL_POWER);
-                    pros::Task::delay(100);
+                    pros::Task::delay(200);
 
                     //Get back up to speed
-                    (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
+                    (void)conveyor_intake.move(FRESH_BLOCK_OUTPUT);
                     pros::Task::delay(300);
                 }
 
-                (void)conveyor_intake.move(OLD_BLOCK_OUTPUT);
+                (void)conveyor_intake.move(FRESH_BLOCK_OUTPUT);
                 pros::Task::delay(10);
             }
         })

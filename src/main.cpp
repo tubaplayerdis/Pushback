@@ -245,7 +245,9 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->lem_chassis.setPose(0,0,0);
+        	odom->lem_chassis.setPose(0,0,90);
+        	odom->lem_chassis.turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
+        	odom->lem_chassis.swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         	//(void)conv->conveyor_intake.move(-90);
         	//pros::Task::delay(200);
         	//conv->do_low_goal_macro = true;

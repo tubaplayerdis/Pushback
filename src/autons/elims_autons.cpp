@@ -22,7 +22,7 @@ namespace coords
             {
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
-                pos middle_goal_high(-8.5, 8.5, 135);
+                pos middle_goal_high(-10.5, 10.5, 125);
                 pos match_loader(-51, 43.00, 90);
                 pos long_goal(-25, 47.1, 90);
                 pos wing_prime_back(-36, 55, 0);
@@ -145,7 +145,7 @@ void elims_left_dsr_auton()
 
     {
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(135, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127}, false);
+        chassis->turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -218,7 +218,7 @@ void elims_left_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(135, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127}, false);
+        chassis->turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -281,7 +281,7 @@ void elims_left_fast_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(140, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127}, false);
+        chassis->turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -354,7 +354,7 @@ void elims_right_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(135, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127}, false);
+        chassis->turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -418,7 +418,7 @@ void elims_right_fast_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(140, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127}, false);
+        chassis->turnToHeading(140, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
