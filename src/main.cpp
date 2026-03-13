@@ -195,7 +195,38 @@ void pid_tune_mode()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+constexpr bool RUN_AUTO_DRIVER = false;
+
 void opcontrol() {
+	if (RUN_AUTO_DRIVER)
+	{
+		while (true)
+		{
+			if (controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+			{
+				break;
+			}
+			pros::Task::delay(20);
+		}
+		auto bruh = new pros::Task ([]()
+		{
+			skills_routine();
+		});
+		while (true)
+		{
+			if (controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+			{
+				bruh->remove();
+				break;
+			}
+
+			pros::Task::delay(20);
+		}
+
+	}
+
+
     odom = localization::get();
     conv = conveyor::get();
 	ts::selector* sel = ts::selector::get();
@@ -212,7 +243,7 @@ void opcontrol() {
 #endif
 	if (pros::c::competition_get_status() & COMPETITION_CONNECTED)
 	{
-		conv->wings.extend();
+		//conv->wings.extend();
 	}
 
 	//odom->l_chassis.perform_dsr_init(POS_POS, 270);
