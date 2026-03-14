@@ -89,7 +89,7 @@ void skills_routine()
 
     {
         (void)conv->wings.toggle();
-        (void)conv->exhaust.move(0.30 * -FULL_POWER);
+        (void)conv->exhaust.move(0.35 * -FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
@@ -132,7 +132,7 @@ void skills_routine()
     {
         (void)conv->trapdoor.extend();
         (void)conv->exhaust.move(-FULL_POWER * 0.65);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.8);
         pros::Task::delay(3300);
     }
 
@@ -235,7 +235,7 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .horizontalDrift = 10, .lead = 0.5, .maxSpeed = 70, .minSpeed = 30, .earlyExitRange = 1}, false);
-        (void)conv->exhaust.move(-0.30 * FULL_POWER);
+        (void)conv->exhaust.move(-0.35 * FULL_POWER);
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
