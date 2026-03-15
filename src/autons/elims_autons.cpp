@@ -23,28 +23,28 @@ namespace coords
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
                 pos middle_goal_high(-10.5, 10.5, 125);
-                pos match_loader(-51, 43.00, 90);
+                pos match_loader(-51, 42.85, 90);
                 pos long_goal(-25, 47.1, 90);
                 pos wing_prime_back(-36, 55, 0);
                 pos wing_forward_init(-12, 57.5, 90);
-                pos wing_forward_final(-12, 61, 90);
+                pos wing_forward_final(-17, 61, 90);
             }
         }
 
         namespace left_fast
         {
             pos block_blip_trio(-29.0, 19.0, 0);
-            pos long_goal_uno(-25, 47.0, 90);
-            pos match_loader(-52, 43.5, 90);
-            pos wing_forward_final(-13, 58.5, 90);
+            pos match_loader(-51, 44.5, 90);
+            pos long_goal(-25, 47.1, 90);
+            pos wing_forward_final(-17, 58.5, 90);
         }
 
         namespace right
         {
             pos block_blip_trio(-29.0, -18.0, 0);
             pos long_goal_uno(-25, -47.0, 90);
-            pos match_loader(-52, -42.5, 85);
-            pos wing_forward_final(-14, -36, 90);
+            pos match_loader(-52, -43.5, 85);
+            pos wing_forward_final(-18, -36, 90);
         }
 
         namespace right_fast_fast
@@ -52,7 +52,7 @@ namespace coords
             pos block_blip_trio(-29.0, -19.0, 0);
             pos long_goal_uno(-25, -47.0, 90);
             pos match_loader(-46, -43.5, 90);
-            pos wing_forward_final(-13, -35.5, 90);
+            pos wing_forward_final(-17, -35.5, 90);
         }
 
         namespace left_fast_fast
@@ -60,7 +60,7 @@ namespace coords
             pos block_blip_trio(-29.0, 19.0, 0);
             pos long_goal_uno(-25, 47.0, 90);
             pos match_loader(-46, 43.5, 90);
-            pos wing_forward_final(-13, 58.5, 90);
+            pos wing_forward_final(-17, 58.5, 90);
         }
 
         namespace left_middle_end
@@ -69,7 +69,7 @@ namespace coords
             pos long_goal(-29, 47.1, 90);
             pos block_blip_trio(-20.0, 20.0, 0);
             pos middle_goal(-10.5, 10.5, 135);
-            pos wing_end(-12, 61, 90);
+            pos wing_end(-17, 61, 90);
         }
     }
 }
@@ -184,8 +184,7 @@ void elims_left_dsr_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 270);
-
-    dt->l_chassis.start_location_recording("ELIMS LEFT DSR");
+    //dt->lem_chassis.setPose(-45.85, 12.09, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -211,8 +210,8 @@ void elims_left_dsr_auton()
     }
 
     {
-        (void)conv->conveyor_intake.move(0.65 * FULL_POWER);
         (void)conv->exhaust.move(-0.8 * FULL_POWER);
+        (void)conv->conveyor_intake.move(0.65 * FULL_POWER);
         conv->trapdoor.toggle();
         pros::Task::delay(1500);
         conv->trapdoor.toggle();
@@ -225,7 +224,10 @@ void elims_left_dsr_auton()
         chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
-        dt->l_chassis.perform_dsr_quad(NEG_POS);
+    }
+
+    {
+        dt->l_chassis.perform_dsr();
     }
 
     {
@@ -234,7 +236,6 @@ void elims_left_dsr_auton()
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(1000);
-        //dt->l_chassis.perform_dsr_quad(NEG_POS);
         conv->match_loader.toggle();
     }
 
@@ -273,8 +274,6 @@ void elims_left_fast_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 270);
 
-    dt->l_chassis.start_location_recording("ELIMS LEFT FAST");
-
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
@@ -288,7 +287,10 @@ void elims_left_fast_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .horizontalDrift = 6, .lead = 0.25, .minSpeed = 80}, false);
+        chassis->moveToPoint(MPOS(match_loader), 1000, {.forwards = false}, false);
+        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        pros::Task::delay(800);
     }
 
     {
@@ -298,11 +300,11 @@ void elims_left_fast_auton()
     }
 
     {
-        dt->l_chassis.perform_dsr_quad(NEG_POS);
+        dt->l_chassis.perform_dsr();
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_uno), 900, {.minSpeed = 127, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(long_goal), 900, {.minSpeed = 127, .earlyExitRange = 4}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -344,9 +346,7 @@ void elims_left_fast_fast_auton()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    dt->l_chassis.perform_dsr_init(NEG_POS, 270);
-
-    dt->l_chassis.start_location_recording("ELIMS LEFT FAST FAST");
+    dt->lem_chassis.setPose(-45.85, 12.09, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -409,7 +409,7 @@ void elims_right_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 270);
 
-    dt->l_chassis.start_location_recording("ELIMS RIGHT DSR ");
+    //dt->l_chassis.start_location_recording("ELIMS RIGHT DSR ");
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -424,7 +424,7 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1500, {.forwards = false, .horizontalDrift = 6, .lead = 0.25, .minSpeed = 80}, false);
+        chassis->moveToPose(POS(match_loader), 2000, {.forwards = false, .horizontalDrift = 6, .lead = 0.25, .minSpeed = 40}, false);
     }
 
     {
@@ -449,8 +449,8 @@ void elims_right_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
+        chassis->turnToHeading(150, 700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 90}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 700, {.maxSpeed = 90}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
         chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);

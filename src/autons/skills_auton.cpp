@@ -126,13 +126,13 @@ void skills_routine()
         conv->match_loader.toggle();
         (void)conv->conveyor_intake.move(-FULL_POWER);
         (void)conv->exhaust.move(-FULL_POWER * 0.25);
-        pros::Task::delay(275);
+        pros::Task::delay(300);
     }
 
     {
         (void)conv->trapdoor.extend();
-        (void)conv->exhaust.move(-FULL_POWER * 0.65);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.8);
+        (void)conv->exhaust.move(-FULL_POWER * 0.8);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
         pros::Task::delay(3300);
     }
 

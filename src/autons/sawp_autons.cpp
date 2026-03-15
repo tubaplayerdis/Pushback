@@ -18,24 +18,24 @@ namespace coords
     {
         namespace dsr
         {
-            pos start_push(0,0,0);
-            pos start_normal(0,0,0);
+            pos start_push(-46.89,-7.5,0);
+            pos start_normal(-47.13,-15.5,0);
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -38.25, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -38.25, 90);
+            pos match_loader_neg_neg_prime(-47.3, -45.75, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -45.75, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
-            pos block_blip_neg_neg(-24.5, -15, 180);
-            pos block_blip_neg_pos(-24.5, 24.5, 0);
+            pos block_blip_neg_neg(-25.5, -15, 180);
+            pos block_blip_neg_pos(-25.5, 24.5, 0);
             pos middle_goal_neg_pos(-10.5, 10.5, 135);
-            pos match_loader_neg_pos(-51, 43.00, 90);
+            pos match_loader_neg_pos(-51, 43.65, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
 
         namespace counter
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -38.25, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -38.25, 90);
+            pos match_loader_neg_neg_prime(-47.3, -40.25, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -40.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-24.5, -15, 180);
             pos block_blip_neg_pos(-24.5, 34.0, 0);
@@ -194,7 +194,7 @@ void sawp_dsr_auton_raw(bool push)
     constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -45;
     constexpr auto LONG_GOAL = 10;
-    constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
+    constexpr auto EXHAUST_INDEX = -0.3 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
 
@@ -217,7 +217,7 @@ void sawp_dsr_auton_raw(bool push)
     }
     else
     {
-        chassis->setPose(POS(start_normal));
+        chassis->setPose(POS(start_push));
     }
 
     if (push)
@@ -239,7 +239,7 @@ void sawp_dsr_auton_raw(bool push)
         {
             chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {.forwards = false}, false);
         }
-        chassis->swingToHeading(TPOS(match_loader_neg_neg_prime), lemlib::DriveSide::LEFT, 700, {}, false);
+        chassis->turnToHeading(TPOS(match_loader_neg_neg_prime), 700, {}, false);
     }
 
     {
@@ -287,8 +287,8 @@ void sawp_dsr_auton_raw(bool push)
             conv->conveyor_intake.brake();
             chassis->waitUntilDone();
         }
-        (void)conv->exhaust.move(-FULL_POWER * 0.65);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.8);
+        (void)conv->exhaust.move(-FULL_POWER * 0.80);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
         (void)conv->trapdoor.extend();
         pros::Task::delay(1000);
         (void)conv->trapdoor.retract();
@@ -300,11 +300,11 @@ void sawp_dsr_auton_raw(bool push)
         chassis->moveToPoint(MPOS(match_loader_neg_pos), 1000, {.forwards = false}, false);
         chassis->turnToHeading(90, 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(700);
+        pros::Task::delay(1100);
     }
 
     {
-        dt->l_chassis.perform_dsr_quad(NEG_POS);
+        dt->l_chassis.perform_dsr();
     }
 
     {
@@ -336,5 +336,5 @@ void sawp_dsr_counter_auton_push()
 
 //ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
 //ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
-ts::auton autons::sawp_dsr_counter = ts::auton("SAWP", sawp_dsr_counter_auton);
-ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP PUSH", sawp_dsr_counter_auton_push);
+ts::auton autons::sawp_dsr_counter = ts::auton("SAWP", sawp_dsr_auton);
+ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP PUSH", sawp_dsr_auton_push);
