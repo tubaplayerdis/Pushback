@@ -202,7 +202,7 @@ struct TurnToPointParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
@@ -231,7 +231,7 @@ struct TurnToHeadingParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
@@ -275,7 +275,7 @@ struct SwingToPointParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
@@ -304,7 +304,7 @@ struct SwingToHeadingParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
@@ -338,7 +338,7 @@ struct MoveToPoseParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
@@ -367,20 +367,37 @@ struct MoveToPointParams {
         /**
          * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
          * 
-         * @note earlyLambda will executed asyncronously and only once.
+         * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
 };
 
-struct DriftToPoseParams {
+struct PursuitToPoseParams {
         /** whether the robot should move forwards or backwards. True by default */
         bool forwards = true;
-
-        /** Acceleration due to friction in inches/sec */
-        float friction = 0.5;
-
-        /** How far the robot should attempt to move using its own inertia */
-        float driftDistance = 6; 
+        /** how fast the robot will move around corners. Recommended value 2-15. 0 means use horizontalDrift set in
+         * chassis class. 0 by default. */
+        float horizontalDrift = 0;
+         /** the maximum speed the robot can travel at. Value between 0-127. 127 by default */
+        float maxSpeed = 127;
+        /** resolution of the points generated. comparable to path.jerry.io's point density. */
+        float resolution = 2;
+        /** the lookahead distance. Units in inches. Larger values will make the robot move
+         * faster but will follow the path less accurately */
+        float lookahead = 9;
+        /** radius of the turning curve of the robot when set to 0, defaults to half the drivebase track width.*/
+        float turningRadius = 0;
+        /** distance between the robot and target point where the movement will exit. Only has an effect if minSpeed is
+         * non-zero.*/
+        float earlyExitRange = 0;
+        /** distance between the robot and target point where the earlyLambda will be executed. */
+        float earlyLambdaRange = 0;
+        /**
+         * Function that executes upon earlyLambdaRange is true. Useful for adding custom pre exit behavior.
+         * 
+         * @note earlyLambda will execute asynchronously and only once.
+         */
+        std::function<void()> earlyLambda = nullptr;
 };
 
 // default drive curve
@@ -542,6 +559,16 @@ class Chassis {
          * @endcode
          */
         void setBrakeMode(pros::motor_brake_mode_e mode);
+        /**
+         * @brief 10-20 second auton that measures and calculates the correct offsets of tracking wheels. LemLib adapted version of the EZ-template utility.
+         * 
+         * @note offset of -9999 will be returned for tracking wheels that are not connected.
+         * 
+         * @warning PID must be tuned and the IMU scale must also be tuned.
+         * 
+         * @return Array of floats representing the offsets of the vertical1, vertical2, horizontial1, horizontial2 tracking wheels.
+         */
+        std::array<float, 4> calculateOdomOffsets();
         /**
          * @brief Turn the chassis so it is facing the target point
          *
@@ -740,10 +767,17 @@ class Chassis {
          * @endcode
          */
         void moveToPoint(float x, float y, int timeout, MoveToPointParams params = {}, bool async = true);
-        
-        void driftToPose(float x, float y, float theta, int timeout, DriftToPoseParams params = {}, bool async = true);
-
-
+        /**
+         * @brief Drive to a point following the most optimal Dubins path using pure pursuit.
+         * 
+         * @param x x location
+         * @param y y location
+         * @param theta target heading in degrees
+         * @param timeout longest time the robot can spend moving
+         * @param params struct to simulate named parameters
+         * @param async whether the function should be run asynchronously. true by default
+         */
+        void pursuitToPose(float x, float y, float theta, int timeout, PursuitToPoseParams params = {}, bool async = true);
         /**
          * @brief Move the chassis along a path
          *
@@ -772,6 +806,18 @@ class Chassis {
          * @endcode
          */
         void follow(const asset& path, float lookahead, int timeout, bool forwards = true, bool async = true);
+        /**
+         * @brief Move the chassis along a path. Overload that uses a vector of poses
+         *
+         * @param path the path asset to follow
+         * @param lookahead the lookahead distance. Units in inches. Larger values will make the robot move
+         * faster but will follow the path less accurately
+         * @param timeout the maximum time the robot can spend moving
+         * @param forwards whether the robot should follow the path going forwards. true by default
+         * @param async whether the function should be run asynchronously. true by default
+         *
+         */
+        void follow(std::vector<lemlib::Pose> path, float lookahead, int timeout, bool forwards = true, bool async = true);
         /**
          * @brief Control the robot during the driver using the tank drive control scheme. In this control scheme one
          * joystick axis controls the left motors' forward and backwards movement of the robot, while the other joystick

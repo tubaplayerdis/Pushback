@@ -30,8 +30,8 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto EXHAUST = 1;
-        constexpr auto CONVEYOR = -10;
+        constexpr auto EXHAUST = 7;
+        constexpr auto CONVEYOR = -17;
         constexpr auto MATCH_LOADER = 'B';
         constexpr auto WINGS = 'C';
         constexpr auto TRAPDOOR = 'A';
@@ -53,8 +53,8 @@ namespace ports
 
     namespace localization
     {
-        constexpr auto INERTIAL = 8;
-        constexpr auto ROTATION_VERTICAL = 14;
+        constexpr auto INERTIAL = 7;
+        constexpr auto ROTATION_VERTICAL = 18;
         constexpr auto ENCODER_HORIZONTAL_0 = 'E';
         constexpr auto ENCODER_HORIZONTAL_1 = 'F';
         constexpr auto FRONT_LOC = 3; //North
@@ -62,12 +62,12 @@ namespace ports
         constexpr auto LEFT_LOC = 2; //West
         constexpr auto RIGHT_LOC = 4; //East
 
-        constexpr auto LEFT_A = -18;
-        constexpr auto LEFT_B = -19;
-        constexpr auto LEFT_C = -20;
-        constexpr auto RIGHT_A = 11;
-        constexpr auto RIGHT_B = 12;
-        constexpr auto RIGHT_C = 13;
+        constexpr auto LEFT_A = -1;
+        constexpr auto LEFT_B = -2;
+        constexpr auto LEFT_C = -16;
+        constexpr auto RIGHT_A = 9;
+        constexpr auto RIGHT_B = 15;
+        constexpr auto RIGHT_C = 10;
 
         namespace settings
         {

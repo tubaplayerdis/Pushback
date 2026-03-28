@@ -65,7 +65,7 @@ namespace coords
 
         namespace left_middle_end
         {
-            pos match_loader(-47, 44.75, 90);
+            pos match_loader(-47, 47, 90);
             pos long_goal(-29, 47.1, 90);
             pos block_blip_trio(-20.0, 20.0, 0);
             pos middle_goal(-10.5, 10.5, 135);
@@ -105,7 +105,8 @@ void elims_left_middle_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 1000, {}, false);
+        chassis->pursuitToPose(POS(match_loader), 2000, {}, false);
+        return;
         conv->match_loader.toggle();
     }
 
@@ -220,8 +221,7 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 1000, {.forwards = false}, false);
-        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
     }
