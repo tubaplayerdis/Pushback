@@ -30,12 +30,12 @@ namespace ports
 
     namespace conveyor
     {
-        constexpr auto EXHAUST = 7;
+        constexpr auto EXHAUST = 14;
         constexpr auto CONVEYOR = -17;
         constexpr auto MATCH_LOADER = 'B';
-        constexpr auto WINGS = 'C';
-        constexpr auto TRAPDOOR = 'A';
-        constexpr auto DESCORE = 'D';
+        constexpr auto WINGS = 'D';
+        constexpr auto TRAPDOOR = 'C';
+        constexpr auto DESCORE = 'A';
 
         namespace controls
         {
@@ -72,8 +72,8 @@ namespace ports
         namespace settings
         {
             constexpr auto ODOMETRY_DIST_FROM_CENTER_HORIZONTAL = -0.87; //The vertical offset of the horizontal tracking wheel from the center of the robot in inches.
-            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = -0.49; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
-            constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = 2.00;
+            constexpr auto ODOMETRY_DIST_FROM_CENTER_VERTICAL = 0.0; //The horizontal offset of the vertical tracking wheel from the center of the robot in inches.
+            constexpr auto ODOMETRY_WHEEL_SIZE_VERTICAL = lemlib::Omniwheel::NEW_275;
             constexpr auto ODOMETRY_WHEEL_SIZE_HORIZONTAL = lemlib::Omniwheel::NEW_275;
             constexpr auto INERTIAL_DRIFT = 1.00395;//1.0076;
 
