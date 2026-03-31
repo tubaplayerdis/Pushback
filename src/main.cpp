@@ -54,20 +54,7 @@ void disabled()
  * starts.
  */
 void competition_initialize()
-{
-	if (!ts::selector::get()->is_auton_selected())
-	{
-		controller_master.rumble(".-.-.-.-");
-        pros::delay(100);
-	}
-	while (true)
-	{
-		pros::delay(100);
-		controller_master.print(2, 0, "TSA: %s", ts_get_selected_auton_name());
-		lemlib::Pose pose = odom->lem_chassis.getPose();
-		controller_master.print(1,0, "%.2f, %.2f, %.2f", pose.x, pose.y, pose.theta);
-	}
-}
+{}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
