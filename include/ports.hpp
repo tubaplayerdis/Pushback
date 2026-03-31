@@ -62,12 +62,12 @@ namespace ports
         constexpr auto LEFT_LOC = 2; //West
         constexpr auto RIGHT_LOC = 4; //East
 
-        constexpr auto LEFT_A = -1;
-        constexpr auto LEFT_B = -2;
-        constexpr auto LEFT_C = -16;
-        constexpr auto RIGHT_A = 9;
-        constexpr auto RIGHT_B = 15;
-        constexpr auto RIGHT_C = 10;
+        constexpr auto LEFT_A = 1;
+        constexpr auto LEFT_B = 2;
+        constexpr auto LEFT_C = 16;
+        constexpr auto RIGHT_A = -9;
+        constexpr auto RIGHT_B = -15;
+        constexpr auto RIGHT_C = -10;
 
         namespace settings
         {

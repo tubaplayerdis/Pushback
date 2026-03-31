@@ -92,12 +92,12 @@ void localization::tick_implementation()
     constexpr auto FULL_POWER = 127;
 
     //Acquire throttle and turning values
-    int32_t throttle = controller_master.get_analog(controls::VERTICAL_AXIS);
+    int32_t throttle = -1 * controller_master.get_analog(controls::VERTICAL_AXIS);
     int32_t turn = controller_master.get_analog(controls::HORIZONTAL_AXIS);
 
     if (throttle == 0 && turn == 0 && controller_master.get_digital(controls::BARRIER_CROSS))
     {
-        lem_chassis.tank(55, 52, true);
+        lem_chassis.tank(-55, -52, true);
     }
     else
     {
