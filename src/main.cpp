@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-#define COMPETITION
+//#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 

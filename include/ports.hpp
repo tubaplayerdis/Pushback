@@ -57,17 +57,17 @@ namespace ports
         constexpr auto ROTATION_VERTICAL = 18;
         constexpr auto ENCODER_HORIZONTAL_0 = 'E';
         constexpr auto ENCODER_HORIZONTAL_1 = 'F';
-        constexpr auto FRONT_LOC = 3; //North
-        constexpr auto REAR_LOC = 5; //South
-        constexpr auto LEFT_LOC = 2; //West
-        constexpr auto RIGHT_LOC = 4; //East
+        constexpr auto FRONT_LOC = 19; //North
+        constexpr auto REAR_LOC = 4; //South
+        constexpr auto LEFT_LOC = 3; //West
+        constexpr auto RIGHT_LOC = 8; //East
 
-        constexpr auto LEFT_A = 1;
-        constexpr auto LEFT_B = 2;
-        constexpr auto LEFT_C = 16;
-        constexpr auto RIGHT_A = -9;
-        constexpr auto RIGHT_B = -15;
-        constexpr auto RIGHT_C = -10;
+        constexpr auto LEFT_A = -9;//9, 15, 10
+        constexpr auto LEFT_B = -15;
+        constexpr auto LEFT_C = -10;
+        constexpr auto RIGHT_A = 1;
+        constexpr auto RIGHT_B = 2;
+        constexpr auto RIGHT_C = 16;
 
         namespace settings
         {
@@ -93,17 +93,17 @@ namespace ports
 
         namespace offsets
         {
-            constexpr auto FRONT_X = 5.151;
-            constexpr auto FRONT_Y = -5.25;
+            constexpr auto FRONT_X = 4.75;
+            constexpr auto FRONT_Y = -4.625;
 
-            constexpr auto RIGHT_X = 5.05;
-            constexpr auto RIGHT_Y = 3.23;
+            constexpr auto RIGHT_X = 5.25;
+            constexpr auto RIGHT_Y = -1;
 
             constexpr auto REAR_X = 5.823;
             constexpr auto REAR_Y = 4.691;
 
-            constexpr auto LEFT_X = 5.05;
-            constexpr auto LEFT_Y = 3.23;
+            constexpr auto LEFT_X = 5.25;
+            constexpr auto LEFT_Y = -1;
         }
     }
 }
