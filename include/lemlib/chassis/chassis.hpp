@@ -11,6 +11,23 @@
 
 namespace lemlib {
 
+class ScalingIMU : public pros::Imu
+{
+        const double scale;
+    public:
+        ScalingIMU(const std::uint8_t port, const double scale) : pros::Imu(port), scale(scale) {}
+
+        double get_rotation() const override 
+        {
+             return Imu::get_rotation() * scale;
+        }
+
+        double get_heading() const override 
+        {
+             return Imu::get_heading() * scale;
+        }
+};
+
 /**
  * @brief class containing the sensors used for odometry
  */
@@ -41,13 +58,12 @@ class OdomSensors {
          * @endcode
          */
         OdomSensors(TrackingWheel* vertical1, TrackingWheel* vertical2, TrackingWheel* horizontal1,
-                    TrackingWheel* horizontal2, pros::Imu* imu, float scale = 1.0f);
+                    TrackingWheel* horizontal2, pros::Imu* imu);
         TrackingWheel* vertical1;
         TrackingWheel* vertical2;
         TrackingWheel* horizontal1;
         TrackingWheel* horizontal2;
         pros::Imu* imu;
-        float imu_scale;
 };
 
 /**
@@ -409,6 +425,9 @@ struct PursuitToPoseParams {
          * @note earlyLambda will execute asynchronously and only once.
          */
         std::function<void()> earlyLambda = nullptr;
+
+        /*Print the generated path to the micro sd card*/
+        bool outputDebug = false;
 };
 
 // default drive curve

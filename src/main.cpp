@@ -119,22 +119,22 @@ void pid_tune_mode()
 
 		if (controller_master.get_digital(ports::tune::KP_UP))
 		{
-			activePID->kP += 0.01f;
+			activePID->kP += 0.1f;
 		}
 
 		if (controller_master.get_digital(ports::tune::KP_DOWN))
 		{
-			activePID->kP -= 0.01f;
+			activePID->kP -= 0.1f;
 		}
 
 		if (controller_master.get_digital(ports::tune::KD_UP))
 		{
-			activePID->kD += 0.01f;
+			activePID->kD += 0.1f;
 		}
 
 		if (controller_master.get_digital(ports::tune::KD_DOWN))
 		{
-			activePID->kD -= 0.01f;
+			activePID->kD -= 0.1f;
 		}
 
 		if (controller_master.get_digital_new_press(ports::tune::TEST_ANGULAR))

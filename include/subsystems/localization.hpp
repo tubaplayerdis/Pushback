@@ -38,7 +38,7 @@ public:
     pros::MotorGroup motors_right;
 
     /// Inertial sensor responsible for things like velocity and rotation
-    pros::Imu inertial;
+    lemlib::ScalingIMU inertial;
 
     /// Pros rotation sensor for vertical wheel
     pros::Rotation rotation_vertical;

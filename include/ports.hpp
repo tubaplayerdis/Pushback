@@ -58,8 +58,8 @@ namespace ports
         constexpr auto ENCODER_HORIZONTAL_0 = 'E';
         constexpr auto ENCODER_HORIZONTAL_1 = 'F';
         constexpr auto FRONT_LOC = 19; //North
-        constexpr auto REAR_LOC = 4; //South
-        constexpr auto LEFT_LOC = 3; //West
+        constexpr auto REAR_LOC = 3; //South
+        constexpr auto LEFT_LOC = 4; //West
         constexpr auto RIGHT_LOC = 8; //East
 
         constexpr auto LEFT_A = -9;//9, 15, 10

@@ -40,7 +40,7 @@ namespace pid
     lemlib::ControllerSettings
     controller_settings_lateral(11.00, // proportional gain (kP)
                                               0.00, // integral gain (kI)
-                                              68.25, // derivative gain (kD)
+                                              59.9, // derivative gain (kD)
                                               0, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -51,15 +51,15 @@ namespace pid
 
     // Angular/turning settings
     lemlib::ControllerSettings
-    controller_settings_angular(4.5,   // kP: Lowered slightly to reduce 180° momentum
+    controller_settings_angular(3.5,   // kP: Lowered slightly to reduce 180° momentum
                             0.0,  // kI: Increased to help finish small 10° turns
-                            34.61,  // kD: Lowered slightly to reduce "choke" on start
+                            30.8,  // kD: Lowered slightly to reduce "choke" on start
                             0.0,   // anti-windup: Prevents kI from growing too large
                             1, // small error range, in inches
                             100, // small error range timeout, in milliseconds
                             3, // large error range, in inches
                             500, // large error range timeout, in milliseconds
-                            0      // slew rate
+                            0 // maximum acceleration (slew)
     );
 }
 
@@ -69,12 +69,12 @@ using namespace ports::localization::settings;
 localization::localization() :
         motors_left({LEFT_A, LEFT_B, LEFT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
         motors_right({RIGHT_A, RIGHT_B, RIGHT_C}, DRIVETRAIN_MOTOR_CARTRIDGE),
-        inertial(INERTIAL),
+        inertial(INERTIAL, INERTIAL_DRIFT),
         rotation_vertical(ROTATION_VERTICAL),
         encoder_horizontal(ENCODER_HORIZONTAL_0, ENCODER_HORIZONTAL_1, true),
         tracking_vertical(&rotation_vertical, ODOMETRY_WHEEL_SIZE_VERTICAL, ODOMETRY_DIST_FROM_CENTER_VERTICAL),
         tracking_horizontal(&encoder_horizontal, ODOMETRY_WHEEL_SIZE_HORIZONTAL, ODOMETRY_DIST_FROM_CENTER_HORIZONTAL),
-        odom_sensors(&tracking_vertical, nullptr, &tracking_horizontal, nullptr, &inertial, INERTIAL_DRIFT),
+        odom_sensors(&tracking_vertical, nullptr, &tracking_horizontal, nullptr, &inertial),
         lem_drivetrain(&motors_left, &motors_right, DRIVETRAIN_TRACK_WIDTH, DRIVETRAIN_WHEEL_DIAMETER, DRIVETRAIN_RPM, DRIVETRAIN_HORIZONTAL_DRIFT),
         lem_chassis(lem_drivetrain, pid::controller_settings_lateral, pid::controller_settings_angular, odom_sensors, &controller::expo_curve_throttle, &controller::expo_curve_steer),
         rear_loc({offsets::REAR_X, offsets::REAR_Y}, REAR_LOC),

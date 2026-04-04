@@ -99,18 +99,19 @@ void elims_left_middle_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 0);
 
+    dt->l_chassis.start_location_recording("middle");
+
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 
     {
-        chassis->pursuitToPose(POS(match_loader), 2000, {}, false);
-        return;
         conv->match_loader.toggle();
     }
 
     {
+        chassis->moveToPoint(MPOS(match_loader), 2000, {}, false);
         chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(850);
@@ -221,7 +222,7 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false}, false);
+        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false, .outputDebug = true}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
     }
