@@ -247,8 +247,8 @@ void opcontrol() {
 			controller_master.print(1, 0, "TSA: %s          ", auton_name.c_str());
 #else
 			//odom->l_chassis.perform_dsr();
-			lemlib::Pose pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
-			controller_master.print(1,0, "%.2f, %.2f, %.2f           ", pose.x, pose.y, pose.theta);
+			//lemlib::Pose pose = odom->lem_chassis.getPose();//l_chassis.get_position_calculation(odom->l_chassis.get_quadrant()).get_value();
+			controller_master.print(1,0, "%u, %u,           ", controller_master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), controller_master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
 			//std::cout << pose.x << ", " << pose.y << ", " << pose.theta << std::endl;
 #endif
 		}

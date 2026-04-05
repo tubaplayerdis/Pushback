@@ -188,6 +188,8 @@ void elims_left_dsr_auton()
     dt->l_chassis.perform_dsr_init(NEG_POS, 270);
     //dt->lem_chassis.setPose(-45.85, 12.09, 270);
 
+    dt->l_chassis.start_location_recording("Whatever");
+
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
@@ -222,13 +224,13 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false, .maxSpeed = 90, .resolution = 0.5, .turningRadius = 12, .lookahead = 7, .earlyExitRange = 0.5, .outputDebug = true}, false);
+        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false, .maxSpeed = 90, .resolution = 0.1, .turningRadius = 25, .lookahead = 0.15, .earlyExitRange = 2, .outputDebug = true}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
     }
 
     {
-        dt->l_chassis.perform_dsr();
+        //dt->l_chassis.perform_dsr();
     }
 
     {
