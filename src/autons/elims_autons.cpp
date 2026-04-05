@@ -23,7 +23,7 @@ namespace coords
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
                 pos middle_goal_high(-10.5, 10.5, 125);
-                pos match_loader(-51, 42.85, 90);
+                pos match_loader(-58, 47.00, 90);
                 pos long_goal(-25, 47.1, 90);
                 pos wing_prime_back(-36, 55, 0);
                 pos wing_forward_init(-12, 57.5, 90);
@@ -222,7 +222,7 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false, .outputDebug = true}, false);
+        chassis->pursuitToPose(POS(match_loader), 2000, {.forwards = false, .maxSpeed = 90, .resolution = 0.5, .turningRadius = 12, .lookahead = 7, .earlyExitRange = 0.5, .outputDebug = true}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
     }
