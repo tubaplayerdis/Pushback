@@ -34,9 +34,9 @@ namespace coords
         namespace left_fast
         {
             pos block_blip_trio(-29.0, 19.0, 0);
-            pos match_loader(-51, 44.5, 90);
-            pos long_goal(-25, 47.1, 90);
-            pos wing_forward_final(-17, 58.5, 90);
+            pos match_loader(-56, 43.75, 90);
+            pos long_goal(-25, 47.25, 90);
+            pos wing_forward_final(-10, 57.5, 90);
         }
 
         namespace left_fast_fast
@@ -274,16 +274,13 @@ void elims_left_fast_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 1000, {.forwards = false}, false);
-        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
-        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(800);
+        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 80}, false);
     }
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        pros::Task::delay(700);
+        pros::Task::delay(800);
     }
 
     {
@@ -291,7 +288,7 @@ void elims_left_fast_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal), 900, {.minSpeed = 127, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(long_goal), 900, {.minSpeed = 100, .earlyExitRange = 4}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -302,8 +299,8 @@ void elims_left_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
+        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
         chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);

@@ -21,8 +21,8 @@ namespace coords
             pos start_push(-46.89,-7.5,0);
             pos start_normal(-47.13,-15.5,0);
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -45.75, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -45.75, 90);
+            pos match_loader_neg_neg_prime(-47.3, -45.25, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -45.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-25.5, -15, 180);
             pos block_blip_neg_pos(-25.5, 24.5, 0);
@@ -244,7 +244,7 @@ void sawp_dsr_auton_raw(bool push)
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(700);
+        pros::Task::delay(1200);
     }
 
     {
@@ -281,17 +281,17 @@ void sawp_dsr_auton_raw(bool push)
         chassis->turnToPoint(MPOS(middle_goal_neg_pos), 500, {.minSpeed = 40, .earlyExitRange = 0.1}, false);
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, true);
         {
-            pros::Task::delay(300);
+            pros::Task::delay(400);
             conv->conveyor_intake.move(-FULL_POWER);
             pros::Task::delay(120);
             conv->conveyor_intake.brake();
             chassis->waitUntilDone();
         }
-        (void)conv->exhaust.move(-FULL_POWER * 0.80);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
-        (void)conv->trapdoor.extend();
-        pros::Task::delay(1000);
+        (void)conv->exhaust.move(-FULL_POWER);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
         (void)conv->trapdoor.retract();
+        pros::Task::delay(1000);
+        (void)conv->trapdoor.extend();
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
     }

@@ -19,9 +19,9 @@ namespace coords
         namespace right
         {
             pos block_blip_trio(-29.0, -18.0, 0);
-            pos long_goal_uno(-25, -47.0, 90);
-            pos match_loader(-52, -43.5, 85);
-            pos wing_forward_final(-18, -36, 90);
+            pos long_goal_uno(-25, -46.75, 90);
+            pos match_loader(-56, -43.75, 85);
+            pos wing_forward_final(-10, -36, 90);
         }
 
         namespace right_fast_fast
@@ -74,13 +74,13 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 2000, {.forwards = false, .horizontalDrift = 6, .lead = 0.25, .minSpeed = 40}, false);
+        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 60}, false);
     }
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        pros::Task::delay(700);
+        pros::Task::delay(800);
     }
 
     {
@@ -88,7 +88,7 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_uno), 900, {.minSpeed = 100, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(long_goal_uno), 900, {.minSpeed = 60, .earlyExitRange = 4}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
