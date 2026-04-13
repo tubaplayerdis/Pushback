@@ -36,6 +36,7 @@ namespace ports
         constexpr auto WINGS = 'D';
         constexpr auto TRAPDOOR = 'C';
         constexpr auto DESCORE = 'A';
+        constexpr auto LOW_GOAL = 'G';
 
         namespace controls
         {

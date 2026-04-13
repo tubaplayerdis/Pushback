@@ -27,8 +27,11 @@ public:
     /// Motor that operates the conveyor and intake
     pros::Motor conveyor_intake;
 
-    /// Pneumatics for the piston that pulls the bands down to score on the middle trough.
+    /// Pneumatics for the piston that pulls the bands down to score on the middle goal.
     pros::adi::Pneumatics trapdoor;
+
+    /// Pneumatics for the piston for the low goal
+    pros::adi::Pneumatics low_goal;
 
     /// Lift pneumatics for match loader "little will mech"
     pros::adi::Pneumatics match_loader;

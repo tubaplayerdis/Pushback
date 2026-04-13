@@ -26,6 +26,7 @@ conveyor::conveyor() :
         exhaust(EXHAUST),
         conveyor_intake(CONVEYOR),
         trapdoor(TRAPDOOR, true),
+        low_goal(LOW_GOAL, false, true),
         match_loader(MATCH_LOADER, false),
         wings(WINGS, false),
         descore(DESCORE, false),
