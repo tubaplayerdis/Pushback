@@ -26,7 +26,7 @@ conveyor::conveyor() :
         exhaust(EXHAUST),
         conveyor_intake(CONVEYOR),
         trapdoor(TRAPDOOR, true),
-        low_goal(LOW_GOAL, false, true),
+        low_goal(LOW_GOAL, false),
         match_loader(MATCH_LOADER, false),
         wings(WINGS, false),
         descore(DESCORE, false),
@@ -69,8 +69,6 @@ conveyor::conveyor() :
     (void)exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
-bool do_brake = false;
-
 void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
@@ -90,41 +88,32 @@ void conveyor::tick_implementation() {
         if (controller_master.get_digital(CONVEYOR_IN))
         {
             if (!trapdoor.is_extended()) trapdoor.extend(); //Color sort will do this
+            if (low_goal.is_extended()) low_goal.retract();
             (void)conveyor_intake.move(FULL_POWER);
-            if (!did_exhaust && do_brake)
-            {
-                (void)exhaust.brake();
-                do_brake = false;
-            }
+            if (!did_exhaust) (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(CONVEYOR_OUT))
         {
             if (!trapdoor.is_extended()) trapdoor.extend();
+            if (!low_goal.is_extended()) low_goal.extend();
             (void)exhaust.move(-FULL_POWER);
             (void)conveyor_intake.move(-FULL_POWER);
-            if (!do_brake) do_brake = true;
         } else if (controller_master.get_digital(ports::localization::controls::BARRIER_CROSS))
         {
             if (!trapdoor.is_extended()) trapdoor.extend();
+            if (low_goal.is_extended()) low_goal.retract();
             (void)conveyor_intake.move(FULL_POWER);
-            if (!did_exhaust && do_brake)
-            {
-                (void)exhaust.brake();
-                do_brake = false;
-            }
+            if (!did_exhaust) (void)exhaust.move(EXHAUST_INDEX);
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (!trapdoor.is_extended()) trapdoor.extend();
+            if (low_goal.is_extended()) low_goal.retract();
             //conveyor_intake.move(FULL_POWER * -0.40);
             do_low_goal_macro = true;
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
         {
             if (!trapdoor.is_extended()) trapdoor.extend();
             (void)conveyor_intake.move(FULL_POWER * -0.30);
-            if (!did_exhaust && do_brake)
-            {
-                (void)exhaust.brake();
-                do_brake = false;
-            }
+            if (!did_exhaust) (void)exhaust.move(EXHAUST_INDEX);
         }
         else
         {
