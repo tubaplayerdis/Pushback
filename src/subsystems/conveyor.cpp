@@ -74,7 +74,7 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(RAMP_MACRO))
     {
         (void)exhaust.move(-FULL_POWER);
-        (void)conveyor_intake.move(FULL_POWER * 0.7);
+        (void)conveyor_intake.move(FULL_POWER * 0.75);
         (void)trapdoor.retract();
     } else
     {
@@ -106,7 +106,7 @@ void conveyor::tick_implementation() {
         } else if (controller_master.get_digital(ports::conveyor::controls::HALF_OUT))
         {
             if (!trapdoor.is_extended()) trapdoor.extend();
-            if (low_goal.is_extended()) low_goal.retract();
+            if (!low_goal.is_extended()) low_goal.extend();
             //conveyor_intake.move(FULL_POWER * -0.40);
             do_low_goal_macro = true;
         } else if (controller_master.get_digital(ports::conveyor::controls::QUARTER_OUT))
