@@ -6,7 +6,7 @@
 #include "../../include/subsystems/localization.hpp"
 
 constexpr auto FULL_POWER = 127;
-constexpr auto EXHAUST_INDEX = -0.15 * FULL_POWER;
+constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
 
 //Private Singleton
 std::unique_ptr<conveyor> conveyor_instance;
@@ -74,7 +74,7 @@ void conveyor::tick_implementation() {
     if (controller_master.get_digital(RAMP_MACRO))
     {
         (void)exhaust.move(-FULL_POWER);
-        (void)conveyor_intake.move(FULL_POWER * 0.85);
+        (void)conveyor_intake.move(FULL_POWER);
         (void)trapdoor.retract();
         if (low_goal.is_extended()) low_goal.retract();
     } else

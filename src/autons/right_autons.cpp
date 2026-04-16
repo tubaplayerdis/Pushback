@@ -19,17 +19,27 @@ namespace coords
         namespace right
         {
             pos block_blip_trio(-29.0, -18.0, 0);
-            pos long_goal_uno(-25, -46.75, 90);
+            pos long_goal_uno(-25, -47.25, 90);
             pos match_loader(-56, -43.75, 85);
-            pos wing_forward_final(-10, -36, 90);
+            pos wing_forward_final(-10, -37, 90);
         }
 
         namespace right_fast_fast
         {
             pos block_blip_trio(-29.0, -19.0, 0);
             pos long_goal_uno(-25, -47.0, 90);
-            pos match_loader(-46, -43.5, 90);
+            pos match_loader(-46, -44.0, 90);
             pos wing_forward_final(-17, -35.5, 90);
+        }
+
+        namespace right_middle_low
+        {
+            pos match_loader(-47, -47, 90);
+            pos block_trio_nn(-22.5, -22.5, 225);
+            pos low_goal(-10, -10, 225);
+            pos block_trio_np(-22.5, 22.5, 180);
+            pos middle_goal(-10, 10, 135);
+            pos middle_goal_prime(-17, 17, 135);
         }
     }
 }
@@ -74,7 +84,7 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 60}, false);
+        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 90}, false);
     }
 
     {
@@ -88,7 +98,7 @@ void elims_right_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_uno), 900, {.minSpeed = 60, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(long_goal_uno), 900, {.minSpeed = 100, .earlyExitRange = 4}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
@@ -99,8 +109,8 @@ void elims_right_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 700, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 90}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 700, {.maxSpeed = 90}, false);
+        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
         chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
@@ -171,5 +181,103 @@ void elims_right_fast_fast_auton()
     }
 }
 
+void elims_right_middle_low_auton()
+{
+    constexpr auto FULL_POWER = 127;
+    constexpr auto NO_POWER = 0;
+    constexpr auto MATCH_LOADER = -50;
+    constexpr auto LONG_GOAL = 127;
+    constexpr auto EXHAUST_INDEX = -0.15 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
+
+    using namespace coords::elims::right_middle_low;
+
+    //Get drivetrain object
+    localization* dt  = localization::get();
+
+    //Get conveyor object
+    conveyor* conv = conveyor::get();
+
+    localization* lc = localization::get();
+
+    //Get lemlib chassis object
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    dt->l_chassis.perform_dsr_init(NEG_NEG, 180);
+
+    {
+        (void)conv->exhaust.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(match_loader), 2000, {}, false);
+        conv->match_loader.toggle();
+        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+    }
+
+    {
+        chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
+        pros::Task::delay(850);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(match_loader), 1000, {}, false);
+        conv->match_loader.toggle();
+        chassis->turnToPoint(MPOS(block_trio_nn), 1000, {.forwards = false}, false);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(block_trio_nn), 1000, {.forwards = false, .minSpeed = 40}, false);
+        chassis->moveToPose(POS(low_goal), 1000, {.forwards = false}, false);
+        conv->low_goal.toggle();
+    }
+
+    {
+        (void)conv->conveyor_intake.move(-FULL_POWER);
+        pros::Task::delay(1000);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+    }
+
+    {
+        chassis->moveToPoint(MPOS(block_trio_nn), 500, {}, false);
+        conv->low_goal.toggle();
+        chassis->turnToPoint(MPOS(block_trio_np), 500, {.forwards = false}, false);
+        chassis->moveToPoint(MPOS(block_trio_np), 1000, {.forwards = false}, false);
+    }
+
+    {
+        chassis->turnToPoint(MPOS(middle_goal), 1000, {}, false);
+        chassis->moveToPoint(MPOS(middle_goal), 1200, {}, true);
+        {
+            pros::Task::delay(500);
+            conv->conveyor_intake.move(-FULL_POWER);
+            pros::Task::delay(150);
+            conv->conveyor_intake.brake();
+            chassis->waitUntilDone();
+        }
+    }
+
+    {
+        (void)conv->trapdoor.retract();
+        (void)conv->exhaust.move(-FULL_POWER);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
+        pros::Task::delay(1000);
+        (void)conv->trapdoor.extend();
+        (void)conv->exhaust.brake();
+        (void)conv->conveyor_intake.brake();
+    }
+
+    {
+        chassis->moveToPoint(MPOS(middle_goal_prime), 1000, {.forwards = false}, false);
+        conv->descore.toggle();
+        chassis->moveToPoint(MPOS(middle_goal), 1200, {}, false);
+    }
+
+}
+
 ts::auton autons::elims_right_fast_fast = ts::auton("R_4_4S", elims_right_fast_fast_auton);
 ts::auton autons::elims_right = ts::auton("R_7_6S", elims_right_auton);
+ts::auton autons::elims_right_middle_low = ts::auton("R_3+4", elims_right_middle_low_auton);
