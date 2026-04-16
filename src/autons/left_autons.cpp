@@ -34,7 +34,7 @@ namespace coords
         namespace left_fast
         {
             pos block_blip_trio(-29.0, 19.0, 0);
-            pos match_loader(-56, 45.5, 90);
+            pos match_loader(-56, 43.5, 90);
             pos long_goal(-25, 47.25, 90);
             pos wing_forward_final(-10, 57.5, 90);
         }
@@ -274,7 +274,7 @@ void elims_left_fast_auton()
     }
 
     {
-        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 60}, false);
+        chassis->moveToPose(POS(match_loader), 1200, {.forwards = false, .horizontalDrift = 1, .lead = 0.25, .minSpeed = 80}, false);
     }
 
     {

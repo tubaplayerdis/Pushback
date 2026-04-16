@@ -34,7 +34,7 @@ namespace ports
         constexpr auto CONVEYOR = -17;
         constexpr auto MATCH_LOADER = 'B';
         constexpr auto WINGS = 'D';
-        constexpr auto TRAPDOOR = 'C';
+        constexpr auto TRAPDOOR = 'H';
         constexpr auto DESCORE = 'A';
         constexpr auto LOW_GOAL = 'G';
 
