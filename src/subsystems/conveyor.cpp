@@ -23,8 +23,8 @@ double get_watts(pros::Motor &m) {
 
 conveyor::conveyor() :
         subsystem(),
-        exhaust(EXHAUST),
-        conveyor_intake(CONVEYOR),
+        exhaust(EXHAUST, pros::v5::MotorGears::blue),
+        conveyor_intake(CONVEYOR, pros::v5::MotorGears::blue),
         trapdoor(TRAPDOOR, true),
         low_goal(LOW_GOAL, false),
         match_loader(MATCH_LOADER, false),
@@ -34,7 +34,7 @@ conveyor::conveyor() :
         low_goal_macro([this]() -> void
         {
             constexpr auto FRESH_BLOCK_OUTPUT = FULL_POWER * -0.375;
-            constexpr auto OLD_BLOCK_OUTPUT = FULL_POWER * -0.475;
+            constexpr auto OLD_BLOCK_OUTPUT = FULL_POWER * -0.445;
 
             while (true)
             {
@@ -51,7 +51,7 @@ conveyor::conveyor() :
                 //controller_master.print(1, 0, "T: %.2f        ", conveyor_intake.get_temperature());
 
                 //Anti-jam
-                if (get_watts(conveyor_intake) < -6.5)
+                if (get_watts(conveyor_intake) < -8.5)
                 {
                     (void)conveyor_intake.move(FULL_POWER);
                     pros::Task::delay(200);
@@ -73,8 +73,8 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
-        (void)exhaust.move(-FULL_POWER);
-        (void)conveyor_intake.move(FULL_POWER);
+        (void)exhaust.move(-FULL_POWER * 0.35);
+        (void)conveyor_intake.move(FULL_POWER * 0.40);
         (void)trapdoor.retract();
         if (low_goal.is_extended()) low_goal.retract();
     } else

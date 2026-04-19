@@ -11,7 +11,9 @@
 #include "../../include/pros/motors.hpp"
 #include <fstream>
 
-#define SECTION_1
+#include "../../include/pros/motors.h"
+
+//#define SECTION_1
 #define SECTION_2
 #define SECTION_3
 
@@ -20,31 +22,34 @@ namespace coords
     namespace segment_uno
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
-        pos middle_goal_pos(-12.5, 12.5, 135);
-        pos match_loader_neg_pos(-55, 44.5, 90);
+        pos middle_goal_pos(-10.0, 10.0, 135);
+        pos match_loader_neg_pos(-56, 47.25, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
-        pos neg_pos_trans_point(33.5, 62, 90);
+        pos neg_pos_trans_point(29.5, 61, 90);
+        pos long_goal_neg_pos_prime(-35.0, 47.1, 90);
+        pos long_goal_neg_pos(-29.0, 47.1, 90);
         pos long_goal_pos_pos(29.0, 47.1, 270);
-        pos match_loader_pos_pos(58.0, 47.1, 270);
+        pos match_loader_pos_pos(56.0, 47.1, 270);
     }
 
     namespace segment_dos
     {
-        pos parking_zone_blue(64, 14.0, 0);
-        pos block_quad_pos_pos(18, 19.85, 155);
+        pos parking_zone_blue(64.0, 14.0, 0);
+        pos block_quad_pos_pos(20.5, 19.0, 155);
         pos red_block_blip_pos_neg(30.75, -17.75, 35);
-        pos middle_goal_neg(4.5, -4.5, 315);
-        pos middle_goal_neg_inner(1.5, -1.5, 315);
-        pos match_loader_pos_neg(48, -41.0, 270);
+        pos block_quad(23.5, -23.5, 325);
+        pos long_goal_pos_neg_prime(37.0, -46.0, 90);
+        pos long_goal_pos_neg(29.0, -47.1, 90);
+        pos match_loader_pos_neg(56, -47.1, 270);
     }
 
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-33.5, -62, 270);
+        pos pos_neg_trans_point(-29.5, -61, 270);
         pos long_goal_neg_neg(-25, -47.1, 90);
-        pos match_loader_neg_neg(-58, -47.5, 90);
-        pos parking_zone_red(-64.5, -16.5, 180);
+        pos match_loader_neg_neg(-56, -47.1, 90);
+        pos parking_zone_red(-63.0, -14.5, 180);
     }
 }
 
@@ -54,11 +59,11 @@ namespace power_values
     constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -40;
     constexpr auto LONG_GOAL = 30;
-    constexpr auto EXHAUST_INDEX = -0.30 * FULL_POWER;
-    constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
+    constexpr auto EXHAUST_INDEX = -0.20 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_LOW = -0.35 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
-    constexpr auto SCORING_TIME = 1800;
-    constexpr auto MATCHLOADING_TIME = 1750;
+    constexpr auto SCORING_TIME = 1350;
+    constexpr auto MATCHLOADING_TIME = 1400;
 }
 
 void skills_routine()
@@ -79,7 +84,7 @@ void skills_routine()
 
     chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
-    //dt->l_chassis.start_location_recording("SKILLS");
+    dt->l_chassis.start_location_recording("SKILLS");
 
 #ifdef SECTION_1
 
@@ -89,7 +94,7 @@ void skills_routine()
 
     {
         (void)conv->wings.toggle();
-        (void)conv->exhaust.move(0.35 * -FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
         (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
@@ -101,49 +106,82 @@ void skills_routine()
     }
 
     {
-        chassis->tank(0, 0, true);
+        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
+        (void)dt->lem_drivetrain.rightMotors->brake();
+        (void)dt->lem_drivetrain.leftMotors->brake();
         pros::Task::delay(200);
+        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
         dt->l_chassis.perform_dsr_quad(NEG_NEG);
-        chassis->swingToPoint(-21, 18.5, lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE}, false);
+        chassis->turnToPoint(-21.5, 6.75, 1500, {}, false);
         conv->match_loader.toggle();
+        (void)conv->conveyor_intake.brake();
     }
 
     {
-        chassis->moveToPoint(-21, 18.5, 1500, {.forwards = false, .maxSpeed = 90}, false);
+        chassis->moveToPoint(-21.5, 6.75, 1500, {.maxSpeed = 90}, false);
     }
 
     {
-        chassis->turnToHeading(135, 800, {}, false);
-        chassis->moveToPoint(-11.5, 11.0, 1500, {.forwards = true, .maxSpeed = 60}, false);
+        conv->conveyor_intake.move(FULL_POWER);
+        chassis->swingToHeading(135, lemlib::DriveSide::RIGHT, 800, {}, false);
+        chassis->moveToPoint(-15.5, 15.5, 1500, {.forwards = false, .maxSpeed = 60}, false);
     }
         //-15.5, 14
 
     {
         chassis->moveToPoint(MPOS(coords::segment_uno::middle_goal_pos), 1500, {}, false);
+        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+        (void)dt->lem_drivetrain.rightMotors->brake();
+        (void)dt->lem_drivetrain.leftMotors->brake();
     }
 
     {
-        conv->match_loader.toggle();
+        pros::Task::delay(200);
+        (void)conv->trapdoor.retract();//seats a block in
+        (void)conv->low_goal.extend();//activate to keep blocks in ideal position.
         (void)conv->conveyor_intake.move(-FULL_POWER);
-        (void)conv->exhaust.move(-FULL_POWER * 0.25);
-        pros::Task::delay(300);
+        (void)conv->exhaust.move(-FULL_POWER * 0.20);
+        pros::Task::delay(115);
     }
 
     {
-        (void)conv->trapdoor.extend();
-        (void)conv->exhaust.move(-FULL_POWER * 0.8);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.65);
-        pros::Task::delay(3300);
+        (void)conv->exhaust.move(-FULL_POWER * 0.65);
+        (void)conv->conveyor_intake.move_velocity(600.0 * 0.40);
+        pros::Task::delay(1500);
+        (void)conv->exhaust.move(-FULL_POWER * 0.35);
+        (void)conv->conveyor_intake.move_velocity(600.0 * 0.30);
+        pros::Task::delay(3500);
+        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     }
 
     {
+        conv->trapdoor.extend();
+        conv->low_goal.retract();//deactive
         (void)conv->conveyor_intake.move(FULL_POWER);
-        conv->trapdoor.retract();
+        (void)conv->exhaust.move(EXHAUST_INDEX);
     }
 
     {
-        conv->exhaust.move(FULL_POWER);
-        chassis->moveToPose(POS(match_loader_neg_pos), 2000, {.forwards = false, .horizontalDrift = 2, .lead = 0.25}, false);
+        chassis->moveToPoint(MPOS(long_goal_neg_pos_prime), 1500, {.forwards = false}, true);
+        {
+            pros::Task::delay(500);
+            conv->match_loader.toggle();
+            chassis->waitUntilDone();
+        }
+        chassis->turnToPoint(MPOS(long_goal_neg_pos), 750, {}, false);
+        chassis->moveToPoint(MPOS(long_goal_neg_pos), 750, {.minSpeed = 40}, false);
+        {
+            chassis->tank(LONG_GOAL, LONG_GOAL, true);
+            (void)conv->exhaust.move(FULL_POWER);
+            (void)conv->conveyor_intake.move(FULL_POWER);
+            pros::Task::delay(650);
+            (void)conv->exhaust.move(EXHAUST_INDEX);
+            (void)conv->conveyor_intake.brake();
+
+            dt->l_chassis.perform_dsr();
+        }
+        chassis->moveToPoint(MPOS(match_loader_neg_pos), 1000, {.forwards = false, .earlyExitRange = 2}, false);
+        (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
     {
@@ -159,13 +197,15 @@ void skills_routine()
     {
         chassis->moveToPose(POS(coords::segment_uno::neg_pos_trans_pose), 1000, {.minSpeed = 40}, false);
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(coords::segment_uno::neg_pos_trans_point), 2000, {}, false);
+        chassis->moveToPoint(MPOS(coords::segment_uno::neg_pos_trans_point), 1500, {}, false);
 
         {
            //dt->l_chassis.perform_dsr_quad(POS_POS);
         }
 
-        chassis->swingToHeading(270, lemlib::DriveSide::RIGHT, 1500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 70}, false);
+        chassis->swingToHeading(230, lemlib::DriveSide::RIGHT, 750, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 100, .earlyExitRange = 1},false);
+        chassis->turnToHeading(270, 750, {}, false);
+
     }
 
     {
@@ -187,7 +227,7 @@ void skills_routine()
     {
         conv->match_loader.toggle();
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPoint(MPOS(coords::segment_uno::match_loader_pos_pos), 1500, { .forwards = false, .maxSpeed = 70, .earlyExitRange = 4 }, false);
+        chassis->moveToPoint(MPOS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false, .earlyExitRange = 2}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
     }
@@ -197,7 +237,7 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPoint(MPOS(coords::segment_uno::long_goal_pos_pos), 1500, {.minSpeed = 50}, false);
+        chassis->moveToPoint(MPOS(coords::segment_uno::long_goal_pos_pos), 1000, {.minSpeed = 60, .earlyExitRange = 1}, false);
     }
 
     {
@@ -209,6 +249,7 @@ void skills_routine()
 
     {
         conv->match_loader.toggle();
+        dt->l_chassis.perform_dsr();
     }
 
 #endif
@@ -235,7 +276,7 @@ void skills_routine()
 
     {
         chassis->moveToPose(POS(coords::segment_dos::parking_zone_blue), 2000, {.forwards = false, .horizontalDrift = 10, .lead = 0.5, .maxSpeed = 70, .minSpeed = 30, .earlyExitRange = 1}, false);
-        (void)conv->exhaust.move(-0.35 * FULL_POWER);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
         chassis->tank(-55, -52, true);
         pros::Task::delay(1400);
         conv->match_loader.toggle();
@@ -253,33 +294,49 @@ void skills_routine()
     }
 
     {
-        chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 90}, false);
-        chassis->turnToHeading(45.5, 1000, {}, false);
+        chassis->moveToPoint(MPOS(coords::segment_dos::block_quad_pos_pos), 3000, {.forwards = false, .maxSpeed = 85}, false);
+        chassis->turnToHeading(44.0, 1000, {}, false);
         chassis->moveToPoint(15, 15, 1000, {.forwards = false}, false);
         (void)conv->conveyor_intake.move(NO_POWER);
         conv->descore.toggle();
-        chassis->moveToPoint(11, 11, 1000, {.forwards = false}, false);
+        conv->low_goal.toggle();
+        chassis->moveToPoint(10.5, 10.5, 750, {.forwards = false}, false);
     }
 
     {
-        conv->trapdoor.toggle();
-        (void)conv->conveyor_intake.move(FULL_POWER * -0.90);
-        pros::Task::delay(700);
-        conv->trapdoor.toggle();
+        (void)conv->conveyor_intake.move(-FULL_POWER);
+        pros::Task::delay(900);
         conv->do_low_goal_macro = true;
-        pros::Task::delay(3300);
+        pros::Task::delay(3100);
         conv->do_low_goal_macro = false;
         conv->descore.toggle();
+        conv->low_goal.toggle();
     }
 
     {
-        chassis->moveToPoint(15, 20, 800, {}, false);
-        conv->conveyor_intake.move(FULL_POWER);
-        conv->exhaust.move(FULL_POWER);
-        chassis->turnToPoint(MPOS(coords::segment_dos::match_loader_pos_neg), 1000, {.forwards = false}, false);
-        conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(coords::segment_dos::match_loader_pos_neg), 2000, {.forwards = false, .maxSpeed = 100}, false);
-        chassis->swingToHeading(270, lemlib::DriveSide::RIGHT, 1000, {}, false);
+        chassis->moveToPoint(15, 20, 500, {}, false);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        (void)conv->exhaust.move(FULL_POWER);
+        chassis->turnToPoint(MPOS(coords::segment_dos::block_quad), 500, {.forwards = false}, false);
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+        chassis->moveToPoint(MPOS(coords::segment_dos::block_quad), 1000, {.forwards = false, .earlyLambdaRange = 8, .earlyLambda = [conv]() -> void {conv->match_loader.toggle();}}, false);
+        chassis->turnToPoint(MPOS(coords::segment_dos::long_goal_pos_neg_prime), 500, {.forwards = false}, false);
+        chassis->moveToPoint(MPOS(coords::segment_dos::long_goal_pos_neg_prime), 1000, {.forwards = false}, false);
+        chassis->turnToPoint(MPOS(coords::segment_dos::long_goal_pos_neg), 500, {}, false);
+        chassis->moveToPoint(MPOS(coords::segment_dos::long_goal_pos_neg), 500, {}, false);
+        //chassis->swingToHeading(270, lemlib::DriveSide::RIGHT, 1000, {}, false);
+    }
+
+    {
+        (void)conv->exhaust.move(FULL_POWER);
+        (void)conv->conveyor_intake.move(FULL_POWER);
+        pros::Task::delay(650);
+    }
+
+    {
+        (void)conv->exhaust.move(EXHAUST_INDEX);
+        //dt->l_chassis.perform_dsr();
+        chassis->moveToPoint(MPOS(coords::segment_dos::match_loader_pos_neg), 1000, {.forwards = false, .earlyExitRange = 4}, false);
     }
 
     {
@@ -305,9 +362,10 @@ void skills_routine()
         dt->l_chassis.perform_dsr_quad(POS_NEG);
         chassis->moveToPose(POS(coords::segment_tres::pos_neg_trans_pose), 1000, {.minSpeed = 40}, false);
         conv->match_loader.toggle();
-        chassis->moveToPoint(MPOS(coords::segment_tres::pos_neg_trans_point), 2000, {}, false);
+        chassis->moveToPoint(MPOS(coords::segment_tres::pos_neg_trans_point), 1500, {}, false);
 
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 1500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 70}, false);
+        chassis->swingToHeading(50, lemlib::DriveSide::RIGHT, 750, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 100, .earlyExitRange = 1},false);
+        chassis->turnToHeading(90, 750, {}, false);
     }
 
     {
@@ -328,13 +386,13 @@ void skills_routine()
     {
         conv->match_loader.toggle();
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPoint(MPOS(coords::segment_tres::match_loader_neg_neg), 1500, {.forwards = false, .maxSpeed = 70, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false, .earlyExitRange = 2}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
     }
 
     {
-        chassis->moveToPoint(MPOS(coords::segment_tres::long_goal_neg_neg), 1500, {.minSpeed = 50}, false);
+        chassis->moveToPoint(MPOS(coords::segment_tres::long_goal_neg_neg), 1000, {.minSpeed = 50}, false);
         chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->exhaust.move(FULL_POWER);
         (void)conv->conveyor_intake.move(FULL_POWER);

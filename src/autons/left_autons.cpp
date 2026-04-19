@@ -23,7 +23,7 @@ namespace coords
                 pos block_blip_trio(-26.5, 18.5, 0);
                 pos block_blip_duo(-6, 42.5, 0);
                 pos middle_goal_high(-10.0, 10.0, 130);
-                pos match_loader(-49, 42.50, 90);
+                pos match_loader(-49, 42.00, 90);
                 pos long_goal(-25, 47.1, 90);
                 pos wing_prime_back(-36, 55, 0);
                 pos wing_forward_final(-10, 57.7, 90);
@@ -228,7 +228,7 @@ void elims_left_dsr_auton()
 
     {
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -299,7 +299,7 @@ void elims_left_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -360,7 +360,7 @@ void elims_left_fast_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 600, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
