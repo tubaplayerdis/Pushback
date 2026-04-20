@@ -123,10 +123,12 @@ void elims_left_middle_auton()
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
         chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
         {
-            conv->conveyor_intake.move(-FULL_POWER);
+            (void)conv->trapdoor.retract();
+            (void)conv->conveyor_intake.move(-FULL_POWER);
+            (void)conv->exhaust.move(EXHAUST_INDEX);
             pros::Task::delay(150);
-            conv->conveyor_intake.brake();
-            (void)conv->trapdoor.extend();
+            (void)conv->conveyor_intake.brake();
+            (void)conv->exhaust.brake();
             chassis->waitUntilDone();
         }
     }
@@ -135,7 +137,7 @@ void elims_left_middle_auton()
         (void)conv->exhaust.move(-FULL_POWER * 0.65);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
         pros::Task::delay(2000);
-        (void)conv->trapdoor.retract();
+        (void)conv->trapdoor.extend();
     }
 
     {
@@ -228,11 +230,7 @@ void elims_left_dsr_auton()
 
     {
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
-        chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
-        chassis->tank(0, 0, true);
-        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+        wing_movement(chassis, wing_forward_final);
     }
 }
 
@@ -299,11 +297,7 @@ void elims_left_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
-        chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
-        chassis->tank(0, 0, true);
-        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+        wing_movement(chassis, wing_forward_final);
     }
 }
 
@@ -360,11 +354,7 @@ void elims_left_fast_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
-        chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
-        chassis->tank(0, 0, true);
-        chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+        wing_movement(chassis, wing_forward_final);
     }
 }
 

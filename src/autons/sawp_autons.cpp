@@ -21,8 +21,8 @@ namespace coords
             pos start_push(-46.89,-7.5,0);
             pos start_normal(-47.13,-15.5,0);
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -45.25, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -45.25, 90);
+            pos match_loader_neg_neg_prime(-46.3, -45.25, 90);
+            pos match_loader_neg_neg_prime_push(-46.3, -45.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_pos(-23.5, 22.5, 0);
             pos middle_goal_neg_pos(-10.5, 10.5, 135);
@@ -33,8 +33,8 @@ namespace coords
         namespace counter
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -38.5, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -38.5, 90);
+            pos match_loader_neg_neg_prime(-46.3, -40.0, 90);
+            pos match_loader_neg_neg_prime_push(-46.3, -40.0, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-24.5, -15, 180);
             pos block_blip_neg_pos(-23.5, 19.0, 145);
@@ -99,7 +99,7 @@ void sawp_dsr_counter_auton_raw(bool push)
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(800);
+        pros::Task::delay(1100);
     }
 
     {
@@ -141,7 +141,7 @@ void sawp_dsr_counter_auton_raw(bool push)
         conv->match_loader.toggle();
         chassis->moveToPoint(MPOS(match_loader_neg_pos), 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 2}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(600);
+        pros::Task::delay(300);
     }
 
     {
@@ -166,7 +166,7 @@ void sawp_dsr_counter_auton_raw(bool push)
         }
 
         {
-            chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+            chassis->setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
             (void)dt->lem_drivetrain.rightMotors->brake();
             (void)dt->lem_drivetrain.leftMotors->brake();
         }

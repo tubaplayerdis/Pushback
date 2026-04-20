@@ -5,6 +5,8 @@
 #ifndef AUTONS_H
 #define AUTONS_H
 
+#include "lemlib/chassis/chassis.hpp"
+#include "pros/motors.hpp"
 #include "titanselect/titanselect.hpp"
 
 //Macro that expands the pos struct for use with the moveToPose command
@@ -26,6 +28,26 @@ struct pos
 };
 
 void skills_routine();
+
+inline void wing_align(lemlib::Chassis* chassis)
+{
+    chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+    chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
+}
+
+inline void brake_chassis(lemlib::Chassis* chassis)
+{
+    chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+    chassis->drivetrain.leftMotors->brake();
+    chassis->drivetrain.rightMotors->brake();
+}
+
+inline void wing_movement(lemlib::Chassis* chassis, pos end_spot)
+{
+    wing_align(chassis);
+    chassis->moveToPoint(MPOS(end_spot), 1500, {.minSpeed = 40}, false);
+    brake_chassis(chassis);
+}
 
 namespace autons
 {

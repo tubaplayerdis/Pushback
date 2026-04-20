@@ -73,6 +73,12 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
+        /*
+         *For skills:
+        *(void)conv->exhaust.move(-FULL_POWER * 0.30);
+        *(void)conv->conveyor_intake.move_velocity(600.0 * 0.30);
+         */
+
         (void)exhaust.move(-FULL_POWER);
         (void)conveyor_intake.move(FULL_POWER);
         (void)trapdoor.retract();

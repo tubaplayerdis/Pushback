@@ -13,7 +13,7 @@
 
 #include "../../include/pros/motors.h"
 
-//#define SECTION_1
+#define SECTION_1
 #define SECTION_2
 #define SECTION_3
 
