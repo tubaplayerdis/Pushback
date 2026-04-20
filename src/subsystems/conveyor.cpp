@@ -73,8 +73,8 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
-        (void)exhaust.move(-FULL_POWER * 0.35);
-        (void)conveyor_intake.move(FULL_POWER * 0.40);
+        (void)exhaust.move(-FULL_POWER);
+        (void)conveyor_intake.move(FULL_POWER);
         (void)trapdoor.retract();
         if (low_goal.is_extended()) low_goal.retract();
     } else
