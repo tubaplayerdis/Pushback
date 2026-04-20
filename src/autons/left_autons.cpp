@@ -228,7 +228,7 @@ void elims_left_dsr_auton()
 
     {
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -299,7 +299,7 @@ void elims_left_fast_auton()
     {
         conv->wings.toggle();
         conv->exhaust.move(EXHAUST_INDEX);
-        chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
         chassis->moveToPoint(MPOS(wing_forward_final), 1500, {.minSpeed = 40}, false);
         chassis->tank(0, 0, true);
@@ -330,7 +330,7 @@ void elims_left_fast_fast_auton()
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    dt->lem_chassis.setPose(-45.85, 12.09, 270);
+    dt->l_chassis.perform_dsr_init(NEG_POS, 270);
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -368,7 +368,7 @@ void elims_left_fast_fast_auton()
     }
 }
 
-ts::auton autons::elims_left_dsr = ts::auton("L_4+3_10S", elims_left_dsr_auton);
-ts::auton autons::elims_left_fast = ts::auton("L_7_6S", elims_left_fast_auton);
-ts::auton autons::elims_left_fast_fast = ts::auton("L_4_4S", elims_left_fast_fast_auton);
-ts::auton autons::elims_left_middle_end = ts::auton("L_3+4_MID_12S", elims_left_middle_auton);
+ts::auton autons::elims_left_dsr = ts::auton("L_4M_3U", elims_left_dsr_auton);
+ts::auton autons::elims_left_fast = ts::auton("L_7U", elims_left_fast_auton);
+ts::auton autons::elims_left_fast_fast = ts::auton("L_4U", elims_left_fast_fast_auton);
+ts::auton autons::elims_left_middle_end = ts::auton("L_4U_3M", elims_left_middle_auton);

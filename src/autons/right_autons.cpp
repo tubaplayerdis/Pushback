@@ -24,7 +24,7 @@ namespace coords
             pos wing_forward_final(-10, -37, 90);
         }
 
-        namespace right_fast_fast
+        namespace right_middle_slow_fast
         {
             pos block_blip_trio(-29.0, -19.0, 0);
             pos long_goal_uno(-25, -47.0, 90);
@@ -68,8 +68,6 @@ void elims_right_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 270);
-
-    //dt->l_chassis.start_location_recording("ELIMS RIGHT DSR ");
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -117,17 +115,17 @@ void elims_right_auton()
     }
 }
 
-void elims_right_fast_fast_auton()
+void elims_right_middle_slow_auton()
 {
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
-    constexpr auto MATCH_LOADER = -50;
+    constexpr auto MATCH_LOADER = -40;
     constexpr auto LONG_GOAL = 127;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
 
-    using namespace coords::elims::right_fast_fast;
+    using namespace coords::elims::right_middle_slow_fast;
 
     //Get drivetrain object
     localization* dt  = localization::get();
@@ -141,8 +139,6 @@ void elims_right_fast_fast_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 270);
-
-    dt->l_chassis.start_location_recording("ELIMS RIGHT DSR ");
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -179,6 +175,19 @@ void elims_right_fast_fast_auton()
         chassis->tank(0, 0, true);
         chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     }
+}
+
+void elims_right_middle_fast_auton()
+{
+    constexpr auto FULL_POWER = 127;
+    constexpr auto NO_POWER = 0;
+    constexpr auto MATCH_LOADER = -40;
+    constexpr auto LONG_GOAL = 127;
+    constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
+    constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
+
+    using namespace coords::elims::right_middle_slow_fast;
 }
 
 void elims_right_middle_low_auton()
@@ -278,6 +287,7 @@ void elims_right_middle_low_auton()
 
 }
 
-ts::auton autons::elims_right_fast_fast = ts::auton("R_4_4S", elims_right_fast_fast_auton);
-ts::auton autons::elims_right = ts::auton("R_7_6S", elims_right_auton);
-ts::auton autons::elims_right_middle_low = ts::auton("R_3+4", elims_right_middle_low_auton);
+ts::auton autons::elims_right_middle_fast = ts::auton("R_4U_3L_F", elims_right_middle_fast_auton)
+ts::auton autons::elims_right_middle_slow = ts::auton("R_4U_3L", elims_right_middle_slow_auton);
+ts::auton autons::elims_right = ts::auton("R_7U", elims_right_auton);
+ts::auton autons::elims_right_middle_low = ts::auton("R_3L_4M", elims_right_middle_low_auton);

@@ -24,24 +24,24 @@ namespace coords
             pos match_loader_neg_neg_prime(-47.3, -45.25, 90);
             pos match_loader_neg_neg_prime_push(-47.3, -45.25, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
-            pos block_blip_neg_neg(-25.5, -15, 180);
-            pos block_blip_neg_pos(-25.5, 24.5, 0);
+            pos block_blip_neg_pos(-23.5, 22.5, 0);
             pos middle_goal_neg_pos(-10.5, 10.5, 135);
-            pos match_loader_neg_pos(-51, 43.65, 90);
+            pos match_loader_neg_pos(-51, 41.5, 90);
             pos long_goal_neg_pos(-29, 47.1, 90);
         }
 
         namespace counter
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-47.3, -40.25, 90);
-            pos match_loader_neg_neg_prime_push(-47.3, -40.25, 90);
+            pos match_loader_neg_neg_prime(-47.3, -38.5, 90);
+            pos match_loader_neg_neg_prime_push(-47.3, -38.5, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_neg(-24.5, -15, 180);
-            pos block_blip_neg_pos(-24.5, 34.0, 0);
-            pos middle_goal_neg_pos(-10.0, 9.50, 135);
-            pos match_loader_neg_pos(-56, 47.2, 90);
-            pos long_goal_neg_pos(-29, 47.6, 90);
+            pos block_blip_neg_pos(-23.5, 19.0, 145);
+            pos long_goal_prime(-40, 41.5, 90);
+            pos middle_goal_neg_pos(-10.0, 9.00, 135);
+            pos match_loader_neg_pos(-56, 47.1, 90);
+            pos long_goal_neg_pos(-29, 47.1, 90);
         }
     }
 }
@@ -54,7 +54,7 @@ void sawp_dsr_counter_auton_raw(bool push)
     constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -40;
     constexpr auto LONG_GOAL = 10;
-    constexpr auto EXHAUST_INDEX = -0.3 * FULL_POWER;
+    constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
 
@@ -69,7 +69,7 @@ void sawp_dsr_counter_auton_raw(bool push)
     //Get lemlib chassis object
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
-    dt->l_chassis.perform_dsr_init(NEG_NEG, 0);
+    dt->l_chassis.perform_dsr_init(NEG_NEG, 180);
 
     dt->l_chassis.start_location_recording("SAWP C ");
 
@@ -77,7 +77,7 @@ void sawp_dsr_counter_auton_raw(bool push)
 
     if (push)
     {
-        chassis->moveToPoint(MPOS(push_point), 550, {}, false);
+        chassis->moveToPoint(MPOS(push_point), 550, {.forwards = false}, false);
     }
 
     {
@@ -89,17 +89,17 @@ void sawp_dsr_counter_auton_raw(bool push)
         conv->match_loader.toggle();
         if (push)
         {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime_push), 2500, {.forwards = false}, false);
+            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime_push), 2500, {.maxSpeed = 80, .minSpeed = 80, .earlyExitRange = 1}, false);
         } else
         {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {.forwards = false}, false);
+            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {.maxSpeed = 80, .minSpeed = 80, .earlyExitRange = 1}, false);
         }
-        chassis->swingToHeading(TPOS(match_loader_neg_neg_prime), lemlib::DriveSide::LEFT, 700, {}, false);
+        chassis->turnToHeading(TPOS(match_loader_neg_neg_prime), 700, {}, false);
     }
 
     {
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(900);
+        pros::Task::delay(800);
     }
 
     {
@@ -107,10 +107,10 @@ void sawp_dsr_counter_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPoint(MPOS(long_goal_neg_neg), 900, {.forwards = true, .minSpeed = 60, .earlyExitRange = 1}, false);
-        chassis->tank(70, 70, true);
+        chassis->moveToPoint(MPOS(long_goal_neg_neg), 900, {.forwards = true, .earlyExitRange = 1}, false);
+        chassis->tank(30, 30, true);
         (void)conv->exhaust.move(FULL_POWER);
-        pros::Task::delay(1000);
+        pros::Task::delay(750);
     }
 
     {
@@ -118,48 +118,30 @@ void sawp_dsr_counter_auton_raw(bool push)
     }
 
     {
-        chassis->turnToPoint(MPOS(block_blip_neg_pos), 1000, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .earlyExitRange = 1}, false);
-        {
-            //dt->l_chassis.perform_dsr_quad(NEG_NEG);
-        }
+        chassis->turnToPoint(MPOS(block_blip_neg_pos), 700, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 90, .earlyExitRange = 1}, false);
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 50}, false);
-        chassis->moveToPoint(MPOS(block_blip_neg_pos), 2500, {.forwards = false, .maxSpeed = 85}, true);
-        {
-            chassis->waitUntil(34);
-            conv->match_loader.toggle();
-            pros::Task::delay(100);
-            conv->match_loader.toggle();
-            chassis->waitUntilDone();
-        }
+        chassis->moveToPose(POS(block_blip_neg_pos), 1300, {.forwards = false, .horizontalDrift = 8, .lead = 0.2, .minSpeed = 60, .earlyExitRange = 5}, false);
     }
 
     {
-        chassis->turnToHeading(290,1000, {.minSpeed = 80}, false);
-        conv->match_loader.toggle();
-        chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 1250, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 110}, false);
-        chassis->tank(50, 50, true);
+        chassis->moveToPoint(MPOS(long_goal_prime), 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4}, false);
+        chassis->turnToHeading(TPOS(long_goal_prime), 500, {}, false);
+        chassis->moveToPoint(MPOS(long_goal_neg_pos), 700, {.minSpeed = 40, .earlyExitRange = 1}, false);
     }
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
-        if (push)
-        {
-            pros::Task::delay(750);
-        }
-        else
-        {
-            pros::Task::delay(1250);
-        }
+        pros::Task::delay(1250);
         (void)conv->exhaust.move(EXHAUST_INDEX);
         dt->l_chassis.perform_dsr_quad(NEG_POS);
     }
 
     {
-        chassis->moveToPose(POS(match_loader_neg_pos), 1500, {.forwards = false, .lead = 0.1, .minSpeed = 60, .earlyExitRange = 0.5}, false);
+        conv->match_loader.toggle();
+        chassis->moveToPoint(MPOS(match_loader_neg_pos), 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 2}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(700);
+        pros::Task::delay(600);
     }
 
     {
@@ -170,6 +152,8 @@ void sawp_dsr_counter_auton_raw(bool push)
         chassis->moveToPose(POS(middle_goal_neg_pos), 1500, {.lead = 0.1, .minSpeed = 60, .earlyExitRange = 5}, true);
         {
             pros::Task::delay(1000);
+            (void)conv->match_loader.toggle();
+            (void)conv->trapdoor.retract();
             conv->conveyor_intake.move(-FULL_POWER);
             pros::Task::delay(200);
             conv->conveyor_intake.brake();
@@ -178,8 +162,13 @@ void sawp_dsr_counter_auton_raw(bool push)
 
         {
             (void)conv->exhaust.move(-FULL_POWER * 0.65);
-            (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
-            (void)conv->trapdoor.extend();
+            (void)conv->conveyor_intake.move(FULL_POWER * 0.55);
+        }
+
+        {
+            chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+            (void)dt->lem_drivetrain.rightMotors->brake();
+            (void)dt->lem_drivetrain.leftMotors->brake();
         }
 
     }
@@ -268,8 +257,7 @@ void sawp_dsr_auton_raw(bool push)
             //dt->l_chassis.perform_dsr_quad(NEG_NEG);
         }
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(block_blip_neg_neg), 1000, {.forwards = false, .lead = 0.2, .minSpeed = 50}, false);
-        chassis->moveToPoint(MPOS(block_blip_neg_pos), 1800, {.forwards = false, .maxSpeed = 85}, true);
+        chassis->moveToPoint(MPOS(block_blip_neg_pos), 2500, {.forwards = false}, true);
         {
             chassis->waitUntil(34);
             conv->match_loader.toggle();
@@ -282,14 +270,14 @@ void sawp_dsr_auton_raw(bool push)
         chassis->moveToPose(POS(middle_goal_neg_pos), 700, {.lead = 0.2}, true);
         {
             pros::Task::delay(400);
+            (void)conv->trapdoor.retract();
             conv->conveyor_intake.move(-FULL_POWER);
             pros::Task::delay(120);
             conv->conveyor_intake.brake();
             chassis->waitUntilDone();
         }
-        (void)conv->exhaust.move(-FULL_POWER);
+        (void)conv->exhaust.move(-FULL_POWER * 0.65);
         (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
-        (void)conv->trapdoor.retract();
         pros::Task::delay(1000);
         (void)conv->trapdoor.extend();
         (void)conv->conveyor_intake.move(FULL_POWER);
@@ -334,7 +322,7 @@ void sawp_dsr_counter_auton_push()
     sawp_dsr_counter_auton_raw(true);
 }
 
-//ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
-//ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
-ts::auton autons::sawp_dsr_counter = ts::auton("SAWP", sawp_dsr_auton);
-ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP PUSH", sawp_dsr_auton_push);
+ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
+ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
+ts::auton autons::sawp_dsr_counter = ts::auton("SAWP C", sawp_dsr_counter_auton);
+ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP C PUSH", sawp_dsr_counter_auton_push);
