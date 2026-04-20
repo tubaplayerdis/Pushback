@@ -40,7 +40,7 @@ conveyor::conveyor() :
             {
                 if (!do_low_goal_macro)
                 {
-                    pros::Task::delay(10);
+                    pros::Task::delay(100);
                     continue;
                 }
 

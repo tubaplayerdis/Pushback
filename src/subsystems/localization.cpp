@@ -84,6 +84,7 @@ localization::localization() :
         l_chassis(&lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::plastic) //Finally. Fuck metal fields
 {
     lemlib::InfoSink().setLowestLevel(lemlib::Level::INFO);
+    (void)rotation_vertical.set_data_rate(5);
     lem_chassis.calibrate(true);
 }
 

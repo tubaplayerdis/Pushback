@@ -82,8 +82,6 @@ void elims_left_middle_auton()
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 0);
 
-    dt->l_chassis.start_location_recording("middle");
-
     {
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(EXHAUST_INDEX);
@@ -171,9 +169,6 @@ void elims_left_dsr_auton()
     lemlib::Chassis* chassis = &dt->lem_chassis;
 
     dt->l_chassis.perform_dsr_init(NEG_POS, 270);
-    //dt->lem_chassis.setPose(-45.85, 12.09, 270);
-
-    dt->l_chassis.start_location_recording("Whatever");
 
     {
         (void)conv->conveyor_intake.move(FULL_POWER);

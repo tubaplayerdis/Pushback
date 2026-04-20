@@ -29,9 +29,9 @@ conveyor* conv = nullptr;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	ts_display_selector();
 	odom = localization::get();
 	conv = conveyor::get();
+	ts_display_selector();
 }
 
 /**
