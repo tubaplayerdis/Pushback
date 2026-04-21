@@ -38,9 +38,9 @@ namespace pid
 {
     // Linear/lateral movement settings
     lemlib::ControllerSettings
-    controller_settings_lateral(11.50, // proportional gain (kP)
+    controller_settings_lateral(10.10, // proportional gain (kP)
                                               0.00, // integral gain (kI)
-                                              68.9, // derivative gain (kD)
+                                              105.0, // derivative gain (kD)//107
                                               0, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
