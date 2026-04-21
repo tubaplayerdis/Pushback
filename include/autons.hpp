@@ -31,7 +31,7 @@ void skills_routine();
 
 inline void wing_align(lemlib::Chassis* chassis)
 {
-    chassis->turnToHeading(150, 400, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+    chassis->turnToHeading(150, 450, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
     chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
 }
 
@@ -60,6 +60,7 @@ namespace autons
     extern ts::auton elims_left_fast;
     extern ts::auton elims_left_fast_fast;
     extern ts::auton elims_left_middle_end;
+    extern ts::auton elims_left_middle_wing;
     extern ts::auton elims_right_middle_fast;
     extern ts::auton elims_right_middle_slow;
     extern ts::auton elims_right;
