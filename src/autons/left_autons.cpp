@@ -48,7 +48,7 @@ namespace coords
 
         namespace left_middle_end
         {
-            pos match_loader(-47, 47.1, 90);
+            pos match_loader(-47, 47.5, 90);
             pos long_goal(-28, 47.1, 90);
             pos block_blip_trio(-20.0, 20.0, 0);
             pos middle_goal(-9.5, 9.5, 135);
@@ -56,6 +56,13 @@ namespace coords
             pos wing_end_low(-10, 36, 90);
         }
     }
+}
+
+void quick_approach_left(lemlib::Chassis* chassis)
+{
+    pos match_loader(-48, 46, 90);
+    chassis->moveToPoint(MPOS(match_loader), 1500, {.minSpeed = 80, .earlyExitRange = 4}, false);
+    chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
 }
 
 void elims_left_middle_wing_auton()

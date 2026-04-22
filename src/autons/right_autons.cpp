@@ -47,6 +47,13 @@ namespace coords
     }
 }
 
+void quick_approach_left(lemlib::Chassis* chassis)
+{
+    pos match_loader(-48, -46, 90);
+    chassis->moveToPoint(MPOS(match_loader), 1500, {.minSpeed = 80, .earlyExitRange = 4}, false);
+    chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+}
+
 void elims_right_auton()
 {
     constexpr auto FULL_POWER = 127;
