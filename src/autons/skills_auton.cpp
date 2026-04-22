@@ -23,13 +23,13 @@ namespace coords
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
         pos middle_goal_pos(-10.0, 10.0, 135);
-        pos match_loader_neg_pos(-56, 47.25, 90);
+        pos match_loader_neg_pos(-57, 47.25, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
-        pos neg_pos_trans_point(29.5, 61, 90);
-        pos long_goal_neg_pos_prime(-35.0, 47.1, 90);
-        pos long_goal_neg_pos(-29.0, 47.1, 90);
-        pos long_goal_pos_pos(29.0, 47.1, 270);
-        pos match_loader_pos_pos(56.0, 47.1, 270);
+        pos neg_pos_trans_point(29.5, 60, 90);
+        pos long_goal_neg_pos_prime(-35.0, 47.2, 90);
+        pos long_goal_neg_pos(-28.0, 47.1, 90);
+        pos long_goal_pos_pos(28.0, 47.1, 270);
+        pos match_loader_pos_pos(57.0, 47.1, 270);
     }
 
     namespace segment_dos
@@ -40,15 +40,15 @@ namespace coords
         pos block_quad(23.5, -23.5, 325);
         pos long_goal_pos_neg_prime(37.0, -45.0, 90);
         pos long_goal_pos_neg(29.0, -47.1, 90);
-        pos match_loader_pos_neg(56, -47.1, 270);
+        pos match_loader_pos_neg(57, -47.1, 270);
     }
 
     namespace segment_tres
     {
         pos pos_neg_trans_pose(24, -62, 270);
-        pos pos_neg_trans_point(-29.5, -61, 270);
+        pos pos_neg_trans_point(-29.5, -60, 270);
         pos long_goal_neg_neg(-25, -47.1, 90);
-        pos match_loader_neg_neg(-56, -47.1, 90);
+        pos match_loader_neg_neg(-57, -47.1, 90);
         pos parking_zone_red(-63.0, -14.5, 180);
     }
 }
@@ -180,7 +180,7 @@ void skills_routine()
 
             dt->l_chassis.perform_dsr();
         }
-        chassis->moveToPose(POS(match_loader_neg_pos), 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 4}, false);
+        chassis->moveToPose(POS(match_loader_neg_pos), 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4}, false);
         (void)conv->conveyor_intake.move(FULL_POWER);
     }
 
@@ -227,7 +227,7 @@ void skills_routine()
     {
         conv->match_loader.toggle();
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false, .minSpeed = 40, .earlyExitRange = 4}, false);
+        chassis->moveToPose(POS(coords::segment_uno::match_loader_pos_pos), 1000, { .forwards = false, .minSpeed = 60, .earlyExitRange = 4}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
     }
@@ -336,7 +336,7 @@ void skills_routine()
     {
         (void)conv->exhaust.move(EXHAUST_INDEX);
         //dt->l_chassis.perform_dsr();
-        chassis->moveToPose(POS(coords::segment_dos::match_loader_pos_neg), 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 4}, false);
+        chassis->moveToPose(POS(coords::segment_dos::match_loader_pos_neg), 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4}, false);
     }
 
     {
@@ -386,7 +386,7 @@ void skills_routine()
     {
         conv->match_loader.toggle();
         (void)conv->exhaust.move(EXHAUST_INDEX);
-        chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false, .minSpeed = 40, .earlyExitRange = 4}, false);
+        chassis->moveToPose(POS(coords::segment_tres::match_loader_neg_neg), 1000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 4}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(MATCHLOADING_TIME);
     }

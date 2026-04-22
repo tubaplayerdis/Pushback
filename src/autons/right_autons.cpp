@@ -22,13 +22,13 @@ namespace coords
         {
             pos block_blip_trio(-29.0, -18.0, 0);
             pos long_goal_uno(-25, -47.25, 90);
-            pos match_loader(-49, -43.25, 85);
-            pos wing_forward_final(-10, -37, 90);
+            pos match_loader(-49, -43.25, 90);
+            pos wing_forward_final(-10, -36, 90);
         }
 
         namespace right_middle_slow_fast
         {
-            pos match_loader_prime(-46.3, -47.1, 90);
+            pos match_loader_prime(-46.3, -47.5, 90);
             pos long_goal(-28, -47.1, 90);
             pos block_blip_trio(-17.0, -17.0, 225);
             pos wing_forward_final(-12, -37, 90);
@@ -37,7 +37,7 @@ namespace coords
 
         namespace right_middle_low
         {
-            pos match_loader(-47.3, -47.1, 90);
+            pos match_loader(-47.3, -47.5, 90);
             pos block_trio_nn(-22.5, -22.5, 225);
             pos low_goal(-10, -10, 225);
             pos block_trio_np(-22.5, 22.5, 180);
@@ -244,7 +244,7 @@ void elims_right_middle_slow_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::LEFT, 1000, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+        chassis->swingToHeading(225, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .maxSpeed = 70, .earlyExitRange = 5}, false);
         chassis->moveToPoint(MPOS(low_goal), 1000, {.forwards = false}, false);
         conv->low_goal.toggle();
         (void)conv->conveyor_intake.move(-FULL_POWER);
@@ -259,7 +259,7 @@ void elims_right_middle_slow_auton()
             chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
             chassis->waitUntilDone();
         }
-        conv->wings.toggle();
+        //conv->wings.toggle();
     }
 
     {

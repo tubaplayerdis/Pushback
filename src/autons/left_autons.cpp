@@ -51,7 +51,7 @@ namespace coords
             pos match_loader(-47, 47.1, 90);
             pos long_goal(-28, 47.1, 90);
             pos block_blip_trio(-20.0, 20.0, 0);
-            pos middle_goal(-10.0, 10.0, 135);
+            pos middle_goal(-9.5, 9.5, 135);
             pos wing_end(-10, 61, 90);
         }
     }
