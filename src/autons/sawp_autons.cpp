@@ -71,7 +71,7 @@ void sawp_dsr_counter_auton_raw(bool push)
 
     dt->l_chassis.perform_dsr_init(NEG_NEG, 180);
 
-    dt->l_chassis.start_location_recording("SAWP C ");
+   //dt->l_chassis.start_location_recording("SAWP C ");
 
     conv->wings.toggle();
 

@@ -32,7 +32,7 @@ namespace coords
             pos long_goal(-28, -47.1, 90);
             pos block_blip_trio(-17.0, -17.0, 225);
             pos wing_forward_final(-12, -37, 90);
-            pos low_goal(-10, -10, 225);
+            pos low_goal(-9.5, -9.5, 225);
         }
 
         namespace right_middle_low

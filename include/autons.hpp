@@ -61,6 +61,7 @@ namespace autons
     extern ts::auton elims_left_fast_fast;
     extern ts::auton elims_left_middle_end;
     extern ts::auton elims_left_middle_wing;
+    extern ts::auton elims_left_middle_wing_fast;
     extern ts::auton elims_right_middle_fast;
     extern ts::auton elims_right_middle_slow;
     extern ts::auton elims_right;
