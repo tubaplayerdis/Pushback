@@ -38,9 +38,9 @@ namespace coords
             pos long_goal_neg_neg(-28, -47.1, 90);
             pos block_blip_neg_neg(-24.5, -15, 180);
             pos block_blip_neg_pos(-23.5, 19.0, 145);
-            pos long_goal_prime(-40, 44.5, 90);
+            pos long_goal_prime(-40, 44.0, 90);
             pos middle_goal_neg_pos(-10.0, 9.00, 135);
-            pos match_loader_neg_pos(-57, 47.25, 90);
+            pos match_loader_neg_pos(-60, 47.25, 90);
             pos long_goal_neg_pos(-28, 47.1, 90);
         }
     }
@@ -139,9 +139,9 @@ void sawp_dsr_counter_auton_raw(bool push)
 
     {
         conv->match_loader.toggle();
-        chassis->moveToPose(POS(match_loader_neg_pos), 1000, {.forwards = false, .minSpeed = 50, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(match_loader_neg_pos), 1000, {.forwards = false, .earlyExitRange = 5}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
-        pros::Task::delay(500);
+        pros::Task::delay(600);
     }
 
     {
@@ -149,7 +149,7 @@ void sawp_dsr_counter_auton_raw(bool push)
     }
 
     {
-        chassis->moveToPose(POS(middle_goal_neg_pos), 1500, {.lead = 0.1, .minSpeed = 60, .earlyExitRange = 5}, true);
+        chassis->moveToPose(POS(middle_goal_neg_pos), 2000, {.lead = 0.1, .minSpeed = 60, .earlyExitRange = 5}, true);
         {
             pros::Task::delay(1000);
             (void)conv->match_loader.toggle();

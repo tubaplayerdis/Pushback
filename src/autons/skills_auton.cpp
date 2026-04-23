@@ -26,7 +26,7 @@ namespace coords
         pos match_loader_neg_pos(-57, 47.25, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(29.5, 60, 90);
-        pos long_goal_neg_pos_prime(-35.0, 47.2, 90);
+        pos long_goal_neg_pos_prime(-35.0, 47.1, 90);
         pos long_goal_neg_pos(-28.0, 47.1, 90);
         pos long_goal_pos_pos(28.0, 47.1, 270);
         pos match_loader_pos_pos(57.0, 47.1, 270);

@@ -124,7 +124,7 @@ void elims_left_middle_wing_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .earlyExitRange = 1}, false);
+        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
         chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
@@ -212,7 +212,7 @@ void elims_left_middle_wing_fast_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .earlyExitRange = 1}, false);
+        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 2000, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
         chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
@@ -305,7 +305,7 @@ void elims_left_middle_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .earlyExitRange = 1}, false);
+        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
         chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);

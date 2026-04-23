@@ -18,6 +18,8 @@
 //Macro that expands the pos struct for use with the turnToHeading command
 #define TPOS(pos) pos.T
 
+#define SKILLS
+
 struct pos
 {
     const float X;

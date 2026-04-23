@@ -1,4 +1,5 @@
 #include "../../include/subsystems/conveyor.hpp"
+#include "../../include/autons.hpp"
 #include "../../include/ports.hpp"
 #include <memory>
 
@@ -34,7 +35,7 @@ conveyor::conveyor() :
         low_goal_macro([this]() -> void
         {
             constexpr auto FRESH_BLOCK_OUTPUT = FULL_POWER * -0.375;
-            constexpr auto OLD_BLOCK_OUTPUT = FULL_POWER * -0.445;
+            constexpr auto OLD_BLOCK_OUTPUT = FULL_POWER * -0.435;
 
             while (true)
             {
@@ -73,15 +74,15 @@ void conveyor::tick_implementation() {
 
     if (controller_master.get_digital(RAMP_MACRO))
     {
-        /*
-         *For skills:
-        *(void)conv->exhaust.move(-FULL_POWER * 0.30);
-        *(void)conv->conveyor_intake.move_velocity(600.0 * 0.30);
-         */
-
+        #ifdef SKILLS
+        (void)exhaust.move(-FULL_POWER * 0.30);
+        (void)conveyor_intake.move_velocity(600.0 * 0.30);
+        #endif
+        #ifndef SKILLS
         (void)exhaust.move(-FULL_POWER);
-        (void)conveyor_intake.move(FULL_POWER);
+        (void)conveyor_intake.move(FULL_POWER * 0.9);
         (void)trapdoor.retract();
+        #endif
         if (low_goal.is_extended()) low_goal.retract();
     } else
     {

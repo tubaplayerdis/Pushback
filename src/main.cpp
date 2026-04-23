@@ -263,7 +263,7 @@ void opcontrol() {
 #ifndef COMPETITION
         if(controller_master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
         {
-        	odom->l_chassis.perform_dsr_init(NEG_NEG, 270);
+        	odom->l_chassis.perform_dsr_init(NEG_NEG, 90);
         	//(void)conv->conveyor_intake.move(-90);
         	//pros::Task::delay(200);
         	//conv->do_low_goal_macro = true;

@@ -18,6 +18,7 @@
 #include "../../include/units/units.hpp"
 #include "../../include/TitanReset/TitanReset.hpp"
 #include "../../include/pros/rtos.hpp"
+#include "../../include/autons.hpp"
 #include <memory>
 #include <chrono>
 #include <cstring>
@@ -33,6 +34,8 @@ namespace field_constants
     constexpr float plastic = 70.283;
     constexpr float home = 70.208;
 }
+
+#ifndef SKILLS
 
 namespace pid
 {
@@ -62,6 +65,38 @@ namespace pid
                             0 // maximum acceleration (slew)
     );
 }
+#endif
+
+#ifdef SKILLS
+namespace pid
+{
+    // Linear/lateral movement settings
+    lemlib::ControllerSettings
+    controller_settings_lateral(11.50, // proportional gain (kP)
+                                              0.00, // integral gain (kI)
+                                              68.9, // derivative gain (kD)
+                                              0, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
+    );
+
+    // Angular/turning settings
+    lemlib::ControllerSettings
+    controller_settings_angular(3.6,   // kP: Lowered slightly to reduce 180° momentum
+                            0.0,  // kI: Increased to help finish small 10° turns
+                            30.8,  // kD: Lowered slightly to reduce "choke" on start
+                            0.0,   // anti-windup: Prevents kI from growing too large
+                            1, // small error range, in inches
+                            100, // small error range timeout, in milliseconds
+                            3, // large error range, in inches
+                            500, // large error range timeout, in milliseconds
+                            0 // maximum acceleration (slew)
+    );
+}
+#endif
 
 using namespace ports::localization;
 using namespace ports::localization::settings;
@@ -84,7 +119,9 @@ localization::localization() :
         l_chassis(&lem_chassis, {&front_loc, &right_loc, &rear_loc, &left_loc}, field_constants::plastic) //Finally. Fuck metal fields
 {
     lemlib::InfoSink().setLowestLevel(lemlib::Level::INFO);
-    (void)rotation_vertical.set_data_rate(5);
+    #ifndef SKILLS
+    (void)rotation_vertical.set_data_rate(5); skills
+    #endif
     lem_chassis.calibrate(true);
 }
 
