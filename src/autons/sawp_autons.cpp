@@ -40,7 +40,7 @@ namespace coords
             pos block_blip_neg_pos(-23.5, 19.0, 145);
             pos long_goal_prime(-40, 44.0, 90);
             pos middle_goal_neg_pos(-10.0, 9.00, 135);
-            pos match_loader_neg_pos(-60, 47.25, 90);
+            pos match_loader_neg_pos(-59, 47.25, 90);
             pos long_goal_neg_pos(-28, 47.1, 90);
         }
     }
@@ -326,3 +326,19 @@ ts::auton autons::sawp_dsr = ts::auton("SAWP", sawp_dsr_auton);
 ts::auton autons::sawp_dsr_push = ts::auton("SAWP P", sawp_dsr_auton_push);
 ts::auton autons::sawp_dsr_counter = ts::auton("SAWP C", sawp_dsr_counter_auton);
 ts::auton autons::sawp_dsr_counter_push = ts::auton("SAWP C PUSH", sawp_dsr_counter_auton_push);
+ts::auton autons::sawp_move("NA_2IN", []() -> void
+{
+    //Get drivetrain object
+    localization* dt  = localization::get();
+
+    //Get conveyor object
+    conveyor* conv = conveyor::get();
+
+    localization* lc = localization::get();
+
+    //Get lemlib chassis object
+    lemlib::Chassis* chassis = &dt->lem_chassis;
+
+    chassis->setPose(0,0,0);
+    chassis->moveToPoint(0, 5, 1000, {}, false);
+});

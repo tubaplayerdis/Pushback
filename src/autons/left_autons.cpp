@@ -33,7 +33,7 @@ namespace coords
         namespace left_fast
         {
             pos block_blip_trio(-29.0, 19.0, 0);
-            pos match_loader(-56, 42.5, 90);
+            pos match_loader(-56, 42.75, 90);
             pos long_goal(-25, 47.25, 90);
             pos wing_forward_final(-10, 57.5, 90);
         }
@@ -49,20 +49,22 @@ namespace coords
         namespace left_middle_end
         {
             pos match_loader(-47, 47.5, 90);
-            pos long_goal(-28, 47.1, 90);
+            pos long_goal(-28, 47.25, 90);
             pos block_blip_trio(-20.0, 20.0, 0);
-            pos middle_goal(-9.5, 9.5, 135);
-            pos wing_end(-10, 61, 90);
-            pos wing_end_low(-10, 36, 90);
+            pos middle_goal(-9.25, 9.25, 135);
+            pos wing_end(-9, 60.0, 90);
+            pos wing_end_low(-7, 36, 90);
         }
     }
 }
 
 void quick_approach_left(lemlib::Chassis* chassis)
 {
-    pos match_loader(-48, 46, 90);
-    chassis->moveToPoint(MPOS(match_loader), 1500, {.minSpeed = 80, .earlyExitRange = 4}, false);
-    chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+    pos match_loader_fast_left(chassis->getPose().x, 39.25, 90);
+    conveyor* conv = conveyor::get();
+    chassis->moveToPoint(MPOS(match_loader_fast_left), 1500, {.minSpeed = 80, .earlyExitRange = 4}, false);
+    conv->match_loader.toggle();
+    chassis->turnToHeading(TPOS(match_loader_fast_left), 500, {}, false);
 }
 
 void elims_left_middle_wing_auton()
@@ -70,7 +72,7 @@ void elims_left_middle_wing_auton()
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -55;
-    constexpr auto LONG_GOAL = 20;
+    constexpr auto LONG_GOAL = 30;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
@@ -113,6 +115,7 @@ void elims_left_middle_wing_auton()
     {
         conv->match_loader.toggle();
         chassis->moveToPoint(MPOS(long_goal), 1000, {.minSpeed = 60, .earlyExitRange = 1 }, false);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(750);
@@ -127,7 +130,7 @@ void elims_left_middle_wing_auton()
         chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
-        chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
+        chassis->moveToPoint(MPOS(middle_goal), 1500, {.earlyExitRange = 3}, true);
         {
             (void)conv->trapdoor.retract();
             (void)conv->conveyor_intake.move(-FULL_POWER);
@@ -147,7 +150,7 @@ void elims_left_middle_wing_auton()
     }
 
     {
-        chassis->moveToPoint(-43, 61.0, 2000, {.forwards = false}, false);
+        chassis->moveToPoint(-43, 60.0, 2000, {.forwards = false}, false);
         chassis->turnToHeading(90, 500, {}, false);
         chassis->moveToPoint(MPOS(wing_end), 2000, {}, false);
     }
@@ -158,7 +161,7 @@ void elims_left_middle_wing_fast_auton()
     constexpr auto FULL_POWER = 127;
     constexpr auto NO_POWER = 0;
     constexpr auto MATCH_LOADER = -55;
-    constexpr auto LONG_GOAL = 20;
+    constexpr auto LONG_GOAL = 30;
     constexpr auto EXHAUST_INDEX = -0.2 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_LOW = -0.75 * FULL_POWER;
     constexpr auto EXHAUST_SCORE_HIGH = FULL_POWER;
@@ -184,12 +187,11 @@ void elims_left_middle_wing_fast_auton()
     }
 
     {
-        conv->match_loader.toggle();
+        //conv->match_loader.toggle();
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 2000, {}, false);
-        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+        quick_approach_left(chassis);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(850);
     }
@@ -201,6 +203,7 @@ void elims_left_middle_wing_fast_auton()
     {
         conv->match_loader.toggle();
         chassis->moveToPoint(MPOS(long_goal), 1000, {.minSpeed = 60, .earlyExitRange = 1 }, false);
+        chassis->tank(LONG_GOAL, LONG_GOAL, true);
         (void)conv->conveyor_intake.move(FULL_POWER);
         (void)conv->exhaust.move(FULL_POWER);
         pros::Task::delay(750);
@@ -212,10 +215,10 @@ void elims_left_middle_wing_fast_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 2000, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
+        chassis->turnToPoint(MPOS(block_blip_trio), 1000, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .minSpeed = 80, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
-        chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
+        chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 5}, true);
         {
             (void)conv->trapdoor.retract();
             (void)conv->conveyor_intake.move(-FULL_POWER);
@@ -228,19 +231,25 @@ void elims_left_middle_wing_fast_auton()
     }
 
     {
-        (void)conv->exhaust.move(-FULL_POWER * 0.65);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
-        pros::Task::delay(1500);
+        (void)conv->exhaust.move(-FULL_POWER);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.9);
+        pros::Task::delay(1000);
         (void)conv->trapdoor.extend();
     }
 
     {
-        chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
-        chassis->swingToHeading(90, lemlib::DriveSide::LEFT, 750, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, true);
+        chassis->moveToPoint(-23, 23, 800, {.forwards = false, .minSpeed = 80, .earlyExitRange = 2}, false);
+        chassis->swingToHeading(270, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 80, .earlyExitRange = 1}, false);
         {
-            pros::Task::delay(50);
+            /*
+            for (int i = 0; i < 20; i++)
+            {
+                chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+                pros::Task::delay(5);
+            }
             chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
             chassis->waitUntilDone();
+            */
         }
         chassis->moveToPoint(MPOS(wing_end_low), 750, {.forwards = false}, false);
     }
@@ -281,8 +290,7 @@ void elims_left_middle_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 2000, {}, false);
-        chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
+        quick_approach_left(chassis);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(850);
     }
@@ -305,10 +313,10 @@ void elims_left_middle_auton()
     }
 
     {
-        chassis->swingToPoint(MPOS(block_blip_trio), lemlib::DriveSide::RIGHT, 1500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 70, .earlyExitRange = 1}, false);
+        chassis->turnToPoint(MPOS(block_blip_trio), 1000, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE, .minSpeed = 80, .earlyExitRange = 1}, false);
         chassis->moveToPoint(MPOS(block_blip_trio), 750, {.forwards = false}, false);
         chassis->turnToPoint(MPOS(middle_goal), 750, {}, false);
-        chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 3}, true);
+        chassis->moveToPoint(MPOS(middle_goal), 1000, {.earlyExitRange = 5}, true);
         {
             (void)conv->trapdoor.retract();
             (void)conv->conveyor_intake.move(-FULL_POWER);
@@ -321,9 +329,9 @@ void elims_left_middle_auton()
     }
 
     {
-        (void)conv->exhaust.move(-FULL_POWER * 0.65);
-        (void)conv->conveyor_intake.move(FULL_POWER * 0.7);
-        pros::Task::delay(1500);
+        (void)conv->exhaust.move(-FULL_POWER);
+        (void)conv->conveyor_intake.move(FULL_POWER * 0.9);
+        pros::Task::delay(1000);
         (void)conv->trapdoor.extend();
     }
 
@@ -549,3 +557,4 @@ ts::auton autons::elims_left_fast = ts::auton("L_7U", elims_left_fast_auton);
 ts::auton autons::elims_left_fast_fast = ts::auton("L_4U", elims_left_fast_fast_auton);
 ts::auton autons::elims_left_middle_end = ts::auton("L_4U_3M_M", elims_left_middle_auton);
 ts::auton autons::elims_left_middle_wing = ts::auton("L_4U_3M_W", elims_left_middle_wing_auton);
+ts::auton autons::elims_left_middle_wing_fast = ts::auton("L_4U_3M_W_F", elims_left_middle_wing_fast_auton);

@@ -77,6 +77,7 @@ void conveyor::tick_implementation() {
         #ifdef SKILLS
         (void)exhaust.move(-FULL_POWER * 0.30);
         (void)conveyor_intake.move_velocity(600.0 * 0.30);
+        (void)trapdoor.retract();
         #endif
         #ifndef SKILLS
         (void)exhaust.move(-FULL_POWER);

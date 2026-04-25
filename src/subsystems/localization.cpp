@@ -120,7 +120,7 @@ localization::localization() :
 {
     lemlib::InfoSink().setLowestLevel(lemlib::Level::INFO);
     #ifndef SKILLS
-    (void)rotation_vertical.set_data_rate(5); skills
+    (void)rotation_vertical.set_data_rate(5);
     #endif
     lem_chassis.calibrate(true);
 }

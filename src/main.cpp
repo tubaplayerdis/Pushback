@@ -15,7 +15,7 @@ extern "C"
 	#include "titanselect/titanselect.h"
 }
 
-//#define COMPETITION
+#define COMPETITION
 
 //For compile_commands.json to be configured, run: pros build-compile-commands
 
@@ -69,7 +69,11 @@ void competition_initialize()
  */
 void autonomous()
 {
+#ifdef SKILLS
+	skills_routine();
+#else
 	ts_run_selected_auton();
+#endif
 }
 
 void pid_tune_mode()
@@ -183,7 +187,11 @@ void pid_tune_mode()
  * task, not resume it from where it left off.
  */
 
+#ifdef SKILLS
+constexpr bool RUN_AUTO_DRIVER = true;
+#else
 constexpr bool RUN_AUTO_DRIVER = false;
+#endif
 
 void opcontrol() {
 	if (RUN_AUTO_DRIVER)

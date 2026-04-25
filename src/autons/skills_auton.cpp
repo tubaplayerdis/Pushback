@@ -22,7 +22,7 @@ namespace coords
     namespace segment_uno
     {
         pos red_block_blip_neg_pos(-26.00, 23.5, 220);
-        pos middle_goal_pos(-10.0, 10.0, 135);
+        pos middle_goal_pos(-10.15, 10.15, 135);
         pos match_loader_neg_pos(-57, 47.25, 90);
         pos neg_pos_trans_pose(-24, 62, 90);
         pos neg_pos_trans_point(29.5, 60, 90);
@@ -141,7 +141,7 @@ void skills_routine()
         (void)conv->low_goal.extend();//activate to keep blocks in ideal position.
         (void)conv->conveyor_intake.move(-FULL_POWER);
         (void)conv->exhaust.move(-FULL_POWER * 0.20);
-        pros::Task::delay(125);
+        pros::Task::delay(140);
     }
 
     {

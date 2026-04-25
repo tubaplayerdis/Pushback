@@ -18,7 +18,7 @@
 //Macro that expands the pos struct for use with the turnToHeading command
 #define TPOS(pos) pos.T
 
-#define SKILLS
+//#define SKILLS
 
 struct pos
 {
@@ -30,11 +30,12 @@ struct pos
 };
 
 void skills_routine();
+void quick_approach_right(lemlib::Chassis* chassis);
 
 inline void wing_align(lemlib::Chassis* chassis)
 {
-    chassis->turnToHeading(150, 450, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
-    chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 400, {}, false);
+    chassis->turnToHeading(150, 500, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
+    chassis->swingToHeading(90, lemlib::DriveSide::RIGHT, 500, {}, false);
 }
 
 inline void brake_chassis(lemlib::Chassis* chassis)
@@ -58,6 +59,7 @@ namespace autons
     extern ts::auton sawp_dsr_push;
     extern ts::auton sawp_dsr_counter;
     extern ts::auton sawp_dsr_counter_push;
+    extern ts::auton sawp_move;
     extern ts::auton elims_left_dsr;
     extern ts::auton elims_left_fast;
     extern ts::auton elims_left_fast_fast;
