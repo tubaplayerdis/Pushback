@@ -12,10 +12,10 @@
 //Macro that expands the pos struct for use with the moveToPose command
 #define POS(pos) pos.X, pos.Y, pos.T
 
-//Macro that expands the pos struct for use with the moveToPoint command
+//Macro that expands the pos struct for use with the moveToPoint, swingToPoint, turnToPoint commands
 #define MPOS(pos) pos.X, pos.Y
 
-//Macro that expands the pos struct for use with the turnToHeading command
+//Macro that expands the pos struct for use with the turnToHeading, swingToHeading commands
 #define TPOS(pos) pos.T
 
 //#define SKILLS
@@ -41,11 +41,11 @@ inline void wing_align(lemlib::Chassis* chassis)
 inline void brake_chassis(lemlib::Chassis* chassis)
 {
     chassis->setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis->drivetrain.leftMotors->brake();
-    chassis->drivetrain.rightMotors->brake();
+    (void)chassis->drivetrain.leftMotors->brake();
+    (void)chassis->drivetrain.rightMotors->brake();
 }
 
-inline void wing_movement(lemlib::Chassis* chassis, pos end_spot)
+inline void wing_movement(lemlib::Chassis* chassis, const pos &end_spot)
 {
     wing_align(chassis);
     chassis->moveToPoint(MPOS(end_spot), 1500, {.minSpeed = 40}, false);

@@ -18,11 +18,7 @@ namespace coords
     {
         namespace dsr
         {
-            pos start_push(-46.89,-7.5,0);
-            pos start_normal(-47.13,-15.5,0);
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-46.3, -47.75, 90);
-            pos match_loader_neg_neg_prime_push(-46.3, -47.75, 90);
             pos long_goal_neg_neg(-29, -47.1, 90);
             pos block_blip_neg_pos(-23.5, 22.5, 0);
             pos middle_goal_neg_pos(-10.5, 10.5, 135);
@@ -33,8 +29,6 @@ namespace coords
         namespace counter
         {
             pos push_point(-47, 4, 0);
-            pos match_loader_neg_neg_prime(-46.3, -47.75, 90);
-            pos match_loader_neg_neg_prime_push(-46.3, -47.75, 90);
             pos long_goal_neg_neg(-28, -47.1, 90);
             pos block_blip_neg_neg(-24.5, -15, 180);
             pos block_blip_neg_pos(-23.5, 19.0, 145);
@@ -86,15 +80,7 @@ void sawp_dsr_counter_auton_raw(bool push)
     }
 
     {
-        conv->match_loader.toggle();
-        if (push)
-        {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime_push), 2500, {}, false);
-        } else
-        {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {}, false);
-        }
-        chassis->turnToHeading(TPOS(match_loader_neg_neg_prime), 700, {}, false);
+        quick_approach_right(chassis);
     }
 
     {
@@ -220,15 +206,7 @@ void sawp_dsr_auton_raw(bool push)
     }
 
     {
-        conv->match_loader.toggle();
-        if (push)
-        {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime_push), 2500, {.forwards = false}, false);
-        } else
-        {
-            chassis->moveToPoint(MPOS(match_loader_neg_neg_prime), 2500, {.forwards = false}, false);
-        }
-        chassis->turnToHeading(TPOS(match_loader_neg_neg_prime), 700, {}, false);
+        quick_approach_right(chassis);
     }
 
     {
