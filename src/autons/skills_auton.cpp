@@ -137,8 +137,8 @@ void skills_routine()
 
     {
         pros::Task::delay(200);
-        (void)conv->trapdoor.retract();//seats a block in
-        (void)conv->low_goal.extend();//activate to keep blocks in ideal position.
+        (void)conv->trapdoor.retract();//glorified
+        (void)conv->low_goal.extend();//the flaps are too high anyways so who cares
         (void)conv->conveyor_intake.move(-FULL_POWER);
         (void)conv->exhaust.move(-FULL_POWER * 0.20);
         pros::Task::delay(140);

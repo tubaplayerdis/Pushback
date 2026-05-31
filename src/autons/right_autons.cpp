@@ -90,6 +90,9 @@ void elims_right_auton()
     }
 
     {
+        /**
+         * This genuine bullshit works because it wants to and sometimes it dosent want to
+         */
         chassis->moveToPoint(MPOS(block_blip_trio), 800, {.forwards = false, .minSpeed = 127, .earlyExitRange = 3}, false);
         conv->match_loader.toggle();
         chassis->swingToHeading(80, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 127, .earlyExitRange = 1}, true);
