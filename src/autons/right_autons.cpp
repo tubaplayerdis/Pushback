@@ -51,7 +51,7 @@ void quick_approach_right(lemlib::Chassis* chassis)
 {
     pos match_loader_fast_right(chassis->getPose().x, -37.00, 90);
     conveyor* conv = conveyor::get();
-    chassis->moveToPoint(MPOS(match_loader_fast_right), 1500, {.minSpeed = 80, .earlyExitRange = 4}, false);
+    chassis->moveToPoint(MPOS(match_loader_fast_right), 1500, {.maxSpeed = 90, .minSpeed = 80, .earlyExitRange = 4}, false);
     conv->match_loader.toggle();
     chassis->turnToHeading(TPOS(match_loader_fast_right), 500, {}, false);
 }

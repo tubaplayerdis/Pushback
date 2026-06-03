@@ -3,6 +3,7 @@
 #include "TRSensor.hpp"
 #include "../pros/imu.hpp"
 #include "../lemlib/chassis/chassis.hpp"
+#include "../lemlib/pose.hpp"
 
 /**
  *  Standard field perimeter radii.
@@ -62,7 +63,6 @@ public:
      * @brief Initialize the localization chassis
      * @note ONLY INITIALIZE THIS WHEN YOUR ROBOT IS NOT MOVING!
      *
-     * @param inertial pointer to the inertial sensor on the robot
      * @param base pointer to the drivebase chassis of the robot
      * @param sensors array of pointers to the localization sensors of the robot
      */
@@ -74,7 +74,6 @@ public:
      * 
      * @details If using TitanReset template nuetral, this constructor can be used as a starting place for how to initalize the TitanReset chassis using a template nuetral option. This is why it is also implemented in the header file as it allows it to be removed when going template nuetral.
      *
-     * @param inertial pointer to the inertial sensor on the robot
      * @param base pointer to the lemlib chassis of the robot
      * @param sensors array of pointers to the localization sensors of the robot
      */

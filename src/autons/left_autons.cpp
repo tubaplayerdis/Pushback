@@ -239,9 +239,8 @@ void elims_left_middle_wing_fast_auton()
 
     {
         chassis->moveToPoint(-23, 23, 800, {.forwards = false, .minSpeed = 80, .earlyExitRange = 2}, false);
-        chassis->swingToHeading(270, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 80, .earlyExitRange = 1}, false);
+        chassis->swingToHeading(270, lemlib::DriveSide::LEFT, 1000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE, .minSpeed = 80, .earlyExitRange = 1}, true);
         {
-            /*
             for (int i = 0; i < 20; i++)
             {
                 chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -249,10 +248,11 @@ void elims_left_middle_wing_fast_auton()
             }
             chassis->setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
             chassis->waitUntilDone();
-            */
         }
         chassis->moveToPoint(MPOS(wing_end_low), 750, {.forwards = false}, false);
     }
+
+    brake_chassis(chassis);
 }
 
 void elims_left_middle_auton()
@@ -403,7 +403,7 @@ void elims_left_dsr_auton()
     }
 
     {
-        chassis->moveToPoint(MPOS(match_loader), 1500, {.forwards = false, .minSpeed = 50, .earlyExitRange = 4}, false);
+        chassis->moveToPoint(MPOS(match_loader), 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 50, .earlyExitRange = 4}, false);
         chassis->turnToHeading(TPOS(match_loader), 500, {}, false);
         chassis->tank(MATCH_LOADER, MATCH_LOADER, true);
         pros::Task::delay(800);
